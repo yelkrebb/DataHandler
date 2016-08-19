@@ -72,7 +72,7 @@ namespace Motion.Core.Data.BleData.Trio
 
 
 
-		public async Task ParseData(byte[] rawData)
+		public async Task<BLEParsingStatus> ParseData(byte[] rawData)
 		{
 			throw new NotImplementedException();
 		}

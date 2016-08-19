@@ -85,6 +85,21 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 			Array.Clear(this.medicineCode5Raw, INDEX_ZERO, this.medicineCode5Raw.Length);
 			Array.Clear(this.medicineCode6Raw, INDEX_ZERO, this.medicineCode6Raw.Length);
 		}
+
+		public Task<BLEParsingStatus> ParseData(byte[] rawData)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<byte[]> GetReadCommand()
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<byte[]> GetWriteCommand()
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
 

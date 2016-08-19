@@ -162,6 +162,8 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 
 			});
 
+			return parseStatus;
+
 		}
 
 		public async Task<byte[]> GetReadCommand()

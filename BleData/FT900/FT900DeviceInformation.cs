@@ -8,6 +8,21 @@ namespace Motion.Core.Data.BleData.FT900
 		public FT900DeviceInformation()
 		{
 		}
+
+		public Task<byte[]> GetReadCommand()
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<byte[]> GetWriteCommand()
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<BLEParsingStatus> ParseData(byte[] rawData)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
 
