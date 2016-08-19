@@ -31,6 +31,42 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="BleData\Trio\AccelData\Signature.cs" />
+    <Compile Include="BleData\Trio\SettingsData\CompanySettings.cs" />
+    <Compile Include="BleData\Trio\SettingsData\DeviceSettings.cs" />
+    <Compile Include="BleData\Trio\SettingsData\ExerciseSettings.cs" />
+    <Compile Include="BleData\Trio\SettingsData\SeizureSettings.cs" />
+    <Compile Include="BleData\Trio\SettingsData\SignatureSettings.cs" />
+    <Compile Include="BleData\Trio\SettingsData\UserSettings.cs" />
+    <Compile Include="BleData\Trio\ITrioDataHandler.cs" />
+    <Compile Include="BleData\Trio\TrioDeviceInformation.cs" />
+    <Compile Include="BleData\FT900\SettingsData\FT900CompanySettings.cs" />
+    <Compile Include="BleData\FT900\FT900DataHandler.cs" />
+    <Compile Include="BleData\FT900\FT900DeviceInformation.cs" />
+    <Compile Include="BleData\FT900\SettingsData\FT900DeviceSettings.cs" />
+    <Compile Include="BleData\FT900\SettingsData\FT900UserSettings.cs" />
+    <Compile Include="BleData\Trio\SettingsData\SetDeviceMode.cs" />
+    <Compile Include="BleData\BLEParsingStatus.cs" />
+    <Compile Include="BleData\FT900\SettingsData\FT900SetDeviceMode.cs" />
+    <Compile Include="BleData\Trio\SettingsData\DeviceStatus.cs" />
+    <Compile Include="BleData\FT900\SettingsData\FT900DeviceStatus.cs" />
+    <Compile Include="BleData\Trio\SettingsData\DeviceAlarm.cs" />
+    <Compile Include="BleData\FT900\SettingsData\FT900DeviceAlarm.cs" />
+    <Compile Include="BleData\Trio\Others\LCDTestDisplay.cs" />
+    <Compile Include="BleData\FT900\Others\FT900LCDTestDisplay.cs" />
+    <Compile Include="BleData\Trio\SettingsData\ClearEEPROM.cs" />
+    <Compile Include="BleData\FT900\SettingsData\FT900ClearEEPROM.cs" />
+    <Compile Include="BleData\Trio\SettingsData\MedicineAlarm.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="BleData\" />
+    <Folder Include="WebServiceData\" />
+    <Folder Include="BleData\Trio\" />
+    <Folder Include="BleData\Trio\StepsData\" />
+    <Folder Include="BleData\FT900\" />
+    <Folder Include="BleData\FT900\SettingsData\" />
+    <Folder Include="BleData\Trio\Others\" />
+    <Folder Include="BleData\FT900\Others\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>
