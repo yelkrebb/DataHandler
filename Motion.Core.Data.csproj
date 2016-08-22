@@ -57,8 +57,9 @@
     <Compile Include="BleData\FT900\SettingsData\FT900ClearEEPROM.cs" />
     <Compile Include="BleData\Trio\SettingsData\MedicineAlarm.cs" />
     <Compile Include="WebServiceData\GetDeviceInformation.cs" />
-    <Compile Include="BleData\Trio\StepsData\StepsTableParameters.cs" />
     <Compile Include="BleData\Trio\StepsData\StepsTableData.cs" />
+    <Compile Include="BleData\Trio\StepsData\ProfileBlocksData.cs" />
+    <Compile Include="BleData\Trio\SettingsData\SensitivitySettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BleData\" />
