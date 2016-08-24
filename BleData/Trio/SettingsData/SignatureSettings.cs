@@ -247,7 +247,7 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 					Buffer.BlockCopy(this.samplingCycleRaw, INDEX_ZERO, this._rawData, SAMPLING_CYCLE_BYTE_LOC_NEW, SAMPLING_CYCLE_BYTE_SIZE);
 					Buffer.BlockCopy(this.samplingFrequencyRaw, INDEX_ZERO, this._rawData, SAMPLING_FREQUENCY_BYTE_LOC_NEW, SAMPLING_FREQUENCY_BYTE_SIZE);
 					Buffer.BlockCopy(this.samplingThresholdRaw, INDEX_ZERO, this._rawData, SAMPLING_THRESHOLD_BYTE_LOC_NEW, SAMPLING_THRESHOLD_BYTE_SIZE);
-					Buffer.BlockCopy(this.samplingRecordingPerdayRaw, INDEX_ZERO, this._rawData, SAMPLING_RECORDING_PER_DAY_BYTE_LOC_WRITE, SAMPLING_RECORDING_PER_DAY_BYTE_SIZE);
+					Buffer.BlockCopy(this.samplingRecordingPerdayRaw, INDEX_ZERO, this._rawData, SAMPLING_RECORDING_PER_DAY_BYTE_LOC, SAMPLING_RECORDING_PER_DAY_BYTE_SIZE);
 					Buffer.BlockCopy(this.samplingStepsRaw, INDEX_ZERO, this._rawData, SAMPLING_STEPS_LOC, SAMPLING_STEPS_SIZE);
 					Buffer.BlockCopy(this.minuteRecordingIntervalRaw, INDEX_ZERO, this._rawData, SAMPLING_MINUTE_RECORDING_LOC, SAMPLING_MINUTE_RECORDING_SIZE);
 					Buffer.BlockCopy(this.maximumStepsRaw, INDEX_ZERO, this._rawData, SAMPLING_MAXIMUM_STEPS_LOC, SAMPLING_MAXIMUM_STEPS_SIZE);
