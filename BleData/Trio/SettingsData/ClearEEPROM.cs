@@ -2,11 +2,12 @@
 using System.Globalization;
 using System.Threading.Tasks;
 using Motion.Core.Data.BleData.Trio;
+using Motion.Mobile.Utilities;
 namespace Motion.Core.Data.BleData.Trio.SettingsData
 {
 	public class ClearEEPROM:ITrioDataHandler
 	{
-
+		const int COMMAND_SIZE_WRITE = 1;
 		const int COMMAND_PREFIX = 0x1B;
 		const int COMMAND_ID_WRITE = 0x28;
 
@@ -44,9 +45,12 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 
 		private void ClearData()
 		{
-			Array.Clear(this._rawData, INDEX_ZERO, this._rawData.Length);
-			Array.Clear(this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
-			Array.Clear(this.eepRomDataRaw, INDEX_ZERO, this.eepRomDataRaw.Length);
+			if (this._rawData != null && this._rawData.Length > 0)
+				Array.Clear(this._rawData, INDEX_ZERO, this._rawData.Length);
+			if (this._readCommandRawData != null && this._readCommandRawData.Length > 0)
+				Array.Clear(this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
+			if (this.eepRomDataRaw != null && this.eepRomDataRaw.Length > 0)
+				Array.Clear(this.eepRomDataRaw, INDEX_ZERO, this.eepRomDataRaw.Length);
 		}
 
 
@@ -55,12 +59,14 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 			BLEParsingStatus parsingStatus = BLEParsingStatus.ERROR;
 			await Task.Run(() =>
 			{
+				this._rawData = new byte[COMMAND_SIZE_WRITE + 2];
 				Array.Copy(rawData, this._rawData, rawData.Length);
 				this.IsReadCommand = true;
 				if (rawData[1] == 0x28)
 				{
+					
 					this.IsReadCommand = false;
-					this.writeCommandResponseCodeRaw = new byte[WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE];
+					this.writeCommandResponseCodeRaw = new byte[Constants.INT32_BYTE_SIZE];
 					Array.Copy(this._rawData, 2, this.writeCommandResponseCodeRaw, INDEX_ZERO, WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE);
 					this.WriteCommandResponseCode = BitConverter.ToInt32(this.writeCommandResponseCodeRaw, INDEX_ZERO);
 					parsingStatus = BLEParsingStatus.SUCCESS;
@@ -85,8 +91,11 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 
 		public async Task<byte[]> GetWriteCommand()
 		{
+
+
 			await Task.Run(() =>
 			{
+				this._rawData = new byte[COMMAND_SIZE_WRITE + 2];
 
 				if (trioDevInfo.ModelNumber == 932 || trioDevInfo.ModelNumber == 936 || trioDevInfo.ModelNumber == 936)
 				{

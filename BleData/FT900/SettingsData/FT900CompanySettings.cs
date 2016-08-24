@@ -8,6 +8,7 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 	public class CompanySettings:FT900DataHandler
 	{
 		const int COMMAND_SIZE_WRITE_900 = 0x13;
+		const int COMMAND_SIZE_READ_900 = 0x02;
 		const int COMMAND_ID_WRITE_FT900 = 0x3A;
 		const int COMMAND_ID_READ_FT900 = 0x3B;
 
@@ -99,7 +100,7 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 		{
 			await Task.Run(() =>
 			{
-				byte[] commandPrefix = BitConverter.GetBytes(COMMAND_SIZE_READ);
+				byte[] commandPrefix = BitConverter.GetBytes(COMMAND_SIZE_READ_900);
 				byte[] commandID = BitConverter.GetBytes(COMMAND_ID_READ_FT900);
 				Buffer.BlockCopy(commandID, INDEX_ZERO, this._readCommandRawData, INDEX_ZERO + 1, 1);
 				Buffer.BlockCopy(commandPrefix, INDEX_ZERO, this._readCommandRawData, INDEX_ZERO, 1);

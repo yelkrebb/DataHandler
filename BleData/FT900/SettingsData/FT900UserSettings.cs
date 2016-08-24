@@ -14,7 +14,8 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 		const int COMMAND_SIZE_WRITE_900 = 10;
 		const int COMMAND_SIZE_READ = 1;
 
-		const int COMMAND_PREFIX = 0x1B;
+		const int COMMAND_PREFIX_WRITE = 0x0B;
+		const int COMMAND_PREFIX_READ = 0x01;
 		const int COMMAND_ID_WRITE = 0x18;
 		const int COMMAND_ID_READ = 0x19;
 

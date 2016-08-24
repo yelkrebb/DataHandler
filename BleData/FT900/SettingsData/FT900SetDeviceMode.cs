@@ -8,7 +8,7 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 	public class FT900SetDeviceMode:FT900DataHandler
 	{
 
-		const int COMMAND_PREFIX = 0x1B;
+		const int COMMAND_PREFIX = 0x02;
 		const int COMMAND_ID_WRITE = 0x29;
 
 		const int INDEX_ZERO = 0;

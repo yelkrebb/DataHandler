@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Threading.Tasks;
+using Motion.Mobile.Utilities;
 using Motion.Core.Data.BleData.Trio;
 
 namespace Motion.Core.Data.BleData.Trio.SettingsData
@@ -10,7 +11,7 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 		const int COMMAND_SIZE_WRITE_WITH_OFFSET = 9;
 		const int COMMAND_SIZE_WRITE_ORIG = 7;
 		const int COMMAND_SIZE_WRITE_WITH_DST = 13;
-		const int COMMAND_SIZE_READ = 1;
+		const int COMMAND_SIZE_READ = 2;
 
 		const int COMMAND_PREFIX = 0x1B;
 		const int COMMAND_ID_WRITE = 0x16;
@@ -86,20 +87,32 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 
 		private void ClearData()
 		{
-			Array.Clear (this._rawData, INDEX_ZERO, this._rawData.Length);
-			Array.Clear (this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
-
-			Array.Clear (this.hourRaw, INDEX_ZERO, this.hourRaw.Length);
-			Array.Clear (this.minuteRaw, INDEX_ZERO, this.minuteRaw.Length);
-			Array.Clear (this.secondRaw, INDEX_ZERO, this.secondRaw.Length);
-			Array.Clear (this.hourTypeRaw, INDEX_ZERO, this.hourTypeRaw.Length);
-			Array.Clear (this.yearRaw, INDEX_ZERO, this.yearRaw.Length);
-			Array.Clear (this.monthRaw, INDEX_ZERO, this.monthRaw.Length);
-			Array.Clear (this.dayRaw, INDEX_ZERO, this.dayRaw.Length);
-			Array.Clear (this.hourOffsetRaw, INDEX_ZERO, this.hourOffsetRaw.Length);
-			Array.Clear (this.minuteOffsetRaw, INDEX_ZERO, this.minuteOffsetRaw.Length);
-			Array.Clear (this.dstStartRaw, INDEX_ZERO, this.dstStartRaw.Length);
-			Array.Clear (this.dstEndRaw, INDEX_ZERO, this.dstEndRaw.Length);
+			if (this._rawData != null && this._rawData.Length > 0)
+				Array.Clear (this._rawData, INDEX_ZERO, this._rawData.Length);
+			if (this._readCommandRawData != null && this._readCommandRawData.Length > 0)
+				Array.Clear (this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
+			if (this.hourRaw != null && this.hourRaw.Length > 0)
+				Array.Clear (this.hourRaw, INDEX_ZERO, this.hourRaw.Length);
+			if (this.minuteRaw != null && this.minuteRaw.Length > 0)
+				Array.Clear (this.minuteRaw, INDEX_ZERO, this.minuteRaw.Length);
+			if (this.secondRaw != null && this.secondRaw.Length > 0)
+				Array.Clear (this.secondRaw, INDEX_ZERO, this.secondRaw.Length);
+			if (this.hourTypeRaw != null && this.hourTypeRaw.Length > 0)
+				Array.Clear (this.hourTypeRaw, INDEX_ZERO, this.hourTypeRaw.Length);
+			if (this.yearRaw != null && this.yearRaw.Length > 0)
+				Array.Clear (this.yearRaw, INDEX_ZERO, this.yearRaw.Length);
+			if (this.monthRaw != null && this.monthRaw.Length > 0)
+				Array.Clear (this.monthRaw, INDEX_ZERO, this.monthRaw.Length);
+			if (this.dayRaw != null && this.dayRaw.Length > 0)
+				Array.Clear (this.dayRaw, INDEX_ZERO, this.dayRaw.Length);
+			if (this.hourOffsetRaw != null && this.hourOffsetRaw.Length > 0)
+				Array.Clear (this.hourOffsetRaw, INDEX_ZERO, this.hourOffsetRaw.Length);
+			if (this.minuteOffsetRaw != null && this.minuteOffsetRaw.Length > 0)
+				Array.Clear (this.minuteOffsetRaw, INDEX_ZERO, this.minuteOffsetRaw.Length);
+			if (this.dstStartRaw != null && this.dstStartRaw.Length > 0)
+				Array.Clear (this.dstStartRaw, INDEX_ZERO, this.dstStartRaw.Length);
+			if (this.dstEndRaw != null && this.dstEndRaw.Length > 0)
+				Array.Clear (this.dstEndRaw, INDEX_ZERO, this.dstEndRaw.Length);
 		}
 
 		public async Task<BLEParsingStatus> ParseData(byte[] rawData)
@@ -107,6 +120,8 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 			BLEParsingStatus parseStatus = BLEParsingStatus.ERROR;
 			await Task.Run(() =>
 			{
+
+				this._rawData = new byte[rawData.Length];
 				Array.Copy(rawData, this._rawData, rawData.Length);
 
 
@@ -114,24 +129,24 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 				if (rawData[1] == 0x16)
 				{
 					this.IsReadCommand = false;
-					this.writeCommandResponseCodeRaw = new byte[WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE];
+					this.writeCommandResponseCodeRaw = new byte[Constants.INT32_BYTE_SIZE];
 					Array.Copy(this._rawData, 2, this.writeCommandResponseCodeRaw, INDEX_ZERO, WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE);
 					this.WriteCommandResponseCode = BitConverter.ToInt32(this.writeCommandResponseCodeRaw, INDEX_ZERO);
 				}
 
 				else
 				{ 
-					this.hourRaw = new byte[1];
-					this.minuteRaw = new byte[1];
-					this.secondRaw = new byte[1];
-					this.hourTypeRaw = new byte[1];
-					this.yearRaw = new byte[1];
-					this.monthRaw = new byte[1];
-					this.dayRaw = new byte[1];
-					this.hourOffsetRaw = new byte[1];
-					this.minuteOffsetRaw = new byte[1];
-					this.dstStartRaw = new byte[1];
-					this.dstEndRaw = new byte[1];
+					this.hourRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.minuteRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.secondRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.hourTypeRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.yearRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.monthRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.dayRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.hourOffsetRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.minuteOffsetRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.dstStartRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.dstEndRaw = new byte[Constants.INT32_BYTE_SIZE];
 
 					Array.Copy(this._rawData, HOUR_BYTE_LOC, this.hourRaw, INDEX_ZERO, 1);
 					Array.Copy(this._rawData, MINUTE_BYTE_LOC, this.minuteRaw, INDEX_ZERO, 1);
@@ -197,6 +212,7 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 		{
 			await Task.Run(() =>
 			{
+				this._readCommandRawData = new byte[COMMAND_SIZE_READ];
 				byte[] commandPrefix = BitConverter.GetBytes(COMMAND_PREFIX);
 				byte[] commandID = BitConverter.GetBytes(COMMAND_ID_READ);
 				Buffer.BlockCopy(commandID, INDEX_ZERO, this._readCommandRawData, INDEX_ZERO+1, 1);
@@ -209,6 +225,12 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 		{
 			await Task.Run(() =>
 			{
+
+				if (this.trioDevInfo.ModelNumber == 962 || (this.trioDevInfo.ModelNumber == 961 && this.trioDevInfo.FirmwareVersion >= 5.0f))
+					this._rawData = new byte[COMMAND_SIZE_WRITE_WITH_DST + 2];
+				else
+					this._rawData = new byte[COMMAND_SIZE_WRITE_WITH_OFFSET + 2];
+
 				this.hourRaw = BitConverter.GetBytes(this.Hour);
 				this.minuteRaw = BitConverter.GetBytes(this.Minute);
 				this.secondRaw = BitConverter.GetBytes(this.Second);
@@ -256,7 +278,7 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 					//For 93x and 96x, 1st byte is the command prefix 0x1B while 2nd byte is the command ID
 					byte[] commandPrefix = BitConverter.GetBytes(COMMAND_PREFIX);
 					byte[] commandID = BitConverter.GetBytes(COMMAND_ID_WRITE);
-					Buffer.BlockCopy(commandID, INDEX_ZERO, this._rawData, INDEX_ZERO, 1);
+					Buffer.BlockCopy(commandID, INDEX_ZERO, this._rawData, INDEX_ZERO+1, 1);
 					Buffer.BlockCopy(commandPrefix, INDEX_ZERO, this._rawData, INDEX_ZERO, 1);
 				}
 				else if (this.trioDevInfo.ModelNumber == 962 || (this.trioDevInfo.ModelNumber == 961 && this.trioDevInfo.FirmwareVersion >= 5.0f))

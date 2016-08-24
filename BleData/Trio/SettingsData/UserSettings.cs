@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Threading.Tasks;
+using Motion.Mobile.Utilities;
 using Motion.Core.Data.BleData;
 
 namespace Motion.Core.Data.BleData.Trio.SettingsData
@@ -10,8 +11,7 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 		const int COMMAND_SIZE_WRITE_ORIG = 7;
 		const int COMMAND_SIZE_WRITE_WITH_DOB = 11;
 		const int COMMAND_SIZE_WRITE_WITH_DOB_AND_SCREEN = 12;
-		const int COMMAND_SIZE_WRITE_900 = 10;
-		const int COMMAND_SIZE_READ = 1;
+		const int COMMAND_SIZE_READ = 2;
 
 		const int COMMAND_PREFIX = 0x1B;
 		const int COMMAND_ID_WRITE = 0x18;
@@ -85,6 +85,11 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 			await Task.Run(() =>
 			{
 
+				if (this.trioDevInfo.ModelNumber == 961)
+					this._rawData = new byte[COMMAND_SIZE_WRITE_WITH_DOB_AND_SCREEN + 2];
+				else
+					this._rawData = new byte[COMMAND_SIZE_WRITE_ORIG + 2];
+
 				this.strideRaw = BitConverter.GetBytes(this.Stride);
 
 				string[] weightValues = this.Weight.ToString(CultureInfo.InvariantCulture).Split('.');
@@ -100,7 +105,7 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 				Buffer.BlockCopy(this.rmrRaw, 0, this._rawData, RMR_BYTE_LOC, RMR_BYTE_SIZE);
 				Buffer.BlockCopy(this.unitOfMeasureRaw, 0, this._rawData, UNIT_OF_MEASURE_BYTE_LOC, UNIT_OF_MEASURE_BYTE_SIZE);
 
-				if (this._rawData.Length == COMMAND_SIZE_WRITE_WITH_DOB_AND_SCREEN)
+				if (this.trioDevInfo.ModelNumber == 961)
 				{
 					string[] dateValues = this.DateOfBirth.Split('-');
 					this.dobYearRaw = BitConverter.GetBytes(int.Parse(dateValues[0]));
@@ -122,7 +127,7 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 					Buffer.BlockCopy(this.ageRaw, 0, this._rawData, AGE_BYTE_LOC, AGE_BYTE_SIZE);
 					Buffer.BlockCopy(this.screenOrientationRaw, 0, this._rawData, SCREEN_BYTE_LOC, SCREEN_BYTE_SIZE);
 				}
-				else if (this._rawData.Length == COMMAND_SIZE_WRITE_WITH_DOB)
+				/*else if (this._rawData.Length == COMMAND_SIZE_WRITE_WITH_DOB)
 				{
 					string[] dateValues = this.DateOfBirth.Split('-');
 					this.dobYearRaw = BitConverter.GetBytes(int.Parse(dateValues[0]));
@@ -135,7 +140,7 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 					Buffer.BlockCopy(this.dobMonthRaw, 0, this._rawData, DOB_MONTH_BYTE_LOC, DOB_MONTH_BYTE_SIZE);
 					Buffer.BlockCopy(this.dobDayRaw, 0, this._rawData, DOB_DAY_BYTE_LOC, DOB_DAY_BYTE_SIZE);
 					Buffer.BlockCopy(this.ageRaw, 0, this._rawData, AGE_BYTE_LOC, AGE_BYTE_SIZE);
-				}
+				}*/
 
 				//Add the two prefix bytes needed for the commands
 				//For 93x and 96x, 1st byte is the command prefix 0x1B while 2nd byte is the command ID
@@ -154,23 +159,24 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 			BLEParsingStatus parseStatus = BLEParsingStatus.ERROR;
 			await Task.Run(() => { 
 			
+				this._rawData = new byte[rawData.Length];
 				Array.Copy(rawData, this._rawData, rawData.Length);
 				this.IsReadCommand = true;
 				if (rawData[1] == 0x18)
 				{
 					this.IsReadCommand = false;
-					this.writeCommandResponseCodeRaw = new byte[WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE];
+					this.writeCommandResponseCodeRaw = new byte[Constants.INT32_BYTE_SIZE];
 					Array.Copy(this._rawData, 2, this.writeCommandResponseCodeRaw, INDEX_ZERO, WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE);
 					this.WriteCommandResponseCode = BitConverter.ToInt32(this.writeCommandResponseCodeRaw, INDEX_ZERO);
 				}
 
 				else
 				{ 
-					this.strideRaw = new byte[STRIDE_BYTE_SIZE];
-					this.weightWholeRaw = new byte[WEIGHT_WHOLE_BYTE_SIZE];
-					this.weightDecimalRaw = new byte[WEIGHT_DECIMAL_BYTE_SIZE];
-					this.rmrRaw = new byte[RMR_BYTE_SIZE];
-					this.unitOfMeasureRaw = new byte[UNIT_OF_MEASURE_BYTE_SIZE];
+					this.strideRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.weightWholeRaw = new byte[Constants.UINT16_BYTE_SIZE];
+					this.weightDecimalRaw = new byte[Constants.UINT16_BYTE_SIZE];
+					this.rmrRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.unitOfMeasureRaw = new byte[Constants.UINT16_BYTE_SIZE];
 
 					Array.Copy(this._rawData, STRIDE_BYTE_LOC, this.strideRaw, INDEX_ZERO, STRIDE_BYTE_SIZE);
 					Array.Copy(this._rawData, WEIGHT_WHOLE_BYTE_LOC, this.weightWholeRaw, INDEX_ZERO, WEIGHT_WHOLE_BYTE_SIZE);
@@ -188,11 +194,11 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 
 					if (this._rawData.Length == COMMAND_SIZE_WRITE_WITH_DOB_AND_SCREEN)
 					{
-						this.dobYearRaw = new byte[DOB_YEAR_BYTE_SIZE];
-						this.dobMonthRaw = new byte[DOB_MONTH_BYTE_SIZE];
-						this.dobDayRaw = new byte[DOB_DAY_BYTE_SIZE];
-						this.ageRaw = new byte[AGE_BYTE_SIZE];
-						this.screenOrientationRaw = new byte[SCREEN_BYTE_SIZE];
+						this.dobYearRaw = new byte[Constants.UINT16_BYTE_SIZE];
+						this.dobMonthRaw = new byte[Constants.UINT16_BYTE_SIZE];
+						this.dobDayRaw = new byte[Constants.UINT16_BYTE_SIZE];
+						this.ageRaw = new byte[Constants.INT32_BYTE_SIZE];
+						this.screenOrientationRaw = new byte[Constants.UINT16_BYTE_SIZE];
 
 						Array.Copy(this._rawData, DOB_YEAR_BYTE_LOC, this.dobYearRaw, INDEX_ZERO, DOB_YEAR_BYTE_SIZE);
 						Array.Copy(this._rawData, DOB_MONTH_BYTE_LOC, this.dobMonthRaw, INDEX_ZERO, DOB_MONTH_BYTE_SIZE);
@@ -210,10 +216,10 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 					}
 					else if (this._rawData.Length == COMMAND_SIZE_WRITE_WITH_DOB)
 					{
-						this.dobYearRaw = new byte[DOB_YEAR_BYTE_SIZE];
-						this.dobMonthRaw = new byte[DOB_MONTH_BYTE_SIZE];
-						this.dobDayRaw = new byte[DOB_DAY_BYTE_SIZE];
-						this.ageRaw = new byte[AGE_BYTE_SIZE];
+						this.dobYearRaw = new byte[Constants.UINT16_BYTE_SIZE];
+						this.dobMonthRaw = new byte[Constants.UINT16_BYTE_SIZE];
+						this.dobDayRaw = new byte[Constants.UINT16_BYTE_SIZE];
+						this.ageRaw = new byte[Constants.INT32_BYTE_SIZE];
 
 						Array.Copy(this._rawData, DOB_YEAR_BYTE_LOC, this.dobYearRaw, INDEX_ZERO, DOB_YEAR_BYTE_SIZE);
 						Array.Copy(this._rawData, DOB_MONTH_BYTE_LOC, this.dobMonthRaw, INDEX_ZERO, DOB_MONTH_BYTE_SIZE);
@@ -235,19 +241,30 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 
 		private void ClearData()
 		{
-			Array.Clear (this._rawData,INDEX_ZERO, this._rawData.Length);
-			Array.Clear (this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
-
-			Array.Clear (this.strideRaw, INDEX_ZERO, this.strideRaw.Length);
-			Array.Clear (this.weightWholeRaw, INDEX_ZERO, this.weightWholeRaw.Length);
-			Array.Clear (this.weightDecimalRaw, INDEX_ZERO, this.weightDecimalRaw.Length);
-			Array.Clear (this.rmrRaw, INDEX_ZERO, this.rmrRaw.Length);
-			Array.Clear (this.unitOfMeasureRaw, INDEX_ZERO, this.unitOfMeasureRaw.Length);
-			Array.Clear (this.dobYearRaw, INDEX_ZERO, this.dobYearRaw.Length);
-			Array.Clear (this.dobMonthRaw, INDEX_ZERO, this.dobMonthRaw.Length);
-			Array.Clear (this.dobDayRaw, INDEX_ZERO, this.dobDayRaw.Length);
-			Array.Clear (this.ageRaw, INDEX_ZERO, this.ageRaw.Length);
-			Array.Clear (this.screenOrientationRaw, INDEX_ZERO, this.screenOrientationRaw.Length);
+			if (this._rawData != null && this._rawData.Length > 0)
+				Array.Clear (this._rawData,INDEX_ZERO, this._rawData.Length);
+			if (this._readCommandRawData != null && this._readCommandRawData.Length > 0)
+				Array.Clear (this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
+			if (this.strideRaw != null && this.strideRaw.Length > 0)
+				Array.Clear (this.strideRaw, INDEX_ZERO, this.strideRaw.Length);
+			if (this.weightWholeRaw != null && this.weightWholeRaw.Length > 0)
+				Array.Clear (this.weightWholeRaw, INDEX_ZERO, this.weightWholeRaw.Length);
+			if (this.weightDecimalRaw != null && this.weightDecimalRaw.Length > 0)
+				Array.Clear (this.weightDecimalRaw, INDEX_ZERO, this.weightDecimalRaw.Length);
+			if (this.rmrRaw != null && this.rmrRaw.Length > 0)
+				Array.Clear (this.rmrRaw, INDEX_ZERO, this.rmrRaw.Length);
+			if (this.unitOfMeasureRaw != null && this.unitOfMeasureRaw.Length > 0)
+				Array.Clear (this.unitOfMeasureRaw, INDEX_ZERO, this.unitOfMeasureRaw.Length);
+			if (this.dobYearRaw != null && this.dobYearRaw.Length > 0)
+				Array.Clear (this.dobYearRaw, INDEX_ZERO, this.dobYearRaw.Length);
+			if (this.dobMonthRaw != null && this.dobMonthRaw.Length > 0)
+				Array.Clear (this.dobMonthRaw, INDEX_ZERO, this.dobMonthRaw.Length);
+			if (this.dobDayRaw != null && this.dobDayRaw.Length > 0)
+				Array.Clear (this.dobDayRaw, INDEX_ZERO, this.dobDayRaw.Length);
+			if (this.ageRaw != null && this.ageRaw.Length > 0)
+				Array.Clear (this.ageRaw, INDEX_ZERO, this.ageRaw.Length);
+			if (this.screenOrientationRaw != null && this.screenOrientationRaw.Length > 0)
+				Array.Clear (this.screenOrientationRaw, INDEX_ZERO, this.screenOrientationRaw.Length);
 
 		}
 
@@ -255,6 +272,7 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 		public async Task<byte[]> GetReadCommand()
 		{
 			await Task.Run(() => { 
+				this._readCommandRawData = new byte[COMMAND_SIZE_READ];
 				byte[] commandPrefix = BitConverter.GetBytes(COMMAND_PREFIX);
 				byte[] commandID = BitConverter.GetBytes(COMMAND_ID_READ);
 				Buffer.BlockCopy(commandID, INDEX_ZERO, this._readCommandRawData, INDEX_ZERO + 1, 1);

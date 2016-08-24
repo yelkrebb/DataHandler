@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Threading.Tasks;
 using Motion.Core.Data.BleData.Trio;
+using Motion.Mobile.Utilities;
 namespace Motion.Core.Data.BleData.Trio.SettingsData
 {
 	public class MedicineAlarm:ITrioDataHandler

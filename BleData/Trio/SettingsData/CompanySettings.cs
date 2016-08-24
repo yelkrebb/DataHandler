@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Threading.Tasks;
+using Motion.Mobile.Utilities;
 using Motion.Core.Data.BleData.Trio;
 
 namespace Motion.Core.Data.BleData.Trio.SettingsData
@@ -9,7 +10,8 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 	{
 		const int COMMAND_SIZE_WRITE_ORIG = 12;
 		const int COMMAND_SIZE_WRITE_WITH_MULTI_INT = 13;
-		const int COMMAND_SIZE_READ = 1;
+		const int COMMAND_SIZE_READ = 2;
+
 
 		const int COMMAND_PREFIX = 0x1B;
 		const int COMMAND_ID_WRITE = 0x1D;
@@ -74,17 +76,27 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 
 		private void ClearData()
 		{
+			if (this._rawData != null && this._rawData.Length > 0)
 			Array.Clear(this._rawData, INDEX_ZERO, this._rawData.Length);
+			if (this._readCommandRawData != null && this._readCommandRawData.Length > 0)
 			Array.Clear(this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
-
+			if (this.tenacityStepsRaw != null && this.tenacityStepsRaw.Length > 0)
 			Array.Clear(tenacityStepsRaw, INDEX_ZERO, tenacityStepsRaw.Length);
+			if (this.intensityStepsRaw != null && this.intensityStepsRaw.Length > 0)
 			Array.Clear(intensityStepsRaw, INDEX_ZERO, intensityStepsRaw.Length);
+			if (this.intensityTimeRaw != null && this.intensityTimeRaw.Length > 0)
 			Array.Clear(intensityTimeRaw, INDEX_ZERO, intensityTimeRaw.Length);
+			if (this.intensityMinuteThresholdRaw != null && this.intensityMinuteThresholdRaw.Length > 0)
 			Array.Clear(intensityMinuteThresholdRaw, INDEX_ZERO, intensityMinuteThresholdRaw.Length);
+			if (this.intensityRestMinuteAllowedRaw != null && this.intensityRestMinuteAllowedRaw.Length > 0)
 			Array.Clear(intensityRestMinuteAllowedRaw, INDEX_ZERO, intensityRestMinuteAllowedRaw.Length);
+			if (this.frequencyStepsRaw != null && this.frequencyStepsRaw.Length > 0)
 			Array.Clear(frequencyStepsRaw, INDEX_ZERO, frequencyStepsRaw.Length);
+			if (this.frequencyCycleTimeRaw != null && this.frequencyCycleTimeRaw.Length > 0)
 			Array.Clear(frequencyCycleTimeRaw, INDEX_ZERO, frequencyCycleTimeRaw.Length);
+			if (this.frequencyCycleAndIntervalRaw != null && this.frequencyCycleAndIntervalRaw.Length > 0)
 			Array.Clear(frequencyCycleAndIntervalRaw, INDEX_ZERO, frequencyCycleAndIntervalRaw.Length);
+			if (this.intensityCycleRaw != null && this.intensityCycleRaw.Length > 0)
 			Array.Clear(intensityCycleRaw, INDEX_ZERO, intensityCycleRaw.Length);
 
 		}
@@ -102,6 +114,7 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 		{
 			await Task.Run(() =>
 			{
+				this._readCommandRawData = new byte[COMMAND_SIZE_READ];
 				byte[] commandPrefix = BitConverter.GetBytes(COMMAND_PREFIX);
 				byte[] commandID = BitConverter.GetBytes(COMMAND_ID_READ);
 				Buffer.BlockCopy(commandID, INDEX_ZERO, this._readCommandRawData, INDEX_ZERO+1, 1);
@@ -112,8 +125,16 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 
 		public async Task<byte[]> GetWriteCommand()
 		{
+			
+			
 			await Task.Run(() =>
 			{
+
+				if (this.trioDevInfo.ModelNumber != 932)
+					this._rawData = new byte[COMMAND_SIZE_WRITE_WITH_MULTI_INT + 2];
+				else
+					this._rawData = new byte[COMMAND_SIZE_WRITE_ORIG + 2];
+
 				this.tenacityStepsRaw = BitConverter.GetBytes(this.TenacitySteps);
 				this.intensityStepsRaw = BitConverter.GetBytes(this.IntensitySteps);
 				this.intensityTimeRaw = BitConverter.GetBytes(this.IntensityTime);
@@ -132,8 +153,10 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 				Buffer.BlockCopy(this.frequencyCycleTimeRaw, 0, this._rawData, FREQUENCY_CYCLE_TIME_BYTE_LOC, FREQUENCY_CYCLE_TIME_BYTE_SIZE);
 				Buffer.BlockCopy(this.frequencyCycleAndIntervalRaw, 0, this._rawData, FREQUENCY_CYCLE_AND_INTERVAL_BYTE_LOC, FREQUENCY_CYCLE_AND_INTERVAL_BYTE_SIZE);
 
-				if ((this.trioDevInfo.ModelNumber == 961 || this.trioDevInfo.ModelNumber == 962 ||
-					(this.trioDevInfo.ModelNumber == 939 && this.trioDevInfo.FirmwareVersion >= 0.3f)) || this._rawData.Length > 14)
+				//if ((this.trioDevInfo.ModelNumber == 961 || this.trioDevInfo.ModelNumber == 962 ||
+				//	(this.trioDevInfo.ModelNumber == 939 && this.trioDevInfo.FirmwareVersion >= 0.3f)) || this._rawData.Length > 14)
+				// commented out since intensity cycle is not needed only in 932
+				if(this.trioDevInfo.ModelNumber != 932)
 				{
 					this.intensityCycleRaw = BitConverter.GetBytes(this.IntensityCycle);
 					Buffer.BlockCopy(this.intensityCycleRaw, 0, this._rawData, INTENSITY_CYCLE_BYTE_LOC, INTENSITY_CYCLE_BYTE_SIZE);
@@ -154,31 +177,33 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 			BLEParsingStatus parseStatus = BLEParsingStatus.ERROR;
 			await Task.Run(() =>
 			{
+
+				this._rawData = new byte[rawData.Length];
 				Array.Copy(rawData, this._rawData, rawData.Length);
 
 				this.IsReadCommand = true;
 				if (rawData[1] == 0x1D)
 				{
 					this.IsReadCommand = false;
-					this.writeCommandResponseCodeRaw = new byte[WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE];
+					this.writeCommandResponseCodeRaw = new byte[Constants.INT32_BYTE_SIZE];
 					Array.Copy(this._rawData, 2, this.writeCommandResponseCodeRaw, INDEX_ZERO, WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE);
 					this.WriteCommandResponseCode = BitConverter.ToInt32(this.writeCommandResponseCodeRaw, INDEX_ZERO);
 				}
 
 				else
 				{ 
-					this.tenacityStepsRaw = new byte[TENACITY_STEPS_BYTE_SIZE];
-					this.frequencyStepsRaw = new byte[FREQUENCY_STEPS_BYTE_SIZE];
-					this.frequencyCycleTimeRaw = new byte[FREQUENCY_CYCLE_TIME_BYTE_SIZE];
-					this.frequencyCycleAndIntervalRaw = new byte[FREQUENCY_CYCLE_AND_INTERVAL_BYTE_SIZE];
+					this.tenacityStepsRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.frequencyStepsRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.frequencyCycleTimeRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.frequencyCycleAndIntervalRaw = new byte[Constants.INT32_BYTE_SIZE];
 
 
 
-					this.intensityStepsRaw = new byte[INTENSITY_STEPS_BYTE_SIZE];
-					this.intensityTimeRaw = new byte[INTENSITY_TIME_BYTE_SIZE];
-					this.intensityMinuteThresholdRaw = new byte[INTENSITY_MINUTE_THRESHOLD_BYTE_SIZE];
-					this.intensityRestMinuteAllowedRaw = new byte[INTENSITY_REST_MINUTE_ALLOWED_BYTE_SIZE];
-					this.intensityCycleRaw = new byte[INTENSITY_CYCLE_BYTE_SIZE];
+					this.intensityStepsRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.intensityTimeRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.intensityMinuteThresholdRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.intensityRestMinuteAllowedRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.intensityCycleRaw = new byte[Constants.INT32_BYTE_SIZE];
 
 					Array.Copy(this._rawData, TENACITY_STEPS_BYTE_LOC, this.tenacityStepsRaw, INDEX_ZERO, TENACITY_STEPS_BYTE_SIZE);
 					Array.Copy(this._rawData, INTENSITY_STEPS_BYTE_LOC, this.intensityStepsRaw, INDEX_ZERO, INTENSITY_STEPS_BYTE_SIZE);

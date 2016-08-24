@@ -60,6 +60,9 @@
     <Compile Include="BleData\Trio\StepsData\StepsTableData.cs" />
     <Compile Include="BleData\Trio\StepsData\ProfileBlocksData.cs" />
     <Compile Include="BleData\Trio\SettingsData\SensitivitySettings.cs" />
+    <Compile Include="BleData\FT900\SettingsData\FT900SensitivitySettings.cs" />
+    <Compile Include="BleData\FT900\StepsData\FT900StepsTableData.cs" />
+    <Compile Include="BleData\Trio\StepsData\SeizureBlocksData.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BleData\" />
@@ -70,6 +73,13 @@
     <Folder Include="BleData\FT900\SettingsData\" />
     <Folder Include="BleData\Trio\Others\" />
     <Folder Include="BleData\FT900\Others\" />
+    <Folder Include="BleData\FT900\StepsData\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Motion.Mobile.Utilities\Motion.Mobile.Utilities.csproj">
+      <Project>{075395FC-AD59-492A-B895-E9BA0001966C}</Project>
+      <Name>Motion.Mobile.Utilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>

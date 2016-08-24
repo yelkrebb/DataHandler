@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Threading.Tasks;
+using Motion.Mobile.Utilities;
 using Motion.Core.Data.BleData.Trio;
 
 namespace Motion.Core.Data.BleData.Trio.SettingsData
@@ -10,6 +11,8 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 		const int COMMAND_PREFIX = 0x1B;
 		const int COMMAND_ID_WRITE = 0x2A;
 		const int COMMAND_ID_READ = 0x2B;
+		const int COMMAND_SIZE_READ = 2;
+		const int COMMAND_SIZE_WRITE = 2;
 
 		const int INDEX_ZERO = 0;
 
@@ -47,10 +50,14 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 
 		private void ClearData()
 		{
-			Array.Clear(this._rawData, INDEX_ZERO, this._rawData.Length);
-			Array.Clear(this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
-			Array.Clear(this.alarmDurationRaw, INDEX_ZERO, this.alarmDurationRaw.Length);
-			Array.Clear(this.alarmBeepTypeRaw, INDEX_ZERO, this.alarmBeepTypeRaw.Length);
+			if (this._rawData != null && this._rawData.Length > 0)
+				Array.Clear(this._rawData, INDEX_ZERO, this._rawData.Length);
+			if (this._readCommandRawData != null && this._readCommandRawData.Length > 0)
+				Array.Clear(this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
+			if (this.alarmDurationRaw != null && this.alarmDurationRaw.Length > 0)
+				Array.Clear(this.alarmDurationRaw, INDEX_ZERO, this.alarmDurationRaw.Length);
+			if (this.alarmBeepTypeRaw != null && this.alarmBeepTypeRaw.Length > 0)
+				Array.Clear(this.alarmBeepTypeRaw, INDEX_ZERO, this.alarmBeepTypeRaw.Length);
 
 		}
 
@@ -59,20 +66,21 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 			BLEParsingStatus parsingStatus = BLEParsingStatus.ERROR;
 			await Task.Run(() =>
 			{
+				this._rawData = new byte[rawData.Length];
 				Array.Copy(rawData, this._rawData, rawData.Length);
 				this.IsReadCommand = true;
 				if (rawData[1] == 0x2A)
 				{
 					this.IsReadCommand = false;
-					this.writeCommandResponseCodeRaw = new byte[WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE];
+					this.writeCommandResponseCodeRaw = new byte[Constants.INT32_BYTE_SIZE];
 					Array.Copy(this._rawData, 2, this.writeCommandResponseCodeRaw, INDEX_ZERO, WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE);
 					this.WriteCommandResponseCode = BitConverter.ToInt32(this.writeCommandResponseCodeRaw, INDEX_ZERO);
 				}
 
 				else
 				{
-					this.alarmDurationRaw = new byte[ALARM_DURATION_BYTE_SIZE];
-					this.alarmBeepTypeRaw = new byte[ALARM_BEEP_TYPE_BYTE_SIZE];
+					this.alarmDurationRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.alarmBeepTypeRaw = new byte[Constants.INT32_BYTE_SIZE];
 					Array.Copy(this._rawData, ALARM_DURATION_LOC, this.alarmDurationRaw, INDEX_ZERO, ALARM_DURATION_BYTE_SIZE);
 					Array.Copy(this._rawData, ALARM_BEEP_TYPE_LOC, this.alarmBeepTypeRaw, INDEX_ZERO, ALARM_BEEP_TYPE_BYTE_SIZE);
 
@@ -95,6 +103,7 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 		{
 			await Task.Run(() =>
 			{
+				this._readCommandRawData = new byte[COMMAND_SIZE_READ];
 				byte[] commandPrefix = BitConverter.GetBytes(COMMAND_PREFIX);
 				byte[] commandID = BitConverter.GetBytes(COMMAND_ID_READ);
 				Buffer.BlockCopy(commandID, INDEX_ZERO, this._readCommandRawData, INDEX_ZERO + 1, 1);
@@ -108,6 +117,7 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 		{
 			await Task.Run(() =>
 			{
+				this._rawData = new byte[COMMAND_SIZE_WRITE + 2];
 
 				this.alarmDurationRaw = BitConverter.GetBytes(this.AlarmDuration);
 				this.alarmBeepTypeRaw = BitConverter.GetBytes(this.BeepType);

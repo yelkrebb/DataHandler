@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Threading.Tasks;
+using Motion.Mobile.Utilities;
 using Motion.Core.Data.BleData.Trio;
 
 namespace Motion.Core.Data.BleData.Trio.SettingsData
@@ -12,6 +13,7 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 
 		const int COMMAND_PREFIX = 0x1B;
 		const int COMMAND_ID_WRITE = 0x29;
+		const int COMMAND_SIZE_WRITE = 1;
 
 		const int INDEX_ZERO = 0;
 
@@ -41,10 +43,12 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 
 		private void ClearData()
 		{
-			Array.Clear(this._rawData, INDEX_ZERO, this._rawData.Length);
-			Array.Clear(this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
-
-			Array.Clear(this.deviceModeSettingRaw, INDEX_ZERO, this.deviceModeSettingRaw.Length);
+			if (this._rawData != null && this._rawData.Length > 0)
+				Array.Clear(this._rawData, INDEX_ZERO, this._rawData.Length);
+			if (this._readCommandRawData != null && this._readCommandRawData.Length > 0)
+				Array.Clear(this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
+			if (this.deviceModeSettingRaw != null && this.deviceModeSettingRaw.Length > 0)
+				Array.Clear(this.deviceModeSettingRaw, INDEX_ZERO, this.deviceModeSettingRaw.Length);
 
 		}
 
@@ -53,8 +57,8 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 			BLEParsingStatus parsingStatus = BLEParsingStatus.ERROR;
 			await Task.Run(() => 
 			{ 
-				
-				this.deviceModeSettingRaw = new byte[DEVICEMODE_SETTING_BYTE_SIZE];
+				this._rawData = new byte[rawData.Length];
+				this.deviceModeSettingRaw = new byte[Constants.INT32_BYTE_SIZE];
 				Array.Copy(this._rawData, DEVICEMODE_SETTING_LOC, this.deviceModeSettingRaw, INDEX_ZERO, DEVICEMODE_SETTING_BYTE_SIZE);
 
 				if (this.trioDevInfo.ModelNumber == 932 || this.trioDevInfo.ModelNumber == 939)
@@ -89,6 +93,7 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 		{
 			await Task.Run(() => 
 			{
+				this._rawData = new byte[COMMAND_SIZE_WRITE + 2];
 				if (this.trioDevInfo.ModelNumber == 932 || this.trioDevInfo.ModelNumber == 939 || this.trioDevInfo.ModelNumber == 936)
 				{
 					this.deviceModeSettingRaw = BitConverter.GetBytes(this.EnableBroadcastAlways);

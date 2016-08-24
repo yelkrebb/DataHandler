@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Threading.Tasks;
+using Motion.Mobile.Utilities;
 using Motion.Core.Data.BleData.Trio;
 
 namespace Motion.Core.Data.BleData.Trio.SettingsData
@@ -11,6 +12,8 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 		const int COMMAND_PREFIX = 0x1B;
 		const int COMMAND_ID_WRITE = 0x12;
 		const int COMMAND_ID_READ = 0x13;
+		const int COMMAND_SIZE_READ = 2;
+		const int COMMAND_SIZE_WRITE = 1;
 
 		const int INDEX_ZERO = 0;
 
@@ -48,9 +51,12 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 
 		private void ClearData()
 		{
-			Array.Clear(this._rawData, INDEX_ZERO, this._rawData.Length);
-			Array.Clear(this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
-			Array.Clear(this.deviceStatusSettingRaw, INDEX_ZERO, this.deviceStatusSettingRaw.Length);
+			if (this._rawData != null && this._rawData.Length > 0)
+				Array.Clear(this._rawData, INDEX_ZERO, this._rawData.Length);
+			if (this._readCommandRawData != null && this._readCommandRawData.Length > 0)
+				Array.Clear(this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
+			if (this.deviceStatusSettingRaw != null && this.deviceStatusSettingRaw.Length > 0)
+				Array.Clear(this.deviceStatusSettingRaw, INDEX_ZERO, this.deviceStatusSettingRaw.Length);
 
 		}
 
@@ -59,19 +65,20 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 			BLEParsingStatus parsingStatus = BLEParsingStatus.ERROR;
 			await Task.Run(() =>
 			{
+				this._rawData = new byte[rawData.Length];
 				Array.Copy(rawData, this._rawData, rawData.Length);
 				this.IsReadCommand = true;
 				if (rawData[1] == 0x12)
 				{
 					this.IsReadCommand = false;
-					this.writeCommandResponseCodeRaw = new byte[WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE];
+					this.writeCommandResponseCodeRaw = new byte[Constants.INT32_BYTE_SIZE];
 					Array.Copy(this._rawData, 2, this.writeCommandResponseCodeRaw, INDEX_ZERO, WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE);
 					this.WriteCommandResponseCode = BitConverter.ToInt32(this.writeCommandResponseCodeRaw, INDEX_ZERO);
 				}
 
 				else
 				{ 
-					this.deviceStatusSettingRaw = new byte[DEVICE_STATUS_SETTING_BYTE_SIZE];
+					this.deviceStatusSettingRaw = new byte[Constants.INT32_BYTE_SIZE];
 					Array.Copy(this._rawData, DEVICE_STATUS_SETTING_LOC, this.deviceStatusSettingRaw, INDEX_ZERO, DEVICE_STATUS_SETTING_BYTE_SIZE);
 
 					if (this.trioDevInfo.ModelNumber == 932 || this.trioDevInfo.ModelNumber == 939 || this.trioDevInfo.ModelNumber == 936)
@@ -108,6 +115,7 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 		{
 			await Task.Run(() =>
 			{
+				this._readCommandRawData = new byte[COMMAND_SIZE_READ];
 				byte[] commandPrefix = BitConverter.GetBytes(COMMAND_PREFIX);
 				byte[] commandID = BitConverter.GetBytes(COMMAND_ID_READ);
 				Buffer.BlockCopy(commandID, INDEX_ZERO, this._readCommandRawData, INDEX_ZERO + 1, 1);
@@ -121,6 +129,8 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 		{
 			await Task.Run(() =>
 			{
+				this._rawData = new byte[COMMAND_SIZE_WRITE + 2];
+
 				int flagValue = 0x00;
 				flagValue |= this.PairingStatus;
 				this.deviceStatusSettingRaw = BitConverter.GetBytes(flagValue);

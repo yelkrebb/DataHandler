@@ -1,0 +1,7 @@
+/Users/cnapenas/Documents/Trio Codes/From Klang XamTes/XamTest/Motion.Core.Data/obj/Debug/.NETPortable,Version=v4.5,Profile=Profile78.AssemblyAttribute.cs
+/Users/cnapenas/Documents/Trio Codes/From Klang XamTes/XamTest/Motion.Core.Data/bin/Debug/Motion.Mobile.Utilities.dll
+/Users/cnapenas/Documents/Trio Codes/From Klang XamTes/XamTest/Motion.Core.Data/bin/Debug/Motion.Mobile.Utilities.dll.mdb
+/Users/cnapenas/Documents/Trio Codes/From Klang XamTes/XamTest/Motion.Core.Data/bin/Debug/Motion.Core.Data.dll.mdb
+/Users/cnapenas/Documents/Trio Codes/From Klang XamTes/XamTest/Motion.Core.Data/bin/Debug/Motion.Core.Data.dll
+/Users/cnapenas/Documents/Trio Codes/From Klang XamTes/XamTest/Motion.Core.Data/obj/Debug/Motion.Core.Data.dll
+/Users/cnapenas/Documents/Trio Codes/From Klang XamTes/XamTest/Motion.Core.Data/obj/Debug/Motion.Core.Data.dll.mdb

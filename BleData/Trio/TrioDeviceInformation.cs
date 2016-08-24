@@ -53,16 +53,24 @@ namespace Motion.Core.Data.BleData.Trio
 
 		private void ClearData()
 		{
-			Array.Clear(this._rawData, INDEX_ZERO, this._rawData.Length);
-			Array.Clear(this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
-
-			Array.Clear(this.serialNumberRaw, INDEX_ZERO, this.serialNumberRaw.Length);
-			Array.Clear(this.modelNumberRaw, INDEX_ZERO, this.modelNumberRaw.Length);
-			Array.Clear(this.firmwareVersionRaw, INDEX_ZERO, this.firmwareVersionRaw.Length);
-			Array.Clear(this.broadcastTypeRaw, INDEX_ZERO, this.broadcastTypeRaw.Length);
-			Array.Clear(this.hardwareVersionRaw, INDEX_ZERO, this.hardwareVersionRaw.Length);
-			Array.Clear(this.batteryLevelRaw, INDEX_ZERO, this.batteryLevelRaw.Length);
-			Array.Clear(this.bootloaderVersionRaw, INDEX_ZERO, this.bootloaderVersionRaw.Length);
+			if (this._rawData != null && this._rawData.Length > 0)
+				Array.Clear(this._rawData, INDEX_ZERO, this._rawData.Length);
+			if (this._readCommandRawData != null && this._readCommandRawData.Length > 0)
+				Array.Clear(this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
+			if (this.serialNumberRaw != null && this.serialNumberRaw.Length > 0)
+				Array.Clear(this.serialNumberRaw, INDEX_ZERO, this.serialNumberRaw.Length);
+			if (this.modelNumberRaw != null && this.modelNumberRaw.Length > 0)
+				Array.Clear(this.modelNumberRaw, INDEX_ZERO, this.modelNumberRaw.Length);
+			if (this.firmwareVersionRaw != null && this.firmwareVersionRaw.Length > 0)
+				Array.Clear(this.firmwareVersionRaw, INDEX_ZERO, this.firmwareVersionRaw.Length);
+			if (this.broadcastTypeRaw != null && this.broadcastTypeRaw.Length > 0)
+				Array.Clear(this.broadcastTypeRaw, INDEX_ZERO, this.broadcastTypeRaw.Length);
+			if (this.hardwareVersionRaw != null && this.hardwareVersionRaw.Length > 0)
+				Array.Clear(this.hardwareVersionRaw, INDEX_ZERO, this.hardwareVersionRaw.Length);
+			if (this.batteryLevelRaw != null && this.batteryLevelRaw.Length > 0)
+				Array.Clear(this.batteryLevelRaw, INDEX_ZERO, this.batteryLevelRaw.Length);
+			if (this.bootloaderVersionRaw != null && this.bootloaderVersionRaw.Length > 0)
+				Array.Clear(this.bootloaderVersionRaw, INDEX_ZERO, this.bootloaderVersionRaw.Length);
 		}
 
 		public TrioDeviceInformation()

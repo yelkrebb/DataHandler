@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Globalization;
 using System.Threading.Tasks;
+using Motion.Mobile.Utilities;
 using Motion.Core.Data.BleData.Trio;
 
 namespace Motion.Core.Data.BleData.Trio.SettingsData
 {
 	public class SeizureSettings:ITrioDataHandler
 	{
-		const int COMMAND_SIZE_WRITE = 2;
+		const int COMMAND_SIZE_WRITE_OLD = 2;
+		const int COMMAND_SIZE_WRITE = 3;
 		const int COMMAND_SIZE_WRITE_WITH_ON_OFF = 3;
-		const int COMMAND_SIZE_READ = 1;
+		const int COMMAND_SIZE_READ = 2;
 
 		const int COMMAND_PREFIX = 0x1B;
 		const int COMMAND_ID_WRITE = 0x31;
@@ -53,12 +55,16 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 
 		private void ClearData()
 		{
-			Array.Clear (this._rawData,INDEX_ZERO, this._rawData.Length);
-			Array.Clear (this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
-
-			Array.Clear (this.seizureNumberOfRecordsRaw, INDEX_ZERO, this.seizureNumberOfRecordsRaw.Length);
-			Array.Clear (this.seizureSamplingFrequencyRaw, INDEX_ZERO, this.seizureSamplingFrequencyRaw.Length);
-			Array.Clear (this.seizureSettingsRaw, INDEX_ZERO, this.seizureSettingsRaw.Length);
+			if (this._rawData != null && this._rawData.Length > 0)
+				Array.Clear (this._rawData,INDEX_ZERO, this._rawData.Length);
+			if (this._readCommandRawData != null && this._readCommandRawData.Length > 0)
+				Array.Clear (this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
+			if (this.seizureNumberOfRecordsRaw != null && this.seizureNumberOfRecordsRaw.Length > 0)
+				Array.Clear (this.seizureNumberOfRecordsRaw, INDEX_ZERO, this.seizureNumberOfRecordsRaw.Length);
+			if (this.seizureSamplingFrequencyRaw != null && this.seizureSamplingFrequencyRaw.Length > 0)
+				Array.Clear (this.seizureSamplingFrequencyRaw, INDEX_ZERO, this.seizureSamplingFrequencyRaw.Length);
+			if (this.seizureSettingsRaw != null && this.seizureSettingsRaw.Length > 0)
+				Array.Clear (this.seizureSettingsRaw, INDEX_ZERO, this.seizureSettingsRaw.Length);
 
 		}
 
@@ -68,21 +74,22 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 			BLEParsingStatus parseStatus = BLEParsingStatus.ERROR;
 			await Task.Run(() =>
 			{ 
+				this._rawData = new byte[rawData.Length];
 				Array.Copy(rawData, this._rawData, rawData.Length);
 				this.IsReadCommand = true;
 				if (rawData[1] == 0x31)
 				{
 					this.IsReadCommand = false;
-					this.writeCommandResponseCodeRaw = new byte[WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE];
+					this.writeCommandResponseCodeRaw = new byte[Constants.INT32_BYTE_SIZE];
 					Array.Copy(this._rawData, 2, this.writeCommandResponseCodeRaw, INDEX_ZERO, WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE);
 					this.WriteCommandResponseCode = BitConverter.ToInt32(this.writeCommandResponseCodeRaw, INDEX_ZERO);
 				}
 
 				else
 				{ 
-					this.seizureNumberOfRecordsRaw = new byte[SEIZURE_NO_OF_REC_BYTE_SIZE];
-					this.seizureSamplingFrequencyRaw = new byte[SEIZURE_SAMPLING_FREQUENCY_BYTE_SIZE];
-					this.seizureSettingsRaw = new byte[SEIZURE_SETTINGS_BYTE_SIZE];
+					this.seizureNumberOfRecordsRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.seizureSamplingFrequencyRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.seizureSettingsRaw = new byte[Constants.INT32_BYTE_SIZE];
 
 					Array.Copy(this._rawData, SEIZURE_NO_OF_REC_BYTE_LOC, this.seizureNumberOfRecordsRaw, INDEX_ZERO, SEIZURE_NO_OF_REC_BYTE_SIZE);
 					Array.Copy(this._rawData, SEIZURE_SAMPLING_FREQUENCY_BYTE_LOC, this.seizureSamplingFrequencyRaw, INDEX_ZERO, SEIZURE_SAMPLING_FREQUENCY_BYTE_SIZE);
@@ -108,6 +115,7 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 		{
 			await Task.Run(() =>
 			{ 
+				this._readCommandRawData = new byte[COMMAND_SIZE_READ];
 				byte[] commandPrefix = BitConverter.GetBytes(COMMAND_PREFIX);
 				byte[] commandID = BitConverter.GetBytes(COMMAND_ID_READ);
 				Buffer.BlockCopy(commandID, INDEX_ZERO, this._readCommandRawData, INDEX_ZERO + 1, 1);
@@ -121,6 +129,14 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 		{
 			await Task.Run(() =>
 			{ 
+				if (!((this.trioDevInfo.ModelNumber == 936 && this.trioDevInfo.FirmwareVersion < 2.2f) ||
+					(this.trioDevInfo.ModelNumber == 939 && this.trioDevInfo.FirmwareVersion < 0.3f) ||
+					(this.trioDevInfo.ModelNumber == 961 && this.trioDevInfo.FirmwareVersion < 1.5f)))
+				
+					this._rawData = new byte[COMMAND_SIZE_WRITE + 2];
+				else
+					this._rawData = new byte[COMMAND_SIZE_WRITE_OLD + 2];
+
 				this.seizureNumberOfRecordsRaw = BitConverter.GetBytes(this.SeizureNumberOfRecords);
 				this.seizureSamplingFrequencyRaw = BitConverter.GetBytes(this.SeizureSamplingFrequency);
 

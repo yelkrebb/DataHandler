@@ -89,15 +89,25 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 
 		private void ClearData()
 		{
+			if (this._rawData != null && this._rawData.Length > 0)
 			Array.Clear(this._rawData, INDEX_ZERO, this._rawData.Length);
+			if (this._rawData != null && this._rawData.Length > 0)
 			Array.Clear(this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
+			if (this._rawData != null && this._rawData.Length > 0)
 			Array.Clear(this.yrDataRaw, INDEX_ZERO, this.yrDataRaw.Length);
+			if (this._rawData != null && this._rawData.Length > 0)
 			Array.Clear(this.monthDataRaw, INDEX_ZERO, this.monthDataRaw.Length);
+			if (this._rawData != null && this._rawData.Length > 0)
 			Array.Clear(this.dayDataRaw, INDEX_ZERO, this.dayDataRaw.Length);
+			if (this._rawData != null && this._rawData.Length > 0)
 			Array.Clear(this.hrNumberRaw, INDEX_ZERO, this.hrNumberRaw.Length);
+			if (this._rawData != null && this._rawData.Length > 0)
 			Array.Clear(this.sentHourFlagRaw, INDEX_ZERO, this.sentHourFlagRaw.Length);
+			if (this._rawData != null && this._rawData.Length > 0)
 			Array.Clear(this.profileGeneratedRaw, INDEX_ZERO, this.profileGeneratedRaw.Length);
+			if (this._rawData != null && this._rawData.Length > 0)
 			Array.Clear(this.fraudTableRaw, INDEX_ZERO, this.fraudTableRaw.Length);
+			if (this._rawData != null && this._rawData.Length > 0)
 			Array.Clear(this.writeCommandResponseCodeRaw, INDEX_ZERO, this.writeCommandResponseCodeRaw.Length);
 		}
 
