@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Motion.Mobile.Utilities;
 using Motion.Core.Data.BleData.Trio;
 
 namespace Motion.Core.Data.BleData.Trio.StepsData
@@ -29,6 +30,10 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 		const int COMMAND_PREFIX = 0x1B;
 		const int COMMAND_ID_READ = 0x22;
 		const int COMMAND_ID_WRITE = 0x25;
+		const int COMMAND_SIZE_READ_OLD = 2;
+		const int COMMAND_SIZE_READ = 4;
+		const int COMMAND_SIZE_WRITE = 7;
+		const int COMMAND_SIZE_WRITE_OLD = 6;
 		const int INDEX_ZERO = 0;
 
 
@@ -90,25 +95,25 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 		private void ClearData()
 		{
 			if (this._rawData != null && this._rawData.Length > 0)
-			Array.Clear(this._rawData, INDEX_ZERO, this._rawData.Length);
-			if (this._rawData != null && this._rawData.Length > 0)
-			Array.Clear(this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
-			if (this._rawData != null && this._rawData.Length > 0)
-			Array.Clear(this.yrDataRaw, INDEX_ZERO, this.yrDataRaw.Length);
-			if (this._rawData != null && this._rawData.Length > 0)
-			Array.Clear(this.monthDataRaw, INDEX_ZERO, this.monthDataRaw.Length);
-			if (this._rawData != null && this._rawData.Length > 0)
-			Array.Clear(this.dayDataRaw, INDEX_ZERO, this.dayDataRaw.Length);
-			if (this._rawData != null && this._rawData.Length > 0)
-			Array.Clear(this.hrNumberRaw, INDEX_ZERO, this.hrNumberRaw.Length);
-			if (this._rawData != null && this._rawData.Length > 0)
-			Array.Clear(this.sentHourFlagRaw, INDEX_ZERO, this.sentHourFlagRaw.Length);
-			if (this._rawData != null && this._rawData.Length > 0)
-			Array.Clear(this.profileGeneratedRaw, INDEX_ZERO, this.profileGeneratedRaw.Length);
-			if (this._rawData != null && this._rawData.Length > 0)
-			Array.Clear(this.fraudTableRaw, INDEX_ZERO, this.fraudTableRaw.Length);
-			if (this._rawData != null && this._rawData.Length > 0)
-			Array.Clear(this.writeCommandResponseCodeRaw, INDEX_ZERO, this.writeCommandResponseCodeRaw.Length);
+				Array.Clear(this._rawData, INDEX_ZERO, this._rawData.Length);
+			if (this._readCommandRawData != null && this._readCommandRawData.Length > 0)
+				Array.Clear(this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
+			if (this.yrDataRaw != null && this.yrDataRaw.Length > 0)
+				Array.Clear(this.yrDataRaw, INDEX_ZERO, this.yrDataRaw.Length);
+			if (this.monthDataRaw != null && this.monthDataRaw.Length > 0)
+				Array.Clear(this.monthDataRaw, INDEX_ZERO, this.monthDataRaw.Length);
+			if (this.dayDataRaw != null && this.dayDataRaw.Length > 0)
+				Array.Clear(this.dayDataRaw, INDEX_ZERO, this.dayDataRaw.Length);
+			if (this.hrNumberRaw != null && this.hrNumberRaw.Length > 0)
+				Array.Clear(this.hrNumberRaw, INDEX_ZERO, this.hrNumberRaw.Length);
+			if (this.sentHourFlagRaw != null && this.sentHourFlagRaw.Length > 0)
+				Array.Clear(this.sentHourFlagRaw, INDEX_ZERO, this.sentHourFlagRaw.Length);
+			if (this.profileGeneratedRaw != null && this.profileGeneratedRaw.Length > 0)
+				Array.Clear(this.profileGeneratedRaw, INDEX_ZERO, this.profileGeneratedRaw.Length);
+			if (this.fraudTableRaw != null && this.fraudTableRaw.Length > 0)
+				Array.Clear(this.fraudTableRaw, INDEX_ZERO, this.fraudTableRaw.Length);
+			if (this.writeCommandResponseCodeRaw != null && this.writeCommandResponseCodeRaw.Length > 0)
+				Array.Clear(this.writeCommandResponseCodeRaw, INDEX_ZERO, this.writeCommandResponseCodeRaw.Length);
 		}
 
 		private void ClearStepsData()
@@ -121,20 +126,19 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 			BLEParsingStatus parsingStatus = BLEParsingStatus.ERROR;
 			await Task.Run(() =>
 			{
+				this._rawData = new byte[rawData.Length];
 				Array.Copy(rawData, this._rawData, rawData.Length);
-
-
 				this.IsReadCommand = true;
 				if (rawData[1] == 0x25)
 				{
 					this.IsReadCommand = false;
-					this.writeCommandResponseCodeRaw = new byte[WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE];
+					this.writeCommandResponseCodeRaw = new byte[Constants.INT32_BYTE_SIZE];
 
 					Array.Copy(this._rawData, 2, this.writeCommandResponseCodeRaw, INDEX_ZERO, WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE);
 					this.WriteCommandResponseCode = BitConverter.ToInt32(this.writeCommandResponseCodeRaw, INDEX_ZERO);
 
 
-					this.fraudTableRaw = new byte[FRAUD_TABLE_BYTE_SIZE];
+					this.fraudTableRaw = new byte[Constants.INT32_BYTE_SIZE];
 					Array.Copy(this._rawData, 3, this.fraudTableRaw, INDEX_ZERO, FRAUD_TABLE_BYTE_SIZE);
 					this.FraudTableCommandValue = BitConverter.ToInt32(this.fraudTableRaw, INDEX_ZERO);
 
@@ -170,12 +174,12 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 						}
 
 
-						this.yrDataRaw = new byte[YEAR_DATA_BYTE_SIZE];
-						this.monthDataRaw = new byte[MONTH_DATA_BYTE_SIZE];
-						this.dayDataRaw = new byte[DAY_DATA_BYTE_SIZE];
-						this.hrNumberRaw = new byte[HOUR_NUM_BYTE_SIZE];
-						this.sentHourFlagRaw = new byte[SENT_HOUR_BYTE_SIZE];
-						this.profileGeneratedRaw = new byte[PROFILE_GENERATED_BYTE_SIZE];
+						this.yrDataRaw = new byte[Constants.INT32_BYTE_SIZE];
+						this.monthDataRaw = new byte[Constants.INT32_BYTE_SIZE];
+						this.dayDataRaw = new byte[Constants.INT32_BYTE_SIZE];
+						this.hrNumberRaw = new byte[Constants.INT32_BYTE_SIZE];
+						this.sentHourFlagRaw = new byte[Constants.INT32_BYTE_SIZE];
+						this.profileGeneratedRaw = new byte[Constants.INT32_BYTE_SIZE];
 
 
 						Array.Copy(this._rawData, currentIndex, this.yrDataRaw, INDEX_ZERO, YEAR_DATA_BYTE_SIZE);
@@ -198,7 +202,7 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 						if (this.trioDevInfo.ModelNumber == 961 && this.trioDevInfo.FirmwareVersion >= 5.0f)
 						//stepsDataTable
 						{
-							this.fraudTableRaw = new byte[FRAUD_TABLE_BYTE_SIZE];
+							this.fraudTableRaw = new byte[Constants.INT32_BYTE_SIZE];
 							Array.Copy(this._rawData, currentIndex + PROFILE_GENERATED_BYTE_SIZE, this.fraudTableRaw, INDEX_ZERO, FRAUD_TABLE_BYTE_SIZE);
 							stepParams.fraudTable = BitConverter.ToInt32(this.fraudTableRaw, INDEX_ZERO);
 						}
@@ -222,16 +226,21 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 		{
 			await Task.Run(() =>
 			{
+
+
 				byte[] commandPrefix = BitConverter.GetBytes(COMMAND_PREFIX);
 				byte[] commandID = BitConverter.GetBytes(COMMAND_ID_READ);
 
 				if (this.trioDevInfo.ModelNumber == 961 && this.trioDevInfo.FirmwareVersion >= 5.0f)
 				{
+					this._readCommandRawData = new byte[COMMAND_SIZE_READ];
 					byte[] packetHandshake = BitConverter.GetBytes(this.PacketHandshakeReadCommandValue);
 					byte[] fraudTable = BitConverter.GetBytes(this.FraudTableCommandValue);
 					Buffer.BlockCopy(packetHandshake, INDEX_ZERO, this._readCommandRawData, INDEX_ZERO + 2, 1);
 					Buffer.BlockCopy(fraudTable, INDEX_ZERO, this._readCommandRawData, INDEX_ZERO + 3, 1);
 				}
+				else
+					this._readCommandRawData = new byte[COMMAND_SIZE_READ_OLD];
 
 
 
@@ -246,23 +255,32 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 		{
 			await Task.Run(() =>
 			{
+				if (this.trioDevInfo.ModelNumber == 961 && this.trioDevInfo.FirmwareVersion >= 5.0f)
+					this._rawData = new byte[COMMAND_SIZE_WRITE + 2];
+				else
+					this._rawData = new byte[COMMAND_SIZE_WRITE_OLD + 2];
 
 				this.yrDataRaw = BitConverter.GetBytes(stepsParamWrite.dbYear);
 				this.monthDataRaw = BitConverter.GetBytes(stepsParamWrite.dbMonth);
 				this.dayDataRaw = BitConverter.GetBytes(stepsParamWrite.dbDay);
 				this.sentHourFlagRaw = BitConverter.GetBytes(stepsParamWrite.sentHourFlag);
-				this.fraudTableRaw = BitConverter.GetBytes(stepsParamWrite.fraudTable);
+
 
 				Buffer.BlockCopy(this.yrDataRaw, INDEX_ZERO, this._rawData, YEAR_DATA_BYTE_WRITE_LOC, 1);
 				Buffer.BlockCopy(this.monthDataRaw, INDEX_ZERO, this._rawData, MONTH_DATA_BYTE_WRITE_LOC, 1);
 				Buffer.BlockCopy(this.dayDataRaw, INDEX_ZERO, this._rawData, DAY_DATA_BYTE_WRITE_LOC, 1);
 				Buffer.BlockCopy(this.sentHourFlagRaw, INDEX_ZERO, this._rawData, SENTHOUR_BYTE_WRITE_LOC, 3);
-				Buffer.BlockCopy(this.fraudTableRaw, INDEX_ZERO, this._rawData, FRAUD_BYTE_WRITE_LOC, 1);
+
+				if (this.trioDevInfo.ModelNumber == 961 && this.trioDevInfo.FirmwareVersion >= 5.0f)
+				{
+					this.fraudTableRaw = BitConverter.GetBytes(stepsParamWrite.fraudTable);
+					Buffer.BlockCopy(this.fraudTableRaw, INDEX_ZERO, this._rawData, FRAUD_BYTE_WRITE_LOC, 1);
+				}
 
 
 				byte[] commandPrefix = BitConverter.GetBytes(COMMAND_PREFIX);
 				byte[] commandID = BitConverter.GetBytes(COMMAND_ID_WRITE);
-				Buffer.BlockCopy(commandID, INDEX_ZERO, this._rawData, INDEX_ZERO, 1);
+				Buffer.BlockCopy(commandID, INDEX_ZERO, this._rawData, INDEX_ZERO + 1, 1);
 				Buffer.BlockCopy(commandPrefix, INDEX_ZERO, this._rawData, INDEX_ZERO, 1);
 
 			});
