@@ -31,6 +31,8 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 		const int DST_START_BYTE_LOC = 11;
 		const int DST_END_BYTE_LOC = 13;
 
+		const int DATA_BYTE_SIZE = 1;
+
 		const int WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE = 1;
 
 		//Predefine flag values for booleans bytes
@@ -129,24 +131,24 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 				if (rawData[1] == 0x16)
 				{
 					this.IsReadCommand = false;
-					this.writeCommandResponseCodeRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.writeCommandResponseCodeRaw = new byte[WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE];
 					Array.Copy(this._rawData, 2, this.writeCommandResponseCodeRaw, INDEX_ZERO, WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE);
 					this.WriteCommandResponseCode = BitConverter.ToInt32(this.writeCommandResponseCodeRaw, INDEX_ZERO);
 				}
 
 				else
 				{ 
-					this.hourRaw = new byte[Constants.INT32_BYTE_SIZE];
-					this.minuteRaw = new byte[Constants.INT32_BYTE_SIZE];
-					this.secondRaw = new byte[Constants.INT32_BYTE_SIZE];
-					this.hourTypeRaw = new byte[Constants.INT32_BYTE_SIZE];
-					this.yearRaw = new byte[Constants.INT32_BYTE_SIZE];
-					this.monthRaw = new byte[Constants.INT32_BYTE_SIZE];
-					this.dayRaw = new byte[Constants.INT32_BYTE_SIZE];
-					this.hourOffsetRaw = new byte[Constants.INT32_BYTE_SIZE];
-					this.minuteOffsetRaw = new byte[Constants.INT32_BYTE_SIZE];
-					this.dstStartRaw = new byte[Constants.INT32_BYTE_SIZE];
-					this.dstEndRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.hourRaw = new byte[DATA_BYTE_SIZE];
+					this.minuteRaw = new byte[DATA_BYTE_SIZE];
+					this.secondRaw = new byte[DATA_BYTE_SIZE];
+					this.hourTypeRaw = new byte[DATA_BYTE_SIZE];
+					this.yearRaw = new byte[DATA_BYTE_SIZE];
+					this.monthRaw = new byte[DATA_BYTE_SIZE];
+					this.dayRaw = new byte[DATA_BYTE_SIZE];
+					this.hourOffsetRaw = new byte[DATA_BYTE_SIZE];
+					this.minuteOffsetRaw = new byte[DATA_BYTE_SIZE];
+					this.dstStartRaw = new byte[DATA_BYTE_SIZE];
+					this.dstEndRaw = new byte[DATA_BYTE_SIZE];
 
 					Array.Copy(this._rawData, HOUR_BYTE_LOC, this.hourRaw, INDEX_ZERO, 1);
 					Array.Copy(this._rawData, MINUTE_BYTE_LOC, this.minuteRaw, INDEX_ZERO, 1);
@@ -156,23 +158,23 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 					Array.Copy(this._rawData, MONTH_BYTE_LOC, this.monthRaw, INDEX_ZERO, 1);
 					Array.Copy(this._rawData, DAY_BYTE_LOC, this.dayRaw, INDEX_ZERO, 1);
 
-					this.Hour = BitConverter.ToInt32(this.hourRaw, INDEX_ZERO);
-					this.Minute = BitConverter.ToInt32(this.minuteRaw, INDEX_ZERO);
-					this.Second = BitConverter.ToInt32(this.secondRaw, INDEX_ZERO);
-					this.HourType = BitConverter.ToBoolean(this.hourTypeRaw, INDEX_ZERO);
-					this.Year = BitConverter.ToInt32(this.yearRaw, INDEX_ZERO);
-					this.Month = BitConverter.ToInt32(this.monthRaw, INDEX_ZERO);
-					this.Day = BitConverter.ToInt32(this.dayRaw, INDEX_ZERO);
+					this.Hour = Convert.ToInt32(Utils.getDecimalValue(this.hourRaw)); 
+					this.Minute = Convert.ToInt32(Utils.getDecimalValue(this.minuteRaw)); 
+					this.Second = Convert.ToInt32(Utils.getDecimalValue(this.secondRaw)); 
+					this.HourType = Convert.ToBoolean(Utils.getDecimalValue(this.hourTypeRaw)); 
+					this.Year = Convert.ToInt32(Utils.getDecimalValue(this.yearRaw)); 
+					this.Month = Convert.ToInt32(Utils.getDecimalValue(this.monthRaw)); 
+					this.Day = Convert.ToInt32(Utils.getDecimalValue(this.dayRaw));
 
 					if ((this.trioDevInfo.ModelNumber == 961 && this.trioDevInfo.FirmwareVersion < 5.0f))
 					{
 						Array.Copy(this._rawData, HOUR_OFFSET_BYTE_LOC, this.hourOffsetRaw, INDEX_ZERO, 1);
 						Array.Copy(this._rawData, MINUTE_OFFSET_BYTE_LOC, this.minuteOffsetRaw, INDEX_ZERO, 1);
 
-						int flagValue = BitConverter.ToInt32(this.hourOffsetRaw, INDEX_ZERO);
+						int flagValue = Convert.ToInt32(Utils.getDecimalValue(this.hourOffsetRaw)); 
 						this.OffestType = Convert.ToBoolean((flagValue >> 7) & 0x01);
 						this.HourOffset = flagValue & 0x3F;
-						this.MinuteOffset = BitConverter.ToInt32(this.minuteOffsetRaw, INDEX_ZERO);
+						this.MinuteOffset = Convert.ToInt32(Utils.getDecimalValue(this.minuteOffsetRaw)); 
 					}
 					else if (this.trioDevInfo.ModelNumber == 962 || (this.trioDevInfo.ModelNumber == 961 && this.trioDevInfo.FirmwareVersion >= 5.0f))
 					{
@@ -181,7 +183,7 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 						Array.Copy(this._rawData, DST_START_BYTE_LOC, this.dstStartRaw, INDEX_ZERO, 1);
 						Array.Copy(this._rawData, DST_END_BYTE_LOC, this.dstEndRaw, INDEX_ZERO, 1);
 
-						int flagValue = BitConverter.ToInt32(this.hourOffsetRaw, INDEX_ZERO);
+						int flagValue = Convert.ToInt32(Utils.getDecimalValue(this.hourOffsetRaw)); BitConverter.ToInt32(this.hourOffsetRaw, INDEX_ZERO);
 						this.OffestType = Convert.ToBoolean((flagValue >> 7) & 0x01);
 						this.DstApplicable = Convert.ToBoolean((flagValue >> 6) & 0x01);
 						this.HourOffset = flagValue & 0x3F;

@@ -72,20 +72,20 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 				if (rawData[1] == 0x2A)
 				{
 					this.IsReadCommand = false;
-					this.writeCommandResponseCodeRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.writeCommandResponseCodeRaw = new byte[WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE];
 					Array.Copy(this._rawData, 2, this.writeCommandResponseCodeRaw, INDEX_ZERO, WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE);
-					this.WriteCommandResponseCode = BitConverter.ToInt32(this.writeCommandResponseCodeRaw, INDEX_ZERO);
+					this.WriteCommandResponseCode = Convert.ToInt32(Utils.getDecimalValue(this.writeCommandResponseCodeRaw)); 
 				}
 
 				else
 				{
-					this.alarmDurationRaw = new byte[Constants.INT32_BYTE_SIZE];
-					this.alarmBeepTypeRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.alarmDurationRaw = new byte[ALARM_DURATION_BYTE_SIZE];
+					this.alarmBeepTypeRaw = new byte[ALARM_BEEP_TYPE_BYTE_SIZE];
 					Array.Copy(this._rawData, ALARM_DURATION_LOC, this.alarmDurationRaw, INDEX_ZERO, ALARM_DURATION_BYTE_SIZE);
 					Array.Copy(this._rawData, ALARM_BEEP_TYPE_LOC, this.alarmBeepTypeRaw, INDEX_ZERO, ALARM_BEEP_TYPE_BYTE_SIZE);
 
-					this.AlarmDuration =  BitConverter.ToInt32(this.alarmDurationRaw, INDEX_ZERO);
-					this.BeepType = BitConverter.ToInt32(this.alarmBeepTypeRaw, INDEX_ZERO);
+					this.AlarmDuration = Convert.ToInt32(Utils.getDecimalValue(this.alarmDurationRaw)); 
+					this.BeepType = Convert.ToInt32(Utils.getDecimalValue(this.alarmBeepTypeRaw)); 
 				}
 
 

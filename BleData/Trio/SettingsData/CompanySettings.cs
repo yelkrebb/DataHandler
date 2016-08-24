@@ -185,25 +185,25 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 				if (rawData[1] == 0x1D)
 				{
 					this.IsReadCommand = false;
-					this.writeCommandResponseCodeRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.writeCommandResponseCodeRaw = new byte[WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE];
 					Array.Copy(this._rawData, 2, this.writeCommandResponseCodeRaw, INDEX_ZERO, WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE);
-					this.WriteCommandResponseCode = BitConverter.ToInt32(this.writeCommandResponseCodeRaw, INDEX_ZERO);
+					this.WriteCommandResponseCode = Convert.ToInt32(Utils.getDecimalValue(this.writeCommandResponseCodeRaw));
 				}
 
 				else
-				{ 
-					this.tenacityStepsRaw = new byte[Constants.INT32_BYTE_SIZE];
-					this.frequencyStepsRaw = new byte[Constants.INT32_BYTE_SIZE];
-					this.frequencyCycleTimeRaw = new byte[Constants.INT32_BYTE_SIZE];
-					this.frequencyCycleAndIntervalRaw = new byte[Constants.INT32_BYTE_SIZE];
+				{
+					this.tenacityStepsRaw = new byte[TENACITY_STEPS_BYTE_SIZE];
+					this.frequencyStepsRaw = new byte[FREQUENCY_STEPS_BYTE_SIZE];
+					this.frequencyCycleTimeRaw = new byte[FREQUENCY_CYCLE_TIME_BYTE_SIZE];
+					this.frequencyCycleAndIntervalRaw = new byte[FREQUENCY_CYCLE_AND_INTERVAL_BYTE_SIZE];
 
 
 
-					this.intensityStepsRaw = new byte[Constants.INT32_BYTE_SIZE];
-					this.intensityTimeRaw = new byte[Constants.INT32_BYTE_SIZE];
-					this.intensityMinuteThresholdRaw = new byte[Constants.INT32_BYTE_SIZE];
-					this.intensityRestMinuteAllowedRaw = new byte[Constants.INT32_BYTE_SIZE];
-					this.intensityCycleRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.intensityStepsRaw = new byte[INTENSITY_STEPS_BYTE_SIZE];
+					this.intensityTimeRaw = new byte[INTENSITY_TIME_BYTE_SIZE];
+					this.intensityMinuteThresholdRaw = new byte[INTENSITY_MINUTE_THRESHOLD_BYTE_SIZE];
+					this.intensityRestMinuteAllowedRaw = new byte[INTENSITY_REST_MINUTE_ALLOWED_BYTE_SIZE];
+					this.intensityCycleRaw = new byte[INTENSITY_CYCLE_BYTE_SIZE];
 
 					Array.Copy(this._rawData, TENACITY_STEPS_BYTE_LOC, this.tenacityStepsRaw, INDEX_ZERO, TENACITY_STEPS_BYTE_SIZE);
 					Array.Copy(this._rawData, INTENSITY_STEPS_BYTE_LOC, this.intensityStepsRaw, INDEX_ZERO, INTENSITY_STEPS_BYTE_SIZE);
@@ -215,21 +215,21 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 					Array.Copy(this._rawData, FREQUENCY_CYCLE_AND_INTERVAL_BYTE_LOC, this.frequencyCycleAndIntervalRaw, INDEX_ZERO, FREQUENCY_CYCLE_AND_INTERVAL_BYTE_SIZE);
 					Array.Copy(this._rawData, INTENSITY_CYCLE_BYTE_LOC, this.intensityCycleRaw, INDEX_ZERO, INTENSITY_CYCLE_BYTE_SIZE);
 
-					this.TenacitySteps = BitConverter.ToInt32(this.tenacityStepsRaw, INDEX_ZERO);
-					this.IntensitySteps = BitConverter.ToInt32(this.intensityStepsRaw, INDEX_ZERO);
-					this.IntensityTime = BitConverter.ToInt32(this.intensityTimeRaw, INDEX_ZERO);
-					this.IntensityMinuteThreshold = BitConverter.ToInt32(this.intensityRestMinuteAllowedRaw, INDEX_ZERO);
-					this.IntensityRestMinuteAllowed = BitConverter.ToInt32(this.intensityRestMinuteAllowedRaw, INDEX_ZERO);
-					this.FrequencySteps = BitConverter.ToInt32(this.frequencyStepsRaw, INDEX_ZERO);
-					this.FrequencyCycleTime = BitConverter.ToInt32(this.frequencyCycleTimeRaw, INDEX_ZERO);
-					this.FrequencyCycleInterval = BitConverter.ToInt32(this.frequencyCycleAndIntervalRaw, INDEX_ZERO) & 0x0F;
-					this.FrequencyCycle = (BitConverter.ToInt32(this.frequencyCycleAndIntervalRaw, INDEX_ZERO) >> 4) & 0x0F;
+					this.TenacitySteps = Convert.ToInt32(Utils.getDecimalValue(this.tenacityStepsRaw));
+					this.IntensitySteps = Convert.ToInt32(Utils.getDecimalValue(this.intensityStepsRaw)); 
+					this.IntensityTime = Convert.ToInt32(Utils.getDecimalValue(this.intensityTimeRaw)); 
+					this.IntensityMinuteThreshold = Convert.ToInt32(Utils.getDecimalValue(this.intensityMinuteThresholdRaw)); 
+					this.IntensityRestMinuteAllowed = Convert.ToInt32(Utils.getDecimalValue(this.intensityRestMinuteAllowedRaw)); 
+					this.FrequencySteps = Convert.ToInt32(Utils.getDecimalValue(this.frequencyStepsRaw)); 
+					this.FrequencyCycleTime = Convert.ToInt32(Utils.getDecimalValue(this.frequencyCycleTimeRaw)); 
+					this.FrequencyCycleInterval = Convert.ToInt32(Utils.getDecimalValue(this.frequencyCycleAndIntervalRaw)); 
+					this.FrequencyCycle = (Convert.ToInt32(Utils.getDecimalValue(this.frequencyCycleAndIntervalRaw))) & 0x0F;
 
 					if ((this.trioDevInfo.ModelNumber == 961 || this.trioDevInfo.ModelNumber == 962 ||
 						(this.trioDevInfo.ModelNumber == 939 && this.trioDevInfo.FirmwareVersion >= 0.3f)) || this._rawData.Length > 14)
 					{
 						//This field was added in the firmware starting Trio model PE939 and latter models.
-						this.IntensityCycle = BitConverter.ToInt32(this.intensityCycleRaw, INDEX_ZERO);
+						this.IntensityCycle = Convert.ToInt32(Utils.getDecimalValue(this.intensityCycleRaw));
 					}
 				}
 				parseStatus = BLEParsingStatus.SUCCESS;

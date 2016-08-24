@@ -58,17 +58,17 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 			await Task.Run(() => 
 			{ 
 				this._rawData = new byte[rawData.Length];
-				this.deviceModeSettingRaw = new byte[Constants.INT32_BYTE_SIZE];
+				this.deviceModeSettingRaw = new byte[DEVICEMODE_SETTING_BYTE_SIZE];
 				Array.Copy(this._rawData, DEVICEMODE_SETTING_LOC, this.deviceModeSettingRaw, INDEX_ZERO, DEVICEMODE_SETTING_BYTE_SIZE);
 
 				if (this.trioDevInfo.ModelNumber == 932 || this.trioDevInfo.ModelNumber == 939)
 				{
-					int flagValue = BitConverter.ToInt32(this.deviceModeSettingRaw, INDEX_ZERO);
+					int flagValue = Convert.ToInt32(Utils.getDecimalValue(this.deviceModeSettingRaw)); 
 					this.EnableBroadcastAlways = Convert.ToInt32(flagValue);
 				}
 				else
 				{
-					int flagValue = BitConverter.ToInt32(this.deviceModeSettingRaw, INDEX_ZERO);
+					int flagValue = Convert.ToInt32(Utils.getDecimalValue(this.deviceModeSettingRaw));
 					this.ShipmentBootUpFlag = Convert.ToBoolean((flagValue >> 7) & 0x01);
 					this.EnableBroadcastAlways = flagValue & 0x7F;
 				}

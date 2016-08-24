@@ -66,9 +66,9 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 				{
 					
 					this.IsReadCommand = false;
-					this.writeCommandResponseCodeRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.writeCommandResponseCodeRaw = new byte[WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE];
 					Array.Copy(this._rawData, 2, this.writeCommandResponseCodeRaw, INDEX_ZERO, WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE);
-					this.WriteCommandResponseCode = BitConverter.ToInt32(this.writeCommandResponseCodeRaw, INDEX_ZERO);
+					this.WriteCommandResponseCode = Convert.ToInt32(Utils.getDecimalValue(this.writeCommandResponseCodeRaw));
 					parsingStatus = BLEParsingStatus.SUCCESS;
 				}
 

@@ -132,15 +132,15 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 				if (rawData[1] == 0x25)
 				{
 					this.IsReadCommand = false;
-					this.writeCommandResponseCodeRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.writeCommandResponseCodeRaw = new byte[WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE];
 
 					Array.Copy(this._rawData, 2, this.writeCommandResponseCodeRaw, INDEX_ZERO, WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE);
-					this.WriteCommandResponseCode = BitConverter.ToInt32(this.writeCommandResponseCodeRaw, INDEX_ZERO);
+					this.WriteCommandResponseCode = Convert.ToInt32(Utils.getDecimalValue(this.writeCommandResponseCodeRaw));
 
 
-					this.fraudTableRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.fraudTableRaw = new byte[FRAUD_TABLE_BYTE_SIZE];
 					Array.Copy(this._rawData, 3, this.fraudTableRaw, INDEX_ZERO, FRAUD_TABLE_BYTE_SIZE);
-					this.FraudTableCommandValue = BitConverter.ToInt32(this.fraudTableRaw, INDEX_ZERO);
+					this.FraudTableCommandValue = Convert.ToInt32(Utils.getDecimalValue(this.fraudTableRaw)); 
 
 				}
 				else //(rawData[1] == 0x22)
@@ -174,12 +174,12 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 						}
 
 
-						this.yrDataRaw = new byte[Constants.INT32_BYTE_SIZE];
-						this.monthDataRaw = new byte[Constants.INT32_BYTE_SIZE];
-						this.dayDataRaw = new byte[Constants.INT32_BYTE_SIZE];
-						this.hrNumberRaw = new byte[Constants.INT32_BYTE_SIZE];
-						this.sentHourFlagRaw = new byte[Constants.INT32_BYTE_SIZE];
-						this.profileGeneratedRaw = new byte[Constants.INT32_BYTE_SIZE];
+						this.yrDataRaw = new byte[YEAR_DATA_BYTE_SIZE];
+						this.monthDataRaw = new byte[MONTH_DATA_BYTE_SIZE];
+						this.dayDataRaw = new byte[DAY_DATA_BYTE_SIZE];
+						this.hrNumberRaw = new byte[HOUR_NUM_BYTE_SIZE];
+						this.sentHourFlagRaw = new byte[SENT_HOUR_BYTE_SIZE];
+						this.profileGeneratedRaw = new byte[PROFILE_GENERATED_BYTE_SIZE];
 
 
 						Array.Copy(this._rawData, currentIndex, this.yrDataRaw, INDEX_ZERO, YEAR_DATA_BYTE_SIZE);
@@ -190,21 +190,21 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 						Array.Copy(this._rawData, currentIndex + SENT_HOUR_BYTE_SIZE, this.profileGeneratedRaw, INDEX_ZERO, PROFILE_GENERATED_BYTE_SIZE);
 
 
-						stepParams.dbYear = BitConverter.ToInt32(this.yrDataRaw, INDEX_ZERO);
-						stepParams.dbMonth = BitConverter.ToInt32(this.monthDataRaw, INDEX_ZERO);
-						stepParams.dbDay = BitConverter.ToInt32(this.dayDataRaw, INDEX_ZERO);
-						stepParams.dbHourNumber = BitConverter.ToInt32(this.hrNumberRaw, INDEX_ZERO);
-						stepParams.sentHourFlag = BitConverter.ToInt32(this.sentHourFlagRaw, INDEX_ZERO);
-						int flagValue = BitConverter.ToInt32(this.profileGeneratedRaw, INDEX_ZERO);
+						stepParams.dbYear = Convert.ToInt32(Utils.getDecimalValue(this.yrDataRaw)); 
+						stepParams.dbMonth = Convert.ToInt32(Utils.getDecimalValue(this.monthDataRaw));  
+						stepParams.dbDay = Convert.ToInt32(Utils.getDecimalValue(this.dayDataRaw)); 
+						stepParams.dbHourNumber = Convert.ToInt32(Utils.getDecimalValue(this.hrNumberRaw)); 
+						stepParams.sentHourFlag = Convert.ToInt32(Utils.getDecimalValue(this.sentHourFlagRaw)); 
+						int flagValue = Convert.ToInt32(Utils.getDecimalValue(this.profileGeneratedRaw));  
 						stepParams.signatureGenerated = Convert.ToInt32(flagValue & 0xFF);
 						stepParams.signatureSent = Convert.ToInt32(flagValue & 0xF0);
 
 						if (this.trioDevInfo.ModelNumber == 961 && this.trioDevInfo.FirmwareVersion >= 5.0f)
 						//stepsDataTable
 						{
-							this.fraudTableRaw = new byte[Constants.INT32_BYTE_SIZE];
+							this.fraudTableRaw = new byte[FRAUD_TABLE_BYTE_SIZE];
 							Array.Copy(this._rawData, currentIndex + PROFILE_GENERATED_BYTE_SIZE, this.fraudTableRaw, INDEX_ZERO, FRAUD_TABLE_BYTE_SIZE);
-							stepParams.fraudTable = BitConverter.ToInt32(this.fraudTableRaw, INDEX_ZERO);
+							stepParams.fraudTable = Convert.ToInt32(Utils.getDecimalValue(this.fraudTableRaw)); 
 						}
 
 						currentIndex = currentIndex + dataLen;

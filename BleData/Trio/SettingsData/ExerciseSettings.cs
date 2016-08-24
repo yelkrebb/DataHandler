@@ -22,6 +22,7 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 		const int FLAG_BYTE_LOC = 3;
 
 		const int WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE = 1;
+		const int DATA_BYTE_SIZE = 1;
 
 		//Predefined Flag values for boolean bytes
 		const int DATA_SYNC_ENABLE = 16;
@@ -81,22 +82,22 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 				if (rawData[1] == 0x1A)
 				{
 					this.IsReadCommand = false;
-					this.writeCommandResponseCodeRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.writeCommandResponseCodeRaw = new byte[WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE];
 					Array.Copy(this._rawData, 2, this.writeCommandResponseCodeRaw, INDEX_ZERO, WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE);
-					this.WriteCommandResponseCode = BitConverter.ToInt32(this.writeCommandResponseCodeRaw, INDEX_ZERO);
+					this.WriteCommandResponseCode = Convert.ToInt32(Utils.getDecimalValue(this.writeCommandResponseCodeRaw)); 
 				}
 
 				else
 				{ 
-					this.syncTimeIntervalRaw = new byte[Constants.INT32_BYTE_SIZE];
-					this.flagRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.syncTimeIntervalRaw = new byte[DATA_BYTE_SIZE];
+					this.flagRaw = new byte[DATA_BYTE_SIZE];
 
 					Array.Copy(this._rawData, SYNC_TIME_INTERVAL_BYTE_LOC, this.syncTimeIntervalRaw, INDEX_ZERO, 1);
 					Array.Copy(this._rawData, FLAG_BYTE_LOC, this.flagRaw, INDEX_ZERO, 1);
 
 					if (this.trioDevInfo.ModelNumber == 932 && this.trioDevInfo.FirmwareVersion <= 3.4f)
 					{
-						int exerciseSettingsValue = BitConverter.ToInt32(this.syncTimeIntervalRaw, INDEX_ZERO);
+						int exerciseSettingsValue = Convert.ToInt32(Utils.getDecimalValue(this.syncTimeIntervalRaw)); 
 						this.SyncTimeInterval = exerciseSettingsValue & 0x0F;
 						this.DataSyncEnable = Convert.ToBoolean((exerciseSettingsValue >> 4) & 0x01);
 						this.FrequencyAlarmEnable = Convert.ToBoolean((exerciseSettingsValue >> 5) & 0x01);
@@ -104,9 +105,9 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 					}
 					else
 					{
-						this.SyncTimeInterval = BitConverter.ToInt32(this.syncTimeIntervalRaw, INDEX_ZERO);
+						this.SyncTimeInterval = Convert.ToInt32(Utils.getDecimalValue(this.syncTimeIntervalRaw));
 
-						int flagValue = BitConverter.ToInt32(this.flagRaw, INDEX_ZERO);
+						int flagValue = Convert.ToInt32(Utils.getDecimalValue(this.flagRaw)); 
 						this.DataSyncEnable = Convert.ToBoolean(flagValue & 0x01);
 						this.FrequencyAlarmEnable = Convert.ToBoolean((flagValue >> 1) & 0x01);
 						this.MultipleIntensityEnable = Convert.ToBoolean((flagValue >> 2) & 0x01);

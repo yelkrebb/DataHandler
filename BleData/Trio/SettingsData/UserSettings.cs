@@ -165,18 +165,18 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 				if (rawData[1] == 0x18)
 				{
 					this.IsReadCommand = false;
-					this.writeCommandResponseCodeRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.writeCommandResponseCodeRaw = new byte[WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE];
 					Array.Copy(this._rawData, 2, this.writeCommandResponseCodeRaw, INDEX_ZERO, WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE);
-					this.WriteCommandResponseCode = BitConverter.ToInt32(this.writeCommandResponseCodeRaw, INDEX_ZERO);
+					this.WriteCommandResponseCode = Convert.ToInt32(Utils.getDecimalValue(this.writeCommandResponseCodeRaw));
 				}
 
 				else
 				{ 
-					this.strideRaw = new byte[Constants.INT32_BYTE_SIZE];
-					this.weightWholeRaw = new byte[Constants.UINT16_BYTE_SIZE];
-					this.weightDecimalRaw = new byte[Constants.UINT16_BYTE_SIZE];
-					this.rmrRaw = new byte[Constants.INT32_BYTE_SIZE];
-					this.unitOfMeasureRaw = new byte[Constants.UINT16_BYTE_SIZE];
+					this.strideRaw = new byte[STRIDE_BYTE_SIZE];
+					this.weightWholeRaw = new byte[WEIGHT_WHOLE_BYTE_SIZE];
+					this.weightDecimalRaw = new byte[WEIGHT_DECIMAL_BYTE_SIZE];
+					this.rmrRaw = new byte[RMR_BYTE_SIZE];
+					this.unitOfMeasureRaw = new byte[UNIT_OF_MEASURE_BYTE_SIZE];
 
 					Array.Copy(this._rawData, STRIDE_BYTE_LOC, this.strideRaw, INDEX_ZERO, STRIDE_BYTE_SIZE);
 					Array.Copy(this._rawData, WEIGHT_WHOLE_BYTE_LOC, this.weightWholeRaw, INDEX_ZERO, WEIGHT_WHOLE_BYTE_SIZE);
@@ -184,21 +184,21 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 					Array.Copy(this._rawData, RMR_BYTE_LOC, this.rmrRaw, INDEX_ZERO, RMR_BYTE_SIZE);
 					Array.Copy(this._rawData, UNIT_OF_MEASURE_BYTE_LOC, this.unitOfMeasureRaw, INDEX_ZERO, UNIT_OF_MEASURE_BYTE_SIZE);
 
-					this.Stride = BitConverter.ToInt32(this.strideRaw, INDEX_ZERO);
+					this.Stride = Convert.ToInt32(Utils.getDecimalValue(this.strideRaw));
 
-					string weightValueStr = Convert.ToString(BitConverter.ToUInt16(this.weightWholeRaw, INDEX_ZERO)) + "." +
-						Convert.ToString(BitConverter.ToUInt16(this.weightDecimalRaw, INDEX_ZERO));
+					string weightValueStr = Convert.ToString( Convert.ToInt32(Utils.getDecimalValue(this.weightWholeRaw)))  + "." +
+						Convert.ToString(Convert.ToInt32(Utils.getDecimalValue(this.weightDecimalRaw)));
 					this.Weight = float.Parse(weightValueStr);
-					this.RestMetabolicRate = BitConverter.ToInt32(this.rmrRaw, INDEX_ZERO);
-					this.UnitOfMeasure = Convert.ToBoolean(BitConverter.ToUInt16(this.unitOfMeasureRaw, INDEX_ZERO) & 0x01);
+					this.RestMetabolicRate = Convert.ToInt32(Utils.getDecimalValue(this.rmrRaw)); 
+					this.UnitOfMeasure = Convert.ToBoolean(Convert.ToInt32(Utils.getDecimalValue(this.unitOfMeasureRaw)) & 0x01);
 
 					if (this._rawData.Length == COMMAND_SIZE_WRITE_WITH_DOB_AND_SCREEN)
 					{
-						this.dobYearRaw = new byte[Constants.UINT16_BYTE_SIZE];
-						this.dobMonthRaw = new byte[Constants.UINT16_BYTE_SIZE];
-						this.dobDayRaw = new byte[Constants.UINT16_BYTE_SIZE];
-						this.ageRaw = new byte[Constants.INT32_BYTE_SIZE];
-						this.screenOrientationRaw = new byte[Constants.UINT16_BYTE_SIZE];
+						this.dobYearRaw = new byte[DOB_YEAR_BYTE_SIZE];
+						this.dobMonthRaw = new byte[DOB_MONTH_BYTE_SIZE];
+						this.dobDayRaw = new byte[DOB_DAY_BYTE_SIZE];
+						this.ageRaw = new byte[AGE_BYTE_SIZE];
+						this.screenOrientationRaw = new byte[SCREEN_BYTE_SIZE];
 
 						Array.Copy(this._rawData, DOB_YEAR_BYTE_LOC, this.dobYearRaw, INDEX_ZERO, DOB_YEAR_BYTE_SIZE);
 						Array.Copy(this._rawData, DOB_MONTH_BYTE_LOC, this.dobMonthRaw, INDEX_ZERO, DOB_MONTH_BYTE_SIZE);
@@ -206,30 +206,30 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 						Array.Copy(this._rawData, AGE_BYTE_LOC, this.ageRaw, INDEX_ZERO, AGE_BYTE_SIZE);
 						Array.Copy(this._rawData, SCREEN_BYTE_LOC, this.screenOrientationRaw, INDEX_ZERO, SCREEN_BYTE_SIZE);
 
-						this.DateOfBirth = Convert.ToString(BitConverter.ToUInt16(this.dobYearRaw, INDEX_ZERO)) + "-" +
-							Convert.ToString(BitConverter.ToUInt16(this.dobMonthRaw, INDEX_ZERO)) + "-" +
-							Convert.ToString(BitConverter.ToUInt16(this.dobDayRaw, INDEX_ZERO));
-						this.Age = BitConverter.ToInt32(this.ageRaw, INDEX_ZERO);
-						this.AutoRotateEnable = Convert.ToBoolean(BitConverter.ToUInt16(this.screenOrientationRaw, INDEX_ZERO) & 0x01);
-						this.VerticalOrientationEnable = Convert.ToBoolean((BitConverter.ToUInt16(this.screenOrientationRaw, INDEX_ZERO) >> 1) & 0x01);
-						this.WristPreference = Convert.ToBoolean((BitConverter.ToUInt16(this.screenOrientationRaw, INDEX_ZERO) >> 2) & 0x01);
+						this.DateOfBirth = Convert.ToString(Convert.ToInt32(Utils.getDecimalValue(this.dobYearRaw))) + "-" +
+							Convert.ToString(Convert.ToInt32(Utils.getDecimalValue(this.dobMonthRaw))) + "-" +
+							Convert.ToString(Convert.ToInt32(Utils.getDecimalValue(this.dobDayRaw)));
+						this.Age = Convert.ToInt32(Utils.getDecimalValue(this.ageRaw));
+						this.AutoRotateEnable = Convert.ToBoolean(Convert.ToInt32(Utils.getDecimalValue(this.screenOrientationRaw)) & 0x01);
+						this.VerticalOrientationEnable = Convert.ToBoolean((Convert.ToInt32(Utils.getDecimalValue(this.screenOrientationRaw)) >> 1) & 0x01);
+						this.WristPreference = Convert.ToBoolean((Convert.ToInt32(Utils.getDecimalValue(this.screenOrientationRaw)) >> 2) & 0x01);
 					}
 					else if (this._rawData.Length == COMMAND_SIZE_WRITE_WITH_DOB)
 					{
-						this.dobYearRaw = new byte[Constants.UINT16_BYTE_SIZE];
-						this.dobMonthRaw = new byte[Constants.UINT16_BYTE_SIZE];
-						this.dobDayRaw = new byte[Constants.UINT16_BYTE_SIZE];
-						this.ageRaw = new byte[Constants.INT32_BYTE_SIZE];
+						this.dobYearRaw = new byte[DOB_YEAR_BYTE_SIZE];
+						this.dobMonthRaw = new byte[DOB_MONTH_BYTE_SIZE];
+						this.dobDayRaw = new byte[DOB_DAY_BYTE_SIZE];
+						this.ageRaw = new byte[AGE_BYTE_SIZE];
 
 						Array.Copy(this._rawData, DOB_YEAR_BYTE_LOC, this.dobYearRaw, INDEX_ZERO, DOB_YEAR_BYTE_SIZE);
 						Array.Copy(this._rawData, DOB_MONTH_BYTE_LOC, this.dobMonthRaw, INDEX_ZERO, DOB_MONTH_BYTE_SIZE);
 						Array.Copy(this._rawData, DOB_DAY_BYTE_LOC, this.dobDayRaw, INDEX_ZERO, DOB_DAY_BYTE_SIZE);
 						Array.Copy(this._rawData, AGE_BYTE_LOC, this.ageRaw, INDEX_ZERO, AGE_BYTE_SIZE);
 
-						this.DateOfBirth = Convert.ToString(BitConverter.ToUInt16(this.dobYearRaw, INDEX_ZERO)) + "-" +
-							Convert.ToString(BitConverter.ToUInt16(this.dobMonthRaw, INDEX_ZERO)) + "-" +
-							Convert.ToString(BitConverter.ToUInt16(this.dobDayRaw, INDEX_ZERO));
-						this.Age = BitConverter.ToInt32(this.ageRaw, INDEX_ZERO);
+						this.DateOfBirth = Convert.ToString(Convert.ToInt32(Utils.getDecimalValue(this.dobYearRaw))) + "-" +
+							Convert.ToString(Convert.ToInt32(Utils.getDecimalValue(this.dobMonthRaw))) + "-" +
+							Convert.ToString(Convert.ToInt32(Utils.getDecimalValue(this.dobDayRaw)));
+						this.Age = Convert.ToInt32(Utils.getDecimalValue(this.ageRaw));
 					}
 				}
 				parseStatus = BLEParsingStatus.SUCCESS;

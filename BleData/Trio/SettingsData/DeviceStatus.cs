@@ -71,25 +71,25 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 				if (rawData[1] == 0x12)
 				{
 					this.IsReadCommand = false;
-					this.writeCommandResponseCodeRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.writeCommandResponseCodeRaw = new byte[WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE];
 					Array.Copy(this._rawData, 2, this.writeCommandResponseCodeRaw, INDEX_ZERO, WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE);
-					this.WriteCommandResponseCode = BitConverter.ToInt32(this.writeCommandResponseCodeRaw, INDEX_ZERO);
+					this.WriteCommandResponseCode = Convert.ToInt32(Utils.getDecimalValue(this.writeCommandResponseCodeRaw));
 				}
 
 				else
 				{ 
-					this.deviceStatusSettingRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.deviceStatusSettingRaw = new byte[DEVICE_STATUS_SETTING_BYTE_SIZE];
 					Array.Copy(this._rawData, DEVICE_STATUS_SETTING_LOC, this.deviceStatusSettingRaw, INDEX_ZERO, DEVICE_STATUS_SETTING_BYTE_SIZE);
 
 					if (this.trioDevInfo.ModelNumber == 932 || this.trioDevInfo.ModelNumber == 939 || this.trioDevInfo.ModelNumber == 936)
 					{
-						int flagValue = BitConverter.ToInt32(this.deviceStatusSettingRaw, INDEX_ZERO);
+						int flagValue = Convert.ToInt32(Utils.getDecimalValue(this.deviceStatusSettingRaw)); 
 						this.FrequencyMet =Convert.ToBoolean((flagValue >> 7) & 0x01);
 						this.IntensityMet = Convert.ToBoolean((flagValue >> 6) & 0x01);
 					}
 					else
 					{
-						int flagValue = BitConverter.ToInt32(this.deviceStatusSettingRaw, INDEX_ZERO);
+						int flagValue = Convert.ToInt32(Utils.getDecimalValue(this.deviceStatusSettingRaw));
 						this.FrequencyMet = Convert.ToBoolean((flagValue >> 7) & 0x01);
 						this.IntensityMet = Convert.ToBoolean((flagValue >> 6) & 0x01);
 						this.TenacityMet = Convert.ToBoolean((flagValue >> 5) & 0x01);

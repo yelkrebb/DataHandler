@@ -86,9 +86,9 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 				if (rawData[1] == 0x58)
 				{
 					this.IsReadCommand = false;
-					this.writeCommandResponseCodeRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.writeCommandResponseCodeRaw = new byte[WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE];
 					Array.Copy(this._rawData, 2, this.writeCommandResponseCodeRaw, INDEX_ZERO, WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE);
-					this.WriteCommandResponseCode = BitConverter.ToInt32(this.writeCommandResponseCodeRaw, INDEX_ZERO);
+					this.WriteCommandResponseCode = Convert.ToInt32(Utils.getDecimalValue(this.writeCommandResponseCodeRaw));
 					parsingStatus = BLEParsingStatus.SUCCESS;
 				}
 
@@ -96,24 +96,24 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 				{
 					if (this.trioDevInfo.ModelNumber == 961 && this.trioDevInfo.FirmwareVersion >= 5.0f)
 					{
-						this.relativeLimitRaw = new byte[Constants.INT32_BYTE_SIZE];
-						this.relativeSensitivityRaw = new byte[Constants.INT32_BYTE_SIZE];
-						this.sleepThresholdRaw = new byte[Constants.INT32_BYTE_SIZE];
+						this.relativeLimitRaw = new byte[RELATIVE_LIMIT_SIZE];
+						this.relativeSensitivityRaw = new byte[RELATIVE_SENSITIVITY_SIZE];
+						this.sleepThresholdRaw = new byte[SLEEP_THRESHOLD_SIZE];
 
 						Array.Copy(this._rawData, RELATIVE_LIMIT_LOC, this.relativeLimitRaw, INDEX_ZERO, RELATIVE_LIMIT_SIZE);
 						Array.Copy(this._rawData, RELATIVE_SENSITIVITY_LOC, this.relativeSensitivityRaw, INDEX_ZERO, RELATIVE_SENSITIVITY_SIZE);
 						Array.Copy(this._rawData, SLEEP_THRESHOLD_LOC, this.sleepThresholdRaw, INDEX_ZERO, SLEEP_THRESHOLD_SIZE);
 
 
-						this.RelativeLimit = BitConverter.ToInt32(this.relativeLimitRaw, INDEX_ZERO);
-						this.RelativeSensitivity = BitConverter.ToInt32(this.relativeSensitivityRaw, INDEX_ZERO);
-						this.SleepThreshold = BitConverter.ToInt32(this.sleepThresholdRaw, INDEX_ZERO);
+						this.RelativeLimit = Convert.ToInt32(Utils.getDecimalValue(this.relativeLimitRaw)); 
+						this.RelativeSensitivity = Convert.ToInt32(Utils.getDecimalValue(this.relativeSensitivityRaw)); 
+						this.SleepThreshold = Convert.ToInt32(Utils.getDecimalValue(this.sleepThresholdRaw)); 
 					}
 					else
 					{
-						this.sensitivityOldRaw = new byte[Constants.INT32_BYTE_SIZE];
+						this.sensitivityOldRaw = new byte[SENSITIVITY_OLD_SIZE];
 						Array.Copy(this._rawData, SENSITIVITY_OLD_LOC, this.sensitivityOldRaw, INDEX_ZERO, SENSITIVITY_OLD_SIZE);
-						this.SensitivityOld = BitConverter.ToInt32(this.sensitivityOldRaw, INDEX_ZERO);
+						this.SensitivityOld = Convert.ToInt32(Utils.getDecimalValue(this.sensitivityOldRaw)); 
 					}
 
 

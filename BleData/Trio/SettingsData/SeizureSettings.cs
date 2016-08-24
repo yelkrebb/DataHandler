@@ -80,29 +80,29 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 				if (rawData[1] == 0x31)
 				{
 					this.IsReadCommand = false;
-					this.writeCommandResponseCodeRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.writeCommandResponseCodeRaw = new byte[WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE];
 					Array.Copy(this._rawData, 2, this.writeCommandResponseCodeRaw, INDEX_ZERO, WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE);
-					this.WriteCommandResponseCode = BitConverter.ToInt32(this.writeCommandResponseCodeRaw, INDEX_ZERO);
+					this.WriteCommandResponseCode = Convert.ToInt32(Utils.getDecimalValue(this.writeCommandResponseCodeRaw));
 				}
 
 				else
 				{ 
-					this.seizureNumberOfRecordsRaw = new byte[Constants.INT32_BYTE_SIZE];
-					this.seizureSamplingFrequencyRaw = new byte[Constants.INT32_BYTE_SIZE];
-					this.seizureSettingsRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.seizureNumberOfRecordsRaw = new byte[SEIZURE_NO_OF_REC_BYTE_SIZE];
+					this.seizureSamplingFrequencyRaw = new byte[SEIZURE_SAMPLING_FREQUENCY_BYTE_SIZE];
+					this.seizureSettingsRaw = new byte[SEIZURE_SETTINGS_BYTE_SIZE];
 
 					Array.Copy(this._rawData, SEIZURE_NO_OF_REC_BYTE_LOC, this.seizureNumberOfRecordsRaw, INDEX_ZERO, SEIZURE_NO_OF_REC_BYTE_SIZE);
 					Array.Copy(this._rawData, SEIZURE_SAMPLING_FREQUENCY_BYTE_LOC, this.seizureSamplingFrequencyRaw, INDEX_ZERO, SEIZURE_SAMPLING_FREQUENCY_BYTE_SIZE);
 
-					this.SeizureNumberOfRecords = BitConverter.ToInt32(this.seizureNumberOfRecordsRaw, INDEX_ZERO);
-					this.SeizureSamplingFrequency = BitConverter.ToInt32(this.seizureSamplingFrequencyRaw, INDEX_ZERO);
+					this.SeizureNumberOfRecords = Convert.ToInt32(Utils.getDecimalValue(this.seizureNumberOfRecordsRaw)); 
+					this.SeizureSamplingFrequency = Convert.ToInt32(Utils.getDecimalValue(this.seizureSamplingFrequencyRaw)); 
 
 					if (!((this.trioDevInfo.ModelNumber == 936 && this.trioDevInfo.FirmwareVersion < 2.2f) ||
 						(this.trioDevInfo.ModelNumber == 939 && this.trioDevInfo.FirmwareVersion < 0.3f) ||
 						(this.trioDevInfo.ModelNumber == 961 && this.trioDevInfo.FirmwareVersion < 1.5f)))
 					{
 						Array.Copy(this._rawData, SEIZURE_SETTINGS_BYTE_LOC, this.seizureSettingsRaw, INDEX_ZERO, SEIZURE_SETTINGS_BYTE_SIZE);
-						this.SeizureSettingsEnable = Convert.ToBoolean(BitConverter.ToInt32(this.seizureSettingsRaw, INDEX_ZERO));
+						this.SeizureSettingsEnable = Convert.ToBoolean(Convert.ToInt32(Utils.getDecimalValue(this.seizureSettingsRaw)));
 					}
 				}
 				parseStatus = BLEParsingStatus.SUCCESS;

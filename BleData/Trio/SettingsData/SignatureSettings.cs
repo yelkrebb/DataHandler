@@ -124,9 +124,9 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 				if (rawData[1] == 0x5F || rawData[1] == 0x1F)
 				{
 					this.IsReadCommand = false;
-					this.writeCommandResponseCodeRaw = new byte[Constants.INT32_BYTE_SIZE];
+					this.writeCommandResponseCodeRaw = new byte[WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE];
 					Array.Copy(this._rawData, 2, this.writeCommandResponseCodeRaw, INDEX_ZERO, WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE);
-					this.WriteCommandResponseCode = BitConverter.ToInt32(this.writeCommandResponseCodeRaw, INDEX_ZERO);
+					this.WriteCommandResponseCode = Convert.ToInt32(Utils.getDecimalValue(this.writeCommandResponseCodeRaw));
 				}
 
 				else
@@ -134,9 +134,9 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 					if ((this.trioDevInfo.ModelNumber == 932 || this.trioDevInfo.ModelNumber == 939 || this.trioDevInfo.ModelNumber == 936 ||
 					this.trioDevInfo.ModelNumber == 905 || (this.trioDevInfo.ModelNumber == 961 && this.trioDevInfo.FirmwareVersion < 5.0f)))
 					{
-						this.samplingTimeWithSamplingCycleRaw = new byte[Constants.INT32_BYTE_SIZE];
-						this.samplingFrequencyRaw = new byte[Constants.INT32_BYTE_SIZE];
-						this.samplingThresholdRaw = new byte[Constants.INT32_BYTE_SIZE];
+						this.samplingTimeWithSamplingCycleRaw = new byte[SAMPLING_TIME_BYTE_SIZE_OLD];
+						this.samplingFrequencyRaw = new byte[SAMPLING_FREQUENCY_BYTE_SIZE];
+						this.samplingThresholdRaw = new byte[SAMPLING_THRESHOLD_BYTE_SIZE];
 
 						Array.Copy(this._rawData, SAMPLING_TIME_BYTE_LOC, this.samplingTimeWithSamplingCycleRaw, INDEX_ZERO, SAMPLING_TIME_BYTE_SIZE_OLD);
 						Array.Copy(this._rawData, SAMPLING_FREQUENCY_BYTE_LOC_OLD, this.samplingFrequencyRaw, INDEX_ZERO, SAMPLING_FREQUENCY_BYTE_SIZE);
@@ -144,30 +144,30 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 
 						if (this.trioDevInfo.ModelNumber == 932 || (this.trioDevInfo.ModelNumber == 936 && this.trioDevInfo.FirmwareVersion < 1.4f))
 						{
-							this.SamplingTime = BitConverter.ToInt32(this.samplingTimeWithSamplingCycleRaw, INDEX_ZERO) & 0x0F;
-							this.SamplingCycle = (BitConverter.ToInt32(this.samplingTimeWithSamplingCycleRaw, INDEX_ZERO) >> 4) & 0X0F;
+							this.SamplingTime = Convert.ToInt32(Utils.getDecimalValue(this.samplingTimeWithSamplingCycleRaw)) & 0x0F;
+							this.SamplingCycle = (Convert.ToInt32(Utils.getDecimalValue(this.samplingTimeWithSamplingCycleRaw))>> 4) & 0X0F;
 						}
 						else
 						{
-							this.SamplingTime = BitConverter.ToInt32(this.samplingTimeWithSamplingCycleRaw, INDEX_ZERO) & 0x1F;
-							this.SamplingCycle = (BitConverter.ToInt32(this.samplingTimeWithSamplingCycleRaw, INDEX_ZERO) >> 5) & 0X07;
+							this.SamplingTime = Convert.ToInt32(Utils.getDecimalValue(this.samplingTimeWithSamplingCycleRaw)) & 0x1F;
+							this.SamplingCycle = (Convert.ToInt32(Utils.getDecimalValue(this.samplingTimeWithSamplingCycleRaw)) >> 5) & 0X07;
 						}
 
-						this.SamplingFrequency = BitConverter.ToInt32(this.samplingFrequencyRaw, INDEX_ZERO);
-						this.SamplingThreshold = BitConverter.ToInt32(this.samplingThresholdRaw, INDEX_ZERO);
+						this.SamplingFrequency = Convert.ToInt32(Utils.getDecimalValue(this.samplingFrequencyRaw));
+						this.SamplingThreshold = Convert.ToInt32(Utils.getDecimalValue(this.samplingThresholdRaw)); 
 					}
 					else
 					{
-						this.samplingTimeRaw = new byte[Constants.INT32_BYTE_SIZE];
-						this.samplingCycleRaw = new byte[Constants.INT32_BYTE_SIZE];
-						this.samplingFrequencyRaw = new byte[Constants.INT32_BYTE_SIZE];
-						this.samplingThresholdRaw = new byte[Constants.INT32_BYTE_SIZE];
-						this.samplingRecordingPerdayRaw = new byte[Constants.INT32_BYTE_SIZE];
-						this.samplingStepsRaw = new byte[Constants.INT32_BYTE_SIZE];
-						this.minuteRecordingIntervalRaw = new byte[Constants.INT32_BYTE_SIZE];
-						this.maximumStepsRaw =  new byte[Constants.INT32_BYTE_SIZE];
-						this.timeframeInSecondsRaw = new byte[Constants.INT32_BYTE_SIZE];
-						this.samplingTotalBlocksRaw = new byte[Constants.INT32_BYTE_SIZE];
+						this.samplingTimeRaw = new byte[SAMPLING_TIME_BYTE_SIZE_NEW];
+						this.samplingCycleRaw = new byte[SAMPLING_CYCLE_BYTE_SIZE];
+						this.samplingFrequencyRaw = new byte[SAMPLING_FREQUENCY_BYTE_SIZE];
+						this.samplingThresholdRaw = new byte[SAMPLING_THRESHOLD_BYTE_SIZE];
+						this.samplingRecordingPerdayRaw = new byte[SAMPLING_RECORDING_PER_DAY_BYTE_SIZE];
+						this.samplingStepsRaw = new byte[SAMPLING_STEPS_SIZE];
+						this.minuteRecordingIntervalRaw = new byte[SAMPLING_MINUTE_RECORDING_SIZE];
+						this.maximumStepsRaw =  new byte[SAMPLING_MAXIMUM_STEPS_SIZE];
+						this.timeframeInSecondsRaw = new byte[SAMPLING_TIME_FRAME_IN_SECONDS_SIZE];
+						this.samplingTotalBlocksRaw = new byte[SAMPLING_TOTAL_BLOCKS_BYTE_SIZE];
 
 						Array.Copy(this._rawData, SAMPLING_TIME_BYTE_LOC, this.samplingTimeRaw, INDEX_ZERO, SAMPLING_TIME_BYTE_SIZE_NEW);
 						Array.Copy(this._rawData, SAMPLING_CYCLE_BYTE_LOC_NEW, this.samplingCycleRaw, INDEX_ZERO, SAMPLING_CYCLE_BYTE_SIZE);
@@ -180,16 +180,16 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 						Array.Copy(this._rawData, SAMPLING_TIME_FRAME_IN_SECONDS_LOC, this.timeframeInSecondsRaw, INDEX_ZERO, SAMPLING_TIME_FRAME_IN_SECONDS_SIZE);
 						Array.Copy(this._rawData, SAMPLING_TOTAL_BLOCKS_BYTE_LOC, this.samplingTotalBlocksRaw, INDEX_ZERO, SAMPLING_TOTAL_BLOCKS_BYTE_SIZE);
 
-						this.SamplingTime = BitConverter.ToInt32(this.samplingTimeRaw, INDEX_ZERO);
-						this.SamplingCycle = BitConverter.ToInt32(this.samplingCycleRaw, INDEX_ZERO);
-						this.SamplingFrequency = BitConverter.ToInt32(this.samplingFrequencyRaw, INDEX_ZERO);
-						this.SamplingThreshold = BitConverter.ToInt32(this.samplingThresholdRaw, INDEX_ZERO);
-						this.SamplingRecordingPerDay = BitConverter.ToInt32(this.samplingRecordingPerdayRaw, INDEX_ZERO);
-						this.SamplingSteps = BitConverter.ToInt32(this.samplingStepsRaw, INDEX_ZERO);
-						this.MinuteRecordingInterval = BitConverter.ToInt32(this.minuteRecordingIntervalRaw, INDEX_ZERO);
-						this.MaximumSteps = BitConverter.ToInt32(this.maximumStepsRaw, INDEX_ZERO);
-						this.TimeFrameInSeconds = BitConverter.ToInt32(this.timeframeInSecondsRaw, INDEX_ZERO);
-						this.SamplingTotalBlocks = BitConverter.ToInt32(this.samplingTotalBlocksRaw, INDEX_ZERO);
+						this.SamplingTime = Convert.ToInt32(Utils.getDecimalValue(this.samplingTimeRaw)); 
+						this.SamplingCycle = Convert.ToInt32(Utils.getDecimalValue(this.samplingCycleRaw)); 
+						this.SamplingFrequency = Convert.ToInt32(Utils.getDecimalValue(this.samplingFrequencyRaw)); 
+						this.SamplingThreshold = Convert.ToInt32(Utils.getDecimalValue(this.samplingThresholdRaw)); 
+						this.SamplingRecordingPerDay = Convert.ToInt32(Utils.getDecimalValue(this.samplingRecordingPerdayRaw)); 
+						this.SamplingSteps = Convert.ToInt32(Utils.getDecimalValue(this.samplingStepsRaw)); 
+						this.MinuteRecordingInterval = Convert.ToInt32(Utils.getDecimalValue(this.minuteRecordingIntervalRaw)); 
+						this.MaximumSteps = Convert.ToInt32(Utils.getDecimalValue(this.maximumStepsRaw)); 
+						this.TimeFrameInSeconds = Convert.ToInt32(Utils.getDecimalValue(this.timeframeInSecondsRaw)); 
+						this.SamplingTotalBlocks = Convert.ToInt32(Utils.getDecimalValue(this.samplingTotalBlocksRaw));  
 
 					}
 				}
