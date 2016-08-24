@@ -59,7 +59,7 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 			BLEParsingStatus parsingStatus = BLEParsingStatus.ERROR;
 			await Task.Run(() =>
 			{
-				this._rawData = new byte[COMMAND_SIZE_WRITE + 2];
+				this._rawData = new byte[rawData.Length];
 				Array.Copy(rawData, this._rawData, rawData.Length);
 				this.IsReadCommand = true;
 				if (rawData[1] == 0x28)
