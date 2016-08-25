@@ -63,6 +63,7 @@
     <Compile Include="BleData\FT900\SettingsData\FT900SensitivitySettings.cs" />
     <Compile Include="BleData\FT900\StepsData\FT900StepsTableData.cs" />
     <Compile Include="BleData\Trio\StepsData\SeizureBlocksData.cs" />
+    <Compile Include="BleData\Trio\StepsData\SignatureData.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BleData\" />
