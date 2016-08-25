@@ -126,6 +126,7 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 			BLEParsingStatus parsingStatus = BLEParsingStatus.ERROR;
 			await Task.Run(() =>
 			{
+				
 				this._rawData = new byte[rawData.Length];
 				Array.Copy(rawData, this._rawData, rawData.Length);
 				this.IsReadCommand = true;
@@ -141,6 +142,8 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 					this.fraudTableRaw = new byte[FRAUD_TABLE_BYTE_SIZE];
 					Array.Copy(this._rawData, 3, this.fraudTableRaw, INDEX_ZERO, FRAUD_TABLE_BYTE_SIZE);
 					this.FraudTableCommandValue = Convert.ToInt32(Utils.getDecimalValue(this.fraudTableRaw)); 
+
+					parsingStatus = BLEParsingStatus.SUCCESS;
 
 				}
 				else //(rawData[1] == 0x22)

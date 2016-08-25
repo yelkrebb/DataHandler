@@ -107,6 +107,7 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 			BLEParsingStatus parsingStatus = BLEParsingStatus.ERROR;
 			await Task.Run(() =>
 			{
+				
 				this._rawData = new byte[rawData.Length];
 				Array.Copy(rawData, this._rawData, rawData.Length);
 				this.IsReadCommand = true;
@@ -164,6 +165,8 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 					if (i + sigLen > this.signatureRaw.Length)
 						break;
 				}
+
+				parsingStatus = BLEParsingStatus.SUCCESS;
 					
 			});
 

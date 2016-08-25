@@ -180,6 +180,8 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 						break;
 				}
 
+				parsingStatus = BLEParsingStatus.SUCCESS;
+
 			});
 
 			return parsingStatus;
