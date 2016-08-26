@@ -66,6 +66,8 @@
     <Compile Include="BleData\Trio\StepsData\SignatureData.cs" />
     <Compile Include="BleData\Trio\StepsData\SeizureData.cs" />
     <Compile Include="BleData\Trio\StepsData\TalliesData.cs" />
+    <Compile Include="BleData\Trio\StepsData\DisplayOnScreenData.cs" />
+    <Compile Include="BleData\Trio\StepsData\MessageData.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BleData\" />

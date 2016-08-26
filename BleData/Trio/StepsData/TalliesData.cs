@@ -12,6 +12,7 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 
 		const int COMMAND_PREFIX = 0x1B;
 		const int COMMAND_ID_READ = 0x5D;
+		const int COMMAND_SIZE_READ = 2;
 
 		const int INDEX_ZERO = 0;
 
@@ -55,7 +56,6 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 		public bool IsReadCommand { get; set; }
 
 		/* #### Equavalent RAW data per field #####*/
-
 		byte[] hoursUsedRaw;
 		byte[] beaconsConnectedRaw;
 		byte[] beaconsFailedRaw;
@@ -84,7 +84,35 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 
 		private void ClearData()
 		{
-			
+			if (this._rawData != null && this._rawData.Length > 0)
+				Array.Clear(this._rawData, INDEX_ZERO, this._rawData.Length);
+			if (this._readCommandRawData != null && this._readCommandRawData.Length > 0)
+				Array.Clear(this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
+			if (this.hoursUsedRaw != null && this.hoursUsedRaw.Length > 0)
+				Array.Clear(this.hoursUsedRaw, INDEX_ZERO, this.hoursUsedRaw.Length);
+			if (this.beaconsConnectedRaw != null && this.beaconsConnectedRaw.Length > 0)
+				Array.Clear(this.beaconsConnectedRaw, INDEX_ZERO, this.beaconsConnectedRaw.Length);
+			if (this.beaconsFailedRaw != null && this.beaconsFailedRaw.Length > 0)
+				Array.Clear(this.beaconsFailedRaw, INDEX_ZERO, this.beaconsFailedRaw.Length);
+			if (this.onDemandConnectedRaw != null && this.onDemandConnectedRaw.Length > 0)
+				Array.Clear(this.onDemandConnectedRaw, INDEX_ZERO, this.onDemandConnectedRaw.Length);
+			if (this.onDemandFailedRaw != null && this.onDemandFailedRaw.Length > 0)
+				Array.Clear(this.onDemandFailedRaw, INDEX_ZERO, this.onDemandFailedRaw.Length);
+			if (this.numberOfChargeRaw != null && this.numberOfChargeRaw.Length > 0)
+				Array.Clear(this.numberOfChargeRaw, INDEX_ZERO, this.numberOfChargeRaw.Length);
+			if (this.numberOfHardResetRaw != null && this.numberOfHardResetRaw.Length > 0)
+				Array.Clear(this.numberOfHardResetRaw, INDEX_ZERO, this.numberOfHardResetRaw.Length);
+
+			if (this.screenOnDurationRaw != null && this.screenOnDurationRaw.Length > 0)
+				Array.Clear(this.screenOnDurationRaw, INDEX_ZERO, this.screenOnDurationRaw.Length);
+			if (this.seizOrProfRecordingCompletedRaw != null && this.seizOrProfRecordingCompletedRaw.Length > 0)
+				Array.Clear(this.seizOrProfRecordingCompletedRaw, INDEX_ZERO, this.seizOrProfRecordingCompletedRaw.Length);
+			if (this.seizOrProfRecordingAbortedRaw != null && this.seizOrProfRecordingAbortedRaw.Length > 0)
+				Array.Clear(this.seizOrProfRecordingAbortedRaw, INDEX_ZERO, this.seizOrProfRecordingAbortedRaw.Length);
+			if (this.numOfAlarmsVibrationsRaw != null && this.numOfAlarmsVibrationsRaw.Length > 0)
+				Array.Clear(this.numOfAlarmsVibrationsRaw, INDEX_ZERO, this.numOfAlarmsVibrationsRaw.Length);
+			if (this.writeCommandResponseCodeRaw != null && this.writeCommandResponseCodeRaw.Length > 0)
+				Array.Clear(this.writeCommandResponseCodeRaw, INDEX_ZERO, this.writeCommandResponseCodeRaw.Length);
 		}
 
 		public async Task<BLEParsingStatus> ParseData(byte[] rawData)
@@ -148,6 +176,19 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 			});
 
 			return parsingStatus;
+		}
+
+		public async Task<byte[]> GetReadStepTableDataCommand()
+		{
+			await Task.Run(() =>
+			{
+				this._readCommandRawData = new byte[COMMAND_SIZE_READ];
+				byte[] commandPrefix = BitConverter.GetBytes(COMMAND_PREFIX);
+				byte[] commandID = BitConverter.GetBytes(COMMAND_ID_READ);
+				Buffer.BlockCopy(commandID, INDEX_ZERO, this._readCommandRawData, INDEX_ZERO + 1, 1);
+				Buffer.BlockCopy(commandPrefix, INDEX_ZERO, this._readCommandRawData, INDEX_ZERO, 1);
+			});
+			return this._readCommandRawData;
 		}
 	}
 }
