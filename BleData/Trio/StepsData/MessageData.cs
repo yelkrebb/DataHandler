@@ -52,7 +52,8 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 		const int MESSAGE_TYPE_BYTE_SIZE = 1;
 		const int MESSAGE_CODE_BYTE_SIZE = 2;
 		const int SLOT_NUM_BYTE_SIZE = 1;
-		const int MSG_PROPERTY_BYTE_SIZE = 1;
+		const int MSG_PROPERTY_BYTE_SIZE_OLD = 1;
+		const int MSG_PROPERTY_BYTE_SIZE = 2;
 		const int X_COOR_BYTE_SIZE = 1;
 		const int Y_COOR_BYTE_SIZE = 1;
 		const int BG_COLOR_BYTE_SIZE = 2;
@@ -142,7 +143,7 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 				{
 					MessageProperty messageProp = messagePropList[i];
 					msgsByteCount += messageProp.msgData.Length;
-					msgPropCount += 5; // byte size for the rest of the fixed sized properties
+					msgPropCount += (this.trioDevInfo.ModelNumber == 961 && this.trioDevInfo.FirmwareVersion >= 5.0f)?6 :5; // byte size for the rest of the fixed sized properties
 				}
 
 				this._rawData = new byte[COMMAND_SIZE_WRITE + 2];
@@ -183,7 +184,7 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 						int flagValue = 0x00;
 						flagValue |= messageProp.type << 13;
 						flagValue |= messageProp.scroll << 6;
-						flagValue |= messageProp.fontSize << 4;
+						flagValue |= messageProp.fontSize << 3;
 						flagValue |= messageProp.color > 7 ? 7 : messageProp.color;
 						this.messagePropertyRaw = BitConverter.GetBytes(flagValue);
 
