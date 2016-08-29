@@ -81,6 +81,7 @@
     <Compile Include="WebServiceData\DeviceWebServices\NotifySettingsUpdate.cs" />
     <Compile Include="WebServiceData\DeviceWebServices\UnpairMemberDevice.cs" />
     <Compile Include="BleData\Trio\StepsData\StepsData.cs" />
+    <Compile Include="WebServiceData\DeviceWebServices\UploadStepDataHeader.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BleData\" />

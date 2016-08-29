@@ -10,8 +10,9 @@ using Motion.Core.Data.WebServiceData;
 
 namespace Motion.Core.Data.WebServiceData.DeviceWebServices
 {
-	public class UploadCommandResponseRequest
+	public class UploadStepDataHeaderRequest
 	{
+		
 		[JsonProperty(PropertyName = "mdl")]
 		public int DeviceModel;
 		[JsonProperty(PropertyName = "serno")]
@@ -25,16 +26,24 @@ namespace Motion.Core.Data.WebServiceData.DeviceWebServices
 		[JsonProperty(PropertyName = "syncid")]
 		public int SynchronizationID;
 		[JsonProperty(PropertyName = "data")]
-		public CommandResponseData commandRespData;
+		public StepDataHeaderData stepDataHeaderData;
 
-		public class CommandResponseData
+		public class StepDataHeaderData
 		{
-			[JsonProperty(PropertyName = "cmd")]
-			public int UploadCommand;
-			[JsonProperty(PropertyName = "rsp")]
-			public int UploadResponse;
+			[JsonProperty(PropertyName = "dtid")]
+			public int DataTransmissionID;
+			[JsonProperty(PropertyName = "hdate")]
+			public string DeviceHeaderDate;
+			[JsonProperty(PropertyName = "hdat")]
+			public long DeviceHeaderData;
+			[JsonProperty(PropertyName = "rdate")]
+			public string CommandReadDate;
+			[JsonProperty(PropertyName = "rshr")]
+			public int CommandReadHour;
+			[JsonProperty(PropertyName = "rehr")]
+			public int CommandReadEnd;
 
-			internal CommandResponseData()
+			internal StepDataHeaderData()
 			{
 
 			}
@@ -46,7 +55,7 @@ namespace Motion.Core.Data.WebServiceData.DeviceWebServices
 
 	}
 
-	public class UploadCommandResponseResponse
+	public class UploadStepDataHeaderResponse
 	{
 		[JsonProperty(PropertyName = "status")]
 		public string ResponseStatus;
@@ -57,18 +66,18 @@ namespace Motion.Core.Data.WebServiceData.DeviceWebServices
 		public string responseJSON;
 
 
-		internal UploadCommandResponseResponse()
+		internal UploadStepDataHeaderResponse()
 		{
 		}
 	}
 
-	public class UploadCommandResponse
+	public class UploadStepDataHeader
 	{
-		const string METHOD_NAME = "UploadCommnandResponse";
-		public UploadCommandResponseRequest request = new UploadCommandResponseRequest();
-		public UploadCommandResponseResponse response = new UploadCommandResponseResponse();
-		
-		public UploadCommandResponse()
+		const string METHOD_NAME = "UploadStepDataHeader";
+		public UploadStepDataHeaderRequest request = new UploadStepDataHeaderRequest();
+		public UploadStepDataHeaderResponse response = new UploadStepDataHeaderResponse();
+
+		public UploadStepDataHeader()
 		{
 			this.initResponseObjects();
 		}
@@ -86,7 +95,7 @@ namespace Motion.Core.Data.WebServiceData.DeviceWebServices
 				string responseStr = await ws.PostData(Utils.GetDeviceServicesURL() + METHOD_NAME, jsonString);
 				System.Diagnostics.Debug.WriteLine(responseStr);
 				this.response.responseJSON = responseStr;
-				this.response = JsonConvert.DeserializeObject<UploadCommandResponseResponse>(responseStr, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+				this.response = JsonConvert.DeserializeObject<UploadStepDataHeaderResponse>(responseStr, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 			}
 			else
 			{
@@ -108,7 +117,7 @@ namespace Motion.Core.Data.WebServiceData.DeviceWebServices
 
 		private void initResponseObjects()
 		{
-			this.request.commandRespData = new UploadCommandResponseRequest.CommandResponseData();
+			this.request.stepDataHeaderData = new UploadStepDataHeaderRequest.StepDataHeaderData();
 		}
 	}
 }
