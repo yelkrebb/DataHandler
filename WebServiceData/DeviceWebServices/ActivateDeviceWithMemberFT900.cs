@@ -13,37 +13,33 @@ using Motion.Core.Data.BleData.Trio;
 
 namespace Motion.Core.Data.WebServiceData.DeviceWebServices
 {
-	public class GetDeviceInfoRequest
+	public class ActivateDeviceWithMemberFT900Request
 	{
 		[JsonProperty(PropertyName = "mdl")]
-		public int TrackerModel; 
+		public int TrackerModel;
 		[JsonProperty(PropertyName = "serno")]
 		public long TrackerSerialNumber;
 		[JsonProperty(PropertyName = "btadd")]
 		public string TrackerBtAdd;
 		[JsonProperty(PropertyName = "aid")]
 		public int ApplicationID;
-		[JsonProperty(PropertyName = "pid")]
-		public int PlatformID;
-		[JsonProperty(PropertyName = "dpstat")]
-		public int DevicePairingStatus;
-		[JsonProperty(PropertyName = "ddtm")]
-		public DateTime? DeviceDateTime = null;
+		[JsonProperty(PropertyName = "drmid")]
+		public int DeviceDermID;
 		[JsonProperty(PropertyName = "fwver")]
 		public float TrackerFirmwareVersion;
 		[JsonIgnore]
 		public string requestJSON;
 
-		internal GetDeviceInfoRequest()
+		internal ActivateDeviceWithMemberFT900Request()
 		{
-			
+
 		}
 	}
 
-	public class GetDeviceInfoResponse
+	public class ActivateDeviceWithMemberFT900Response
 	{
-		[JsonProperty (PropertyName = "status")]
-		public string ResponseStatus; 
+		[JsonProperty(PropertyName = "status")]
+		public string ResponseStatus;
 		[JsonProperty(PropertyName = "msg")]
 		public string ResponseMessage;
 		[JsonProperty(PropertyName = "mid")]
@@ -53,7 +49,7 @@ namespace Motion.Core.Data.WebServiceData.DeviceWebServices
 		[JsonProperty(PropertyName = "did")]
 		public int DeviceID;
 		[JsonProperty(PropertyName = "syncd")]
-		public long LastSyncSettingDateTime; 
+		public long LastSyncSettingDateTime;
 		[JsonProperty(PropertyName = "lmno")]
 		public int LastMinuteSlotNumber;
 		[JsonProperty(PropertyName = "lmho")]
@@ -63,7 +59,7 @@ namespace Motion.Core.Data.WebServiceData.DeviceWebServices
 		[JsonProperty(PropertyName = "svrdtm")]
 		public string ServerDateTime;
 		[JsonProperty(PropertyName = "fwver")]
-		public float TrackerFirmwareVersion; 
+		public float TrackerFirmwareVersion;
 		[JsonProperty(PropertyName = "tdif")]
 		public int AllowableTimeDifference;
 		[JsonProperty(PropertyName = "uflag")]
@@ -89,9 +85,10 @@ namespace Motion.Core.Data.WebServiceData.DeviceWebServices
 		[JsonProperty(PropertyName = "cset")]
 		public ExerciseSettings exerciseSettings;
 		[JsonProperty(PropertyName = "eset")]
-		public CompanySettings companySettings;
+		public FT900CompanySettings companySettings;
 		[JsonProperty(PropertyName = "sset")]
 		public SignatureSettings signatureSettings;
+		//Todo Add "saset" StepAlgorithmSetting
 		[JsonProperty(PropertyName = "app")]
 		public AppUpdateInfo appUpdateInfo;
 		[JsonProperty(PropertyName = "sz")]
@@ -137,7 +134,7 @@ namespace Motion.Core.Data.WebServiceData.DeviceWebServices
 
 			internal AppUpdateInfo()
 			{
-				
+
 			}
 		}
 
@@ -154,21 +151,22 @@ namespace Motion.Core.Data.WebServiceData.DeviceWebServices
 			}
 		}
 
-		internal GetDeviceInfoResponse()
+		internal ActivateDeviceWithMemberFT900Response()
 		{
+
 		}
 	}
 
-	public class GetDeviceInformation
+	public class ActivateDeviceWithMemberFT900
 	{
-		const string METHOD_NAME = "ActivateDeviceWithMember";
+		const string METHOD_NAME = "GetDeviceInfo";
 
-		public GetDeviceInfoRequest request = new GetDeviceInfoRequest();
-		public GetDeviceInfoResponse response = new GetDeviceInfoResponse();
+		public ActivateDeviceWithMemberFT900Request request = new ActivateDeviceWithMemberFT900Request();
+		public ActivateDeviceWithMemberFT900Response response = new ActivateDeviceWithMemberFT900Response();
 
 		private TrioDeviceInformation _devInfo;
 
-		public GetDeviceInformation(TrioDeviceInformation devInfo)
+		public ActivateDeviceWithMemberFT900(TrioDeviceInformation devInfo)
 		{
 			this._devInfo = devInfo;
 			this.initResponseObjects();
@@ -187,7 +185,7 @@ namespace Motion.Core.Data.WebServiceData.DeviceWebServices
 				string responseStr = await ws.PostData(Utils.GetDeviceServicesURL() + METHOD_NAME, jsonString);
 				System.Diagnostics.Debug.WriteLine(responseStr);
 				this.response.responseJSON = responseStr;
-				this.response = JsonConvert.DeserializeObject<GetDeviceInfoResponse>(responseStr, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+				this.response = JsonConvert.DeserializeObject<ActivateDeviceWithMemberFT900Response>(responseStr, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
 			}
 			else
 			{
@@ -200,7 +198,7 @@ namespace Motion.Core.Data.WebServiceData.DeviceWebServices
 		{
 			bool isValid = false;
 
-			if (this.request.TrackerModel != 0 && this.request.TrackerSerialNumber != 0 && this.request.TrackerFirmwareVersion >= 0.0f && this.request.ApplicationID != 0 && this.request.DeviceDateTime.HasValue)
+			if (this.request.TrackerModel != 0 && this.request.TrackerSerialNumber != 0 && this.request.TrackerFirmwareVersion >= 0.0f && this.request.ApplicationID != 0)
 			{
 				isValid = true;
 			}
@@ -209,15 +207,15 @@ namespace Motion.Core.Data.WebServiceData.DeviceWebServices
 
 		private void initResponseObjects()
 		{
-			this.response.lastSeizureDataUploadInfo = new GetDeviceInfoResponse.LastSeizureDataUploadInfo();
+			this.response.lastSeizureDataUploadInfo = new ActivateDeviceWithMemberFT900Response.LastSeizureDataUploadInfo();
 			this.response.userSettings = new UserSettings(this._devInfo);
-			this.response.companySettings = new CompanySettings(this._devInfo);
+			this.response.companySettings = new FT900CompanySettings();
 			this.response.exerciseSettings = new ExerciseSettings(this._devInfo);
 			this.response.signatureSettings = new SignatureSettings(this._devInfo);
 			this.response.seizureSettings = new SeizureSettings(this._devInfo);
 			this.response.sensitivitySettings = new SensitivitySettings(this._devInfo);
-			this.response.appUpdateInfo = new GetDeviceInfoResponse.AppUpdateInfo();
-			this.response.deviceFwUpdateInfo = new GetDeviceInfoResponse.DeviceFirmwareUpdateInfo();
+			this.response.appUpdateInfo = new ActivateDeviceWithMemberFT900Response.AppUpdateInfo();
+			this.response.deviceFwUpdateInfo = new ActivateDeviceWithMemberFT900Response.DeviceFirmwareUpdateInfo();
 
 		}
 	}

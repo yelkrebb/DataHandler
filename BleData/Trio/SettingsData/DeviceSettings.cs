@@ -59,8 +59,8 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 		public int WriteCommandResponseCode { get; set; }
 		public bool IsReadCommand { get; set; }
 
-		public byte[] _rawData { get; set; }
-		public byte[] _readCommandRawData { get; set; }
+		private byte[] _rawData { get; set; }
+		private byte[] _readCommandRawData { get; set; }
 
 
 		/* #### Equavalent RAW data per field #####*/

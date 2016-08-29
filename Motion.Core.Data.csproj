@@ -30,7 +30,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BleData\Trio\AccelData\Signature.cs" />
     <Compile Include="BleData\Trio\SettingsData\CompanySettings.cs" />
     <Compile Include="BleData\Trio\SettingsData\DeviceSettings.cs" />
     <Compile Include="BleData\Trio\SettingsData\ExerciseSettings.cs" />
@@ -82,6 +81,10 @@
     <Compile Include="WebServiceData\DeviceWebServices\UnpairMemberDevice.cs" />
     <Compile Include="BleData\Trio\StepsData\StepsData.cs" />
     <Compile Include="WebServiceData\DeviceWebServices\UploadStepDataHeader.cs" />
+    <Compile Include="WebServiceData\DeviceWebServices\UploadSignatureData.cs" />
+    <Compile Include="WebServiceData\DeviceWebServices\UploadSeizureData.cs" />
+    <Compile Include="WebServiceData\DeviceWebServices\ActivateDeviceWithMemberFT900.cs" />
+    <Compile Include="WebServiceData\DeviceWebServices\GetDeviceInformationFT900.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BleData\" />
@@ -93,6 +96,7 @@
     <Folder Include="BleData\Trio\Others\" />
     <Folder Include="BleData\FT900\Others\" />
     <Folder Include="BleData\FT900\StepsData\" />
+    <Folder Include="BleData\Trio\AccelData\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Motion.Mobile.Utilities\Motion.Mobile.Utilities.csproj">

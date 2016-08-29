@@ -87,7 +87,6 @@ namespace Motion.Core.Data.WebServiceData.DeviceWebServices
 		public CompanySettings companySettings;
 		[JsonProperty(PropertyName = "sset")]
 		public SignatureSettings signatureSettings;
-		//Todo Add "saset" StepAlgorithmSetting
 		[JsonProperty(PropertyName = "app")]
 		public AppUpdateInfo appUpdateInfo;
 		[JsonProperty(PropertyName = "sz")]

@@ -3,9 +3,11 @@ using System.Globalization;
 using System.Threading.Tasks;
 using Motion.Core.Data.BleData.FT900;
 
+using Newtonsoft.Json;
+
 namespace Motion.Core.Data.BleData.FT900.SettingsData
 {
-	public class CompanySettings:FT900DataHandler
+	public class FT900CompanySettings:FT900DataHandler
 	{
 		const int COMMAND_SIZE_WRITE_900 = 0x13;
 		const int COMMAND_SIZE_READ_900 = 0x02;
@@ -42,22 +44,38 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 		const int MIN_STEPS_THRESHOLD_BYTE_SIZE_FT900 = 1;
 		const int FLAGS_BYTE_SIZE_FT900 = 1;
 
+		[JsonProperty(PropertyName = "gstp")]
 		public int TenacitySteps { get; set; }
+		[JsonProperty(PropertyName = "fstp")]
 		public int FrequencySteps { get; set; }
+		[JsonProperty(PropertyName = "freqt")]
 		public int FrequencyCycleTime { get; set; }
+		[JsonProperty(PropertyName = "freqc")]
 		public int FrequencyCycle { get; set; }
+		[JsonProperty(PropertyName = "freqi")]
 		public int FrequencyCycleInterval { get; set; }
 
+		[JsonProperty(PropertyName = "faset")]
 		public bool FrequencyAutoSet { get; set; }
+		[JsonProperty(PropertyName = "maxitm")]
 		public int ActivityMax { get; set; }
+		[JsonProperty(PropertyName = "astm")]
 		public int ActivityStartTime { get; set; }
+		[JsonProperty(PropertyName = "estm")]
 		public int ActivityEndTime { get; set; }
+		[JsonProperty(PropertyName = "synct")]
 		public int SyncTimeInterval { get; set; }
+		[JsonProperty(PropertyName = "minsth")]
 		public int MinimumStepThreshold { get; set; }
+		[JsonProperty(PropertyName = "falrm")]
 		public bool FrequencyAlarmEnable { get; set; }
+		[JsonProperty(PropertyName = "dset")]
 		public bool NextDaySet { get; set; }
+		[JsonProperty(PropertyName = "tsens")]
 		public int StepSensitivity { get; set; }
+		[JsonIgnore]
 		public int WriteCommandResponseCode { get; set; }
+		[JsonIgnore]
 		public bool IsReadCommand { get; set; }
 
 		byte[] frequencyAutoSetRaw;
@@ -77,7 +95,6 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 		private byte[] _rawData;
 		private byte[] _readCommandRawData;
 
-		FT900DeviceInformation ft900DevInfo;
 
 		private void ClearData()
 		{
@@ -90,9 +107,8 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 			Array.Clear(flagsByteRaw, INDEX_ZERO, flagsByteRaw.Length);
 		}
 
-		public CompanySettings(FT900DeviceInformation devInfo)
+		public FT900CompanySettings()
 		{
-			this.ft900DevInfo = devInfo;
 			this.ClearData();
 		}
 
