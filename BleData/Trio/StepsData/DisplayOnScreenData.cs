@@ -50,7 +50,18 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 
 		private void ClearData()
 		{
-
+			if (this._rawData != null && this._rawData.Length > 0)
+				Array.Clear(this._rawData, INDEX_ZERO, this._rawData.Length);
+			if (this._readCommandRawData != null && this._readCommandRawData.Length > 0)
+				Array.Clear(this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
+			if (this.packetNumRaw != null && this.packetNumRaw.Length > 0)
+				Array.Clear(this.packetNumRaw, INDEX_ZERO, this.packetNumRaw.Length);
+			if (this.totalMessageRaw != null && this.totalMessageRaw.Length > 0)
+				Array.Clear(this.totalMessageRaw, INDEX_ZERO, this.totalMessageRaw.Length);
+			if (this.checkSumRaw != null && this.checkSumRaw.Length > 0)
+				Array.Clear(this.checkSumRaw, INDEX_ZERO, this.checkSumRaw.Length);
+			if (this.writeCommandResponseCodeRaw != null && this.writeCommandResponseCodeRaw.Length > 0)
+				Array.Clear(this.writeCommandResponseCodeRaw, INDEX_ZERO, this.writeCommandResponseCodeRaw.Length);
 		}
 
 		public async Task<BLEParsingStatus> ParseData(byte[] rawData)

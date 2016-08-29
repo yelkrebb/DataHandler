@@ -30,8 +30,8 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 		byte[] writeCommandResponseCodeRaw;
 		/* ### End Raw data per field ### */
 
-		public byte[] _rawData { get; set; }
-		public byte[] _readCommandRawData { get; set; }
+		byte[] _rawData;
+		byte[] _readCommandRawData;
 
 
 		FT900DeviceInformation ft900DevInfo;

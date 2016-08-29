@@ -85,6 +85,7 @@
     <Compile Include="WebServiceData\DeviceWebServices\UploadSeizureData.cs" />
     <Compile Include="WebServiceData\DeviceWebServices\ActivateDeviceWithMemberFT900.cs" />
     <Compile Include="WebServiceData\DeviceWebServices\GetDeviceInformationFT900.cs" />
+    <Compile Include="BleData\FT900\SettingsData\FT900StepAlgorithmSetting.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BleData\" />

@@ -57,8 +57,8 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 		public int WriteCommandResponseCode { get; set; }
 		public bool IsReadCommand { get; set; }
 
-		public byte[] _rawData { get; set; }
-		public byte[] _readCommandRawData { get; set; }
+		byte[] _rawData { get; set; }
+		byte[] _readCommandRawData { get; set; }
 
 
 		/* #### Equavalent RAW data per field #####*/

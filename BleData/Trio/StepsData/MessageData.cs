@@ -100,7 +100,32 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 
 		private void ClearData()
 		{
-			
+			if (this._rawData != null && this._rawData.Length > 0)
+				Array.Clear(this._rawData, INDEX_ZERO, this._rawData.Length);
+			if (this._readCommandRawData != null && this._readCommandRawData.Length > 0)
+				Array.Clear(this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
+			if (this.totalSurveyAlertsRaw != null && this.totalSurveyAlertsRaw.Length > 0)
+				Array.Clear(this.totalSurveyAlertsRaw, INDEX_ZERO, this.totalSurveyAlertsRaw.Length);
+			if (this.checkSumRaw != null && this.checkSumRaw.Length > 0)
+				Array.Clear(this.checkSumRaw, INDEX_ZERO, this.checkSumRaw.Length);
+			if (this.scrollingDelayRaw != null && this.scrollingDelayRaw.Length > 0)
+				Array.Clear(this.scrollingDelayRaw, INDEX_ZERO, this.scrollingDelayRaw.Length);
+			if (this.messageTypeRaw != null && this.messageTypeRaw.Length > 0)
+				Array.Clear(this.messageTypeRaw, INDEX_ZERO, this.messageTypeRaw.Length);
+			if (this.messageCodeRaw != null && this.messageCodeRaw.Length > 0)
+				Array.Clear(this.messageCodeRaw, INDEX_ZERO, this.messageCodeRaw.Length);
+			if (this.slotNumberRaw != null && this.slotNumberRaw.Length > 0)
+				Array.Clear(this.slotNumberRaw, INDEX_ZERO, this.slotNumberRaw.Length);
+			if (this.messagePropertyRaw != null && this.messagePropertyRaw.Length > 0)
+				Array.Clear(this.messagePropertyRaw, INDEX_ZERO, this.messagePropertyRaw.Length);
+			if (this.xCoorRaw != null && this.xCoorRaw.Length > 0)
+				Array.Clear(this.xCoorRaw, INDEX_ZERO, this.xCoorRaw.Length);
+			if (this.yCoorRaw != null && this.yCoorRaw.Length > 0)
+				Array.Clear(this.yCoorRaw, INDEX_ZERO, this.yCoorRaw.Length);
+			if (this.bgColorRaw != null && this.bgColorRaw.Length > 0)
+				Array.Clear(this.bgColorRaw, INDEX_ZERO, this.bgColorRaw.Length);
+			if (this.writeCommandResponseCodeRaw != null && this.writeCommandResponseCodeRaw.Length > 0)
+				Array.Clear(this.writeCommandResponseCodeRaw, INDEX_ZERO, this.writeCommandResponseCodeRaw.Length);
 		}
 
 		public async Task<BLEParsingStatus> ParseData(byte[] rawData)
