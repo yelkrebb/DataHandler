@@ -76,6 +76,11 @@
     <Compile Include="WebServiceData\DeviceWebServices\UploadTalliesData.cs" />
     <Compile Include="WebServiceData\DeviceWebServices\UploadDataCompleted.cs" />
     <Compile Include="WebServiceData\DeviceWebServices\UploadCommandResponse.cs" />
+    <Compile Include="WebServiceData\DeviceWebServices\UploadStepsData.cs" />
+    <Compile Include="WebServiceData\DeviceWebServices\ActivateDeviceWithMember.cs" />
+    <Compile Include="WebServiceData\DeviceWebServices\NotifySettingsUpdate.cs" />
+    <Compile Include="WebServiceData\DeviceWebServices\UnpairMemberDevice.cs" />
+    <Compile Include="BleData\Trio\StepsData\StepsData.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BleData\" />

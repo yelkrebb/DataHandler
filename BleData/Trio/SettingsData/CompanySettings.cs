@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Motion.Mobile.Utilities;
 using Motion.Core.Data.BleData.Trio;
 
+using Newtonsoft.Json;
+
 namespace Motion.Core.Data.BleData.Trio.SettingsData
 {
 	public class CompanySettings : ITrioDataHandler
@@ -41,17 +43,29 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 		const int FREQUENCY_CYCLE_AND_INTERVAL_BYTE_SIZE = 1;
 		const int WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE = 1;
 
+		[JsonProperty(PropertyName = "gstp")]
 		public int TenacitySteps { get; set; }
+		[JsonProperty(PropertyName = "istp")]
 		public int IntensitySteps { get; set; }
+		[JsonProperty(PropertyName = "istm")]
 		public int IntensityTime { get; set; }
+		[JsonProperty(PropertyName = "ist")]
 		public int IntensityMinuteThreshold { get; set; }
+		[JsonProperty(PropertyName = "irm")]
 		public int IntensityRestMinuteAllowed { get; set; }
+		[JsonProperty(PropertyName = "fstp")]
 		public int FrequencySteps { get; set; }
+		[JsonProperty(PropertyName = "freqt")]
 		public int FrequencyCycleTime { get; set; }
+		[JsonProperty(PropertyName = "freqc")]
 		public int FrequencyCycle { get; set; }
+		[JsonProperty(PropertyName = "freqi")]
 		public int FrequencyCycleInterval { get; set; }
+		[JsonProperty(PropertyName = "isc")]
 		public int IntensityCycle { get; set; }
+		[JsonIgnore]
 		public int WriteCommandResponseCode { get; set; }
+		[JsonIgnore]
 		public bool IsReadCommand { get; set; }
 
 		/* #### Equavalent RAW data per field #####*/

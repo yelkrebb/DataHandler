@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Motion.Mobile.Utilities;
 using Motion.Core.Data.BleData.Trio;
 
+using Newtonsoft.Json;
+
 namespace Motion.Core.Data.BleData.Trio.SettingsData
 {
 	public class ExerciseSettings: ITrioDataHandler
@@ -33,15 +35,22 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 		const int FREQUENCY_ALARM_ENABLE_NEW = 2;
 		const int MULTIPLE_INTENSITY_ENABLE_NEW = 4;
 
+		[JsonProperty(PropertyName = "synct")]
 		public int SyncTimeInterval { get; set; }
+		[JsonProperty(PropertyName = "sync")]
 		public bool DataSyncEnable { get; set; }
+		[JsonProperty(PropertyName = "falrm")]
 		public bool FrequencyAlarmEnable { get; set; }
+		[JsonIgnore]
 		public bool MultipleIntensityEnable { get; set; }
+		[JsonIgnore]
 		public int WriteCommandResponseCode { get; set; }
+		[JsonIgnore]
 		public bool IsReadCommand { get; set; }
 
-		public byte[] _rawData { get; set; }
-		public byte[] _readCommandRawData { get; set; }
+
+		private byte[] _rawData { get; set; }
+		private byte[] _readCommandRawData { get; set; }
 
 		TrioDeviceInformation trioDevInfo;
 

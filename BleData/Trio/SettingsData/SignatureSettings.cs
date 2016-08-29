@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Motion.Mobile.Utilities;
 using Motion.Core.Data.BleData.Trio;
 
+using Newtonsoft.Json;
+
 namespace Motion.Core.Data.BleData.Trio.SettingsData
 {
 	public class SignatureSettings: ITrioDataHandler
@@ -48,18 +50,31 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 		const int SAMPLING_TOTAL_BLOCKS_BYTE_SIZE = 1;
 		const int WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE = 1;
 
+		[JsonProperty(PropertyName = "pst")]
 		public int SamplingTime { get; set; }
+		[JsonProperty(PropertyName = "psc")]
 		public int SamplingCycle { get; set; }
+		[JsonProperty(PropertyName = "psf")]
 		public int SamplingFrequency { get; set; }
+		[JsonProperty(PropertyName = "psth")]
 		public int SamplingThreshold { get; set; }
+		[JsonProperty(PropertyName = "psrd")]
 		public int SamplingRecordingPerDay { get; set; }
+		[JsonIgnore]
 		public int SamplingTotalBlocks { get; set; }
+		[JsonIgnore]
 		public int SamplingSteps { get; set; }
+		[JsonIgnore]
 		public int MinuteRecordingInterval { get; set; }
+		[JsonIgnore]
 		public int MaximumSteps { get; set; }
+		[JsonIgnore]
 		public int TimeFrameInSeconds { get; set; }
+		[JsonIgnore]
 		public int WriteCommandResponseCode { get; set; }
+		[JsonIgnore]
 		public bool IsReadCommand { get; set; }
+
 
 		/* #### Equavalent RAW data per field #####*/
 		byte[] samplingTimeWithSamplingCycleRaw;
@@ -78,8 +93,8 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
  		/* #### Equavalent RAW data per field #####*/
 
 
-		public byte[] _rawData { get; set; }
-		public byte[] _readCommandRawData { get; set; }
+		private byte[] _rawData { get; set; }
+		private byte[] _readCommandRawData { get; set; }
 
 		TrioDeviceInformation trioDevInfo;
 

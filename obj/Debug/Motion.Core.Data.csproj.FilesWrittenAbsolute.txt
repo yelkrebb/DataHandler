@@ -1,0 +1,12 @@
+/Development/XamarinApps/XamTest/Motion.Core.Data/obj/Debug/.NETPortable,Version=v4.5,Profile=Profile78.AssemblyAttribute.cs
+/Development/XamarinApps/XamTest/Motion.Core.Data/bin/Debug/Newtonsoft.Json.dll
+/Development/XamarinApps/XamTest/Motion.Core.Data/bin/Debug/Motion.Mobile.Utilities.dll
+/Development/XamarinApps/XamTest/Motion.Core.Data/bin/Debug/Motion.Mobile.Utilities.dll.mdb
+/Development/XamarinApps/XamTest/Motion.Core.Data/bin/Debug/Motion.Core.WSHandler.dll
+/Development/XamarinApps/XamTest/Motion.Core.Data/bin/Debug/Motion.Core.WSHandler.dll.mdb
+/Development/XamarinApps/XamTest/Motion.Core.Data/bin/Debug/System.Net.Http.dll
+/Development/XamarinApps/XamTest/Motion.Core.Data/bin/Debug/System.Net.Http.Primitives.dll
+/Development/XamarinApps/XamTest/Motion.Core.Data/bin/Debug/Motion.Core.Data.dll.mdb
+/Development/XamarinApps/XamTest/Motion.Core.Data/bin/Debug/Motion.Core.Data.dll
+/Development/XamarinApps/XamTest/Motion.Core.Data/obj/Debug/Motion.Core.Data.dll
+/Development/XamarinApps/XamTest/Motion.Core.Data/obj/Debug/Motion.Core.Data.dll.mdb

@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Motion.Mobile.Utilities;
 using Motion.Core.Data.BleData.Trio;
 
+using Newtonsoft.Json;
+
 namespace Motion.Core.Data.BleData.Trio.SettingsData
 {
 	public class SensitivitySettings: ITrioDataHandler
@@ -30,11 +32,17 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 		const int WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE = 1;
 
 
+		[JsonIgnore]
 		public int RelativeLimit { get; set; }
+		[JsonProperty(PropertyName = "rsens")]
 		public int RelativeSensitivity { get; set; }
+		[JsonIgnore]
 		public int SleepThreshold { get; set; }
+		[JsonProperty(PropertyName = "tsens")]
 		public int SensitivityOld { get; set; }
+		[JsonIgnore]
 		public int WriteCommandResponseCode { get; set; }
+		[JsonIgnore]
 		public bool IsReadCommand { get; set; }
 
 		/* #### Equavalent RAW data per field #####*/
@@ -45,8 +53,8 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 		byte[] writeCommandResponseCodeRaw;
 		/* ### End Raw data per field ### */
 
-		public byte[] _rawData { get; set; }
-		public byte[] _readCommandRawData { get; set; }
+		private byte[] _rawData { get; set; }
+		private byte[] _readCommandRawData { get; set; }
 
 
 		TrioDeviceInformation trioDevInfo;

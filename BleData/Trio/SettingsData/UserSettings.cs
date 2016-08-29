@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Motion.Mobile.Utilities;
 using Motion.Core.Data.BleData;
 
+using Newtonsoft.Json;
+
 namespace Motion.Core.Data.BleData.Trio.SettingsData
 {
 	public class UserSettings: ITrioDataHandler
@@ -42,17 +44,33 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 		const int SCREEN_BYTE_SIZE = 1;
 		const int WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE = 1;
 
+		[JsonProperty(PropertyName = "strd")]
 		public int Stride { get; set; }
+		[JsonProperty(PropertyName = "wt")]
 		public float Weight { get; set; }
+		[JsonProperty(PropertyName = "rmr")]
 		public int RestMetabolicRate { get; set; }
+		[JsonProperty(PropertyName = "uom")]
 		public bool UnitOfMeasure { get; set; }
-		public string DateOfBirth { get; set; } //yy-MM-dd format
+		[JsonProperty(PropertyName = "byear")]
+		public int DOBYear { get; set; }
+		[JsonProperty(PropertyName = "bmon")]
+		public int DOBMonth { get; set; }
+		[JsonProperty(PropertyName = "bday")]
+		public int DOBDay { get; set; }
+		[JsonProperty(PropertyName = "age")]
 		public int Age { get; set; }
+		[JsonIgnore]
 		public bool AutoRotateEnable { get; set; }
+		[JsonIgnore]
 		public bool VerticalOrientationEnable { get; set; }
+		[JsonIgnore]
 		public bool WristPreference { get; set; } // 0-left wrist; 1-right wrist
+		[JsonIgnore]
 		public int WriteCommandResponseCode { get; set; }
+		[JsonIgnore]
 		public bool IsReadCommand { get; set; }
+
 
 		/* #### Equavalent RAW data per field #####*/
 		private byte[] strideRaw;
@@ -107,10 +125,9 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 
 				if (this.trioDevInfo.ModelNumber == 961)
 				{
-					string[] dateValues = this.DateOfBirth.Split('-');
-					this.dobYearRaw = BitConverter.GetBytes(int.Parse(dateValues[0]));
-					this.dobMonthRaw = BitConverter.GetBytes(int.Parse(dateValues[1]));
-					this.dobDayRaw = BitConverter.GetBytes(int.Parse(dateValues[2]));
+					this.dobYearRaw = BitConverter.GetBytes(this.DOBYear);
+					this.dobMonthRaw = BitConverter.GetBytes(this.DOBMonth);
+					this.dobDayRaw = BitConverter.GetBytes(this.DOBDay);
 
 					this.ageRaw = BitConverter.GetBytes(this.Age);
 
@@ -206,9 +223,10 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 						Array.Copy(this._rawData, AGE_BYTE_LOC, this.ageRaw, INDEX_ZERO, AGE_BYTE_SIZE);
 						Array.Copy(this._rawData, SCREEN_BYTE_LOC, this.screenOrientationRaw, INDEX_ZERO, SCREEN_BYTE_SIZE);
 
-						this.DateOfBirth = Convert.ToString(Convert.ToInt32(Utils.getDecimalValue(this.dobYearRaw))) + "-" +
-							Convert.ToString(Convert.ToInt32(Utils.getDecimalValue(this.dobMonthRaw))) + "-" +
-							Convert.ToString(Convert.ToInt32(Utils.getDecimalValue(this.dobDayRaw)));
+						this.DOBYear = (int)Utils.getDecimalValue(this.dobYearRaw);
+						this.DOBMonth = (int)Utils.getDecimalValue(this.dobMonthRaw);
+						this.DOBDay = (int)Utils.getDecimalValue(this.dobDayRaw);
+
 						this.Age = Convert.ToInt32(Utils.getDecimalValue(this.ageRaw));
 						this.AutoRotateEnable = Convert.ToBoolean(Convert.ToInt32(Utils.getDecimalValue(this.screenOrientationRaw)) & 0x01);
 						this.VerticalOrientationEnable = Convert.ToBoolean((Convert.ToInt32(Utils.getDecimalValue(this.screenOrientationRaw)) >> 1) & 0x01);
@@ -226,9 +244,10 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 						Array.Copy(this._rawData, DOB_DAY_BYTE_LOC, this.dobDayRaw, INDEX_ZERO, DOB_DAY_BYTE_SIZE);
 						Array.Copy(this._rawData, AGE_BYTE_LOC, this.ageRaw, INDEX_ZERO, AGE_BYTE_SIZE);
 
-						this.DateOfBirth = Convert.ToString(Convert.ToInt32(Utils.getDecimalValue(this.dobYearRaw))) + "-" +
-							Convert.ToString(Convert.ToInt32(Utils.getDecimalValue(this.dobMonthRaw))) + "-" +
-							Convert.ToString(Convert.ToInt32(Utils.getDecimalValue(this.dobDayRaw)));
+						this.DOBYear = (int)Utils.getDecimalValue(this.dobYearRaw);
+						this.DOBMonth = (int)Utils.getDecimalValue(this.dobMonthRaw);
+						this.DOBDay = (int)Utils.getDecimalValue(this.dobDayRaw);
+
 						this.Age = Convert.ToInt32(Utils.getDecimalValue(this.ageRaw));
 					}
 				}

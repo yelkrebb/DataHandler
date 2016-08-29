@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Motion.Mobile.Utilities;
 using Motion.Core.Data.BleData.Trio;
 
+using Newtonsoft.Json;
+
 namespace Motion.Core.Data.BleData.Trio.SettingsData
 {
 	public class SeizureSettings:ITrioDataHandler
@@ -29,10 +31,17 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 		const int SEIZURE_SETTINGS_BYTE_SIZE = 1;
 		const int WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE = 1;
 
+		[JsonProperty(PropertyName = "szt")]
+		public int SeizureSamplingTime { get; set; }
+		[JsonProperty(PropertyName = "szrec")]
 		public int SeizureNumberOfRecords { get; set; }
+		[JsonProperty(PropertyName = "freq")]
 		public int SeizureSamplingFrequency { get; set; }
+		[JsonProperty(PropertyName = "szflag")]
 		public bool SeizureSettingsEnable { get; set; }
+		[JsonIgnore]
 		public int WriteCommandResponseCode { get; set; }
+		[JsonIgnore]
 		public bool IsReadCommand { get; set; }
 
 		/* #### Equavalent RAW data per field #####*/
@@ -42,8 +51,8 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 		byte[] writeCommandResponseCodeRaw;
 		/* ### End Raw data per field ### */
 
-		public byte[] _rawData { get; set; }
-		public byte[] _readCommandRawData { get; set; }
+		private byte[] _rawData { get; set; }
+		private byte[] _readCommandRawData { get; set; }
 
 		TrioDeviceInformation trioDevInfo;
 
