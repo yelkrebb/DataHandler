@@ -72,6 +72,10 @@
     <Compile Include="WebServiceData\DeviceWebServices\GetOnlinePortalData.cs" />
     <Compile Include="WebServiceData\WebServiceRequestStatus.cs" />
     <Compile Include="WebServiceData\DeviceWebServices\GetFirmwareData.cs" />
+    <Compile Include="WebServiceData\DeviceWebServices\NotifyFirmwareUpdateData.cs" />
+    <Compile Include="WebServiceData\DeviceWebServices\UploadTalliesData.cs" />
+    <Compile Include="WebServiceData\DeviceWebServices\UploadDataCompleted.cs" />
+    <Compile Include="WebServiceData\DeviceWebServices\UploadCommandResponse.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BleData\" />

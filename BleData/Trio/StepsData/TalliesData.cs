@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Motion.Mobile.Utilities;
+using Newtonsoft.Json;
 using Motion.Core.Data.BleData.Trio;
 
 namespace Motion.Core.Data.BleData.Trio.StepsData
@@ -41,18 +42,31 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 		const int SEIZ_OR_PROF_RECORDING_ABORTED_BYTE_SIZE = 2;
 		const int NUM_OF_ALARMS_VIBRATIONS_BYTE_SIZE = 2;
 
+		[JsonProperty(PropertyName = "tothr")]
 		public int HoursUsed { get; set; }
+		[JsonProperty(PropertyName = "bcnok")]
 		public int NumberOfBeaconsConnected { get; set; }
+		[JsonProperty(PropertyName = "bcndc")]
 		public int NumberOfBeaconsFailed { get; set; }
+		[JsonProperty(PropertyName = "ondok")]
 		public int NumberOfOnDemandConnected { get; set; }
+		[JsonProperty(PropertyName = "onddc")]
 		public int NumberOfOnDemandFailed { get; set; }
+		[JsonProperty(PropertyName = "cght")]
 		public int NumberOfCharge { get; set; }
+		[JsonProperty(PropertyName = "hrest")]
 		public int NumberOfHardReset { get; set; }
+		[JsonProperty(PropertyName = "scrdur")]
 		public int ScreenOnDuration { get; set; }
+		[JsonProperty(PropertyName = "pok")]
 		public int SeizureOrProfileRecordingCompleted { get; set; }
+		[JsonProperty(PropertyName = "pdc")]
 		public int SeizureOrProfileRecordingAborted { get; set; }
+		[JsonProperty(PropertyName = "aov")]
 		public int NumberOfAlarmsOrVibrations { get; set; }
+		[JsonIgnore]
 		public int WriteCommandResponseCode { get; set; }
+		[JsonIgnore]
 		public bool IsReadCommand { get; set; }
 
 		/* #### Equavalent RAW data per field #####*/
@@ -71,8 +85,8 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 		/* ### End Raw data per field ### */
 
 
-		public byte[] _rawData { get; set; }
-		public byte[] _readCommandRawData { get; set; }
+		byte[] _rawData;
+		byte[] _readCommandRawData;
 
 		TrioDeviceInformation trioDevInfo;
 
