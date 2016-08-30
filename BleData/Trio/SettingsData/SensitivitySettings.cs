@@ -53,8 +53,8 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 		byte[] writeCommandResponseCodeRaw;
 		/* ### End Raw data per field ### */
 
-		private byte[] _rawData { get; set; }
-		private byte[] _readCommandRawData { get; set; }
+		private byte[] _rawData;
+		private byte[] _readCommandRawData;
 
 
 		TrioDeviceInformation trioDevInfo;

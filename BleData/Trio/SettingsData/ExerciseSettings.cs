@@ -49,8 +49,8 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 		public bool IsReadCommand { get; set; }
 
 
-		private byte[] _rawData { get; set; }
-		private byte[] _readCommandRawData { get; set; }
+		private byte[] _rawData;
+		private byte[] _readCommandRawData;
 
 		TrioDeviceInformation trioDevInfo;
 

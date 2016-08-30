@@ -34,8 +34,8 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 		/* ### End Raw data per field ### */
 
 
-		public byte[] _rawData { get; set; }
-		public byte[] _readCommandRawData { get; set; }
+		public byte[] _rawData;
+		public byte[] _readCommandRawData;
 
 		FT900DeviceInformation ft900DevInfo;
 		
@@ -47,10 +47,14 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 
 		private void ClearData()
 		{
-			Array.Clear(this._rawData, INDEX_ZERO, this._rawData.Length);
-			Array.Clear(this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
-			Array.Clear(this.alarmDurationRaw, INDEX_ZERO, this.alarmDurationRaw.Length);
-			Array.Clear(this.alarmBeepTypeRaw, INDEX_ZERO, this.alarmBeepTypeRaw.Length);
+			if (this._rawData != null && this._rawData.Length > 0)
+				Array.Clear(this._rawData, INDEX_ZERO, this._rawData.Length);
+			if (this._readCommandRawData != null && this._readCommandRawData.Length > 0)
+				Array.Clear(this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
+			if (this.alarmDurationRaw != null && this.alarmDurationRaw.Length > 0)
+				Array.Clear(this.alarmDurationRaw, INDEX_ZERO, this.alarmDurationRaw.Length);
+			if (this.alarmBeepTypeRaw != null && this.alarmBeepTypeRaw.Length > 0)
+				Array.Clear(this.alarmBeepTypeRaw, INDEX_ZERO, this.alarmBeepTypeRaw.Length);
 
 		}
 

@@ -62,8 +62,8 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 
 
 
-		byte[] _rawData { get; set; }
-		byte[] _readCommandRawData { get; set; }
+		byte[] _rawData;
+		byte[] _readCommandRawData;
 
 
 		/* #### Equavalent RAW data per field #####*/

@@ -34,8 +34,8 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 		byte[] writeCommandResponseCodeRaw;
 		/* ### End Raw data per field ### */
 
-		public byte[] _rawData { get; set; }
-		public byte[] _readCommandRawData { get; set; }
+		public byte[] _rawData;
+		public byte[] _readCommandRawData;
 
 		FT900DeviceInformation ft900DevInfo;
 
@@ -47,10 +47,14 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 
 		private void ClearData()
 		{
-			Array.Clear(this._rawData, INDEX_ZERO, this._rawData.Length);
-			Array.Clear(this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
-			Array.Clear(this.sensitivityOldRaw, INDEX_ZERO, this.sensitivityOldRaw.Length);
-			Array.Clear(this.writeCommandResponseCodeRaw, INDEX_ZERO, this.writeCommandResponseCodeRaw.Length);
+			if (this._rawData != null && this._rawData.Length > 0)
+				Array.Clear(this._rawData, INDEX_ZERO, this._rawData.Length);
+			if (this._readCommandRawData != null && this._readCommandRawData.Length > 0)
+				Array.Clear(this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
+			if (this.sensitivityOldRaw != null && this.sensitivityOldRaw.Length > 0)
+				Array.Clear(this.sensitivityOldRaw, INDEX_ZERO, this.sensitivityOldRaw.Length);
+			if (this.writeCommandResponseCodeRaw != null && this.writeCommandResponseCodeRaw.Length > 0)
+				Array.Clear(this.writeCommandResponseCodeRaw, INDEX_ZERO, this.writeCommandResponseCodeRaw.Length);
 		}
 
 		public async Task<BLEParsingStatus> ParseData(byte[] rawData)

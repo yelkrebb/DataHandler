@@ -44,9 +44,12 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 
 		private void ClearData()
 		{
-			Array.Clear(this._rawData, INDEX_ZERO, this._rawData.Length);
-			Array.Clear(this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
-			Array.Clear(this.eepRomDataRaw, INDEX_ZERO, this.eepRomDataRaw.Length);
+			if (this._rawData != null && this._rawData.Length > 0)
+				Array.Clear(this._rawData, INDEX_ZERO, this._rawData.Length);
+			if (this._readCommandRawData != null && this._readCommandRawData.Length > 0)
+				Array.Clear(this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
+			if (this.eepRomDataRaw != null && this.eepRomDataRaw.Length > 0)
+				Array.Clear(this.eepRomDataRaw, INDEX_ZERO, this.eepRomDataRaw.Length);
 		}
 
 		public async Task<BLEParsingStatus> ParseData(byte[] rawData)

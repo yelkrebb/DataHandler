@@ -98,13 +98,24 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 
 		private void ClearData()
 		{
-			Array.Clear(frequencyAutoSetRaw, INDEX_ZERO, frequencyAutoSetRaw.Length);
-			Array.Clear(activityMaxRaw, INDEX_ZERO, activityMaxRaw.Length);
-			Array.Clear(activityStartTimeRaw, INDEX_ZERO, activityStartTimeRaw.Length);
-			Array.Clear(activityEndTimeRaw, INDEX_ZERO, activityEndTimeRaw.Length);
-			Array.Clear(syncTimeIntervalRaw, INDEX_ZERO, syncTimeIntervalRaw.Length);
-			Array.Clear(minimumStepThresholdRaw, INDEX_ZERO, minimumStepThresholdRaw.Length);
-			Array.Clear(flagsByteRaw, INDEX_ZERO, flagsByteRaw.Length);
+			if (this.frequencyAutoSetRaw != null && this.frequencyAutoSetRaw.Length > 0)
+				Array.Clear(frequencyAutoSetRaw, INDEX_ZERO, frequencyAutoSetRaw.Length);
+			if (this.activityMaxRaw != null && this.activityMaxRaw.Length > 0)
+				Array.Clear(activityMaxRaw, INDEX_ZERO, activityMaxRaw.Length);
+			if (this.activityStartTimeRaw != null && this.activityStartTimeRaw.Length > 0)
+				Array.Clear(activityStartTimeRaw, INDEX_ZERO, activityStartTimeRaw.Length);
+			if (this.activityEndTimeRaw != null && this.activityEndTimeRaw.Length > 0)
+				Array.Clear(activityEndTimeRaw, INDEX_ZERO, activityEndTimeRaw.Length);
+			if (this.syncTimeIntervalRaw != null && this.syncTimeIntervalRaw.Length > 0)
+				Array.Clear(syncTimeIntervalRaw, INDEX_ZERO, syncTimeIntervalRaw.Length);
+			if (this.minimumStepThresholdRaw != null && this.minimumStepThresholdRaw.Length > 0)
+				Array.Clear(minimumStepThresholdRaw, INDEX_ZERO, minimumStepThresholdRaw.Length);
+			if (this.flagsByteRaw != null && this.flagsByteRaw.Length > 0)
+				Array.Clear(flagsByteRaw, INDEX_ZERO, flagsByteRaw.Length);
+			if (this._rawData != null && this._rawData.Length > 0)
+				Array.Clear(_rawData, INDEX_ZERO, _rawData.Length);
+			if (this._readCommandRawData != null && this._readCommandRawData.Length > 0)
+				Array.Clear(_readCommandRawData, INDEX_ZERO, _readCommandRawData.Length);
 		}
 
 		public FT900CompanySettings()

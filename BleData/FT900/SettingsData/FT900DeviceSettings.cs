@@ -57,8 +57,8 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 		public int WriteCommandResponseCode { get; set; }
 		public bool IsReadCommand { get; set; }
 
-		byte[] _rawData { get; set; }
-		byte[] _readCommandRawData { get; set; }
+		byte[] _rawData;
+		byte[] _readCommandRawData;
 
 
 		/* #### Equavalent RAW data per field #####*/
@@ -86,20 +86,32 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 
 		private void ClearData()
 		{
-			Array.Clear(this._rawData, INDEX_ZERO, this._rawData.Length);
-			Array.Clear(this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
-
-			Array.Clear(this.hourRaw, INDEX_ZERO, this.hourRaw.Length);
-			Array.Clear(this.minuteRaw, INDEX_ZERO, this.minuteRaw.Length);
-			Array.Clear(this.secondRaw, INDEX_ZERO, this.secondRaw.Length);
-			Array.Clear(this.hourTypeRaw, INDEX_ZERO, this.hourTypeRaw.Length);
-			Array.Clear(this.yearRaw, INDEX_ZERO, this.yearRaw.Length);
-			Array.Clear(this.monthRaw, INDEX_ZERO, this.monthRaw.Length);
-			Array.Clear(this.dayRaw, INDEX_ZERO, this.dayRaw.Length);
-			Array.Clear(this.hourOffsetRaw, INDEX_ZERO, this.hourOffsetRaw.Length);
-			Array.Clear(this.minuteOffsetRaw, INDEX_ZERO, this.minuteOffsetRaw.Length);
-			Array.Clear(this.dstStartRaw, INDEX_ZERO, this.dstStartRaw.Length);
-			Array.Clear(this.dstEndRaw, INDEX_ZERO, this.dstEndRaw.Length);
+			if (this._rawData != null && this._rawData.Length > 0)
+				Array.Clear(this._rawData, INDEX_ZERO, this._rawData.Length);
+			if (this._readCommandRawData != null && this._readCommandRawData.Length > 0)
+				Array.Clear(this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
+			if (this.hourRaw != null && this.hourRaw.Length > 0)
+				Array.Clear(this.hourRaw, INDEX_ZERO, this.hourRaw.Length);
+			if (this.minuteRaw != null && this.minuteRaw.Length > 0)
+				Array.Clear(this.minuteRaw, INDEX_ZERO, this.minuteRaw.Length);
+			if (this.secondRaw != null && this.secondRaw.Length > 0)
+				Array.Clear(this.secondRaw, INDEX_ZERO, this.secondRaw.Length);
+			if (this.hourTypeRaw != null && this.hourTypeRaw.Length > 0)
+				Array.Clear(this.hourTypeRaw, INDEX_ZERO, this.hourTypeRaw.Length);
+			if (this.yearRaw != null && this.yearRaw.Length > 0)
+				Array.Clear(this.yearRaw, INDEX_ZERO, this.yearRaw.Length);
+			if (this.monthRaw != null && this.monthRaw.Length > 0)
+				Array.Clear(this.monthRaw, INDEX_ZERO, this.monthRaw.Length);
+			if (this.dayRaw != null && this.dayRaw.Length > 0)
+				Array.Clear(this.dayRaw, INDEX_ZERO, this.dayRaw.Length);
+			if (this.hourOffsetRaw != null && this.hourOffsetRaw.Length > 0)
+				Array.Clear(this.hourOffsetRaw, INDEX_ZERO, this.hourOffsetRaw.Length);
+			if (this.minuteOffsetRaw != null && this.minuteOffsetRaw.Length > 0)
+				Array.Clear(this.minuteOffsetRaw, INDEX_ZERO, this.minuteOffsetRaw.Length);
+			if (this.dstStartRaw != null && this.dstStartRaw.Length > 0)
+				Array.Clear(this.dstStartRaw, INDEX_ZERO, this.dstStartRaw.Length);
+			if (this.dstEndRaw != null && this.dstEndRaw.Length > 0)
+				Array.Clear(this.dstEndRaw, INDEX_ZERO, this.dstEndRaw.Length);
 		}
 
 		public async Task<BLEParsingStatus> ParseData(byte[] rawData)

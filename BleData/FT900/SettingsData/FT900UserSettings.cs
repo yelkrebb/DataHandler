@@ -71,9 +71,9 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 		private byte[] writeCommandResponseCodeRaw;
 		/* ### End Raw data per field ### */
 
-		private byte[] _rawData { get; set; }
-		private byte[] _readCommandRawData { get; set; }
-		private byte[] _writeCommandRawData { get; set; }
+		private byte[] _rawData;
+		private byte[] _readCommandRawData;
+		private byte[] _writeCommandRawData;
 
 		FT900DeviceInformation ft900DevInfo;
 
@@ -189,19 +189,30 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 
 		private void ClearData()
 		{
-			Array.Clear(this._rawData, INDEX_ZERO, this._rawData.Length);
-			Array.Clear(this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
-
-			Array.Clear(this.strideRaw, INDEX_ZERO, this.strideRaw.Length);
-			Array.Clear(this.weightWholeRaw, INDEX_ZERO, this.weightWholeRaw.Length);
-			Array.Clear(this.weightDecimalRaw, INDEX_ZERO, this.weightDecimalRaw.Length);
-			Array.Clear(this.rmrRaw, INDEX_ZERO, this.rmrRaw.Length);
-			Array.Clear(this.unitOfMeasureRaw, INDEX_ZERO, this.unitOfMeasureRaw.Length);
-			Array.Clear(this.dobYearRaw, INDEX_ZERO, this.dobYearRaw.Length);
-			Array.Clear(this.dobMonthRaw, INDEX_ZERO, this.dobMonthRaw.Length);
-			Array.Clear(this.dobDayRaw, INDEX_ZERO, this.dobDayRaw.Length);
-			Array.Clear(this.ageRaw, INDEX_ZERO, this.ageRaw.Length);
-			Array.Clear(this.screenOrientationRaw, INDEX_ZERO, this.screenOrientationRaw.Length);
+			if (this._rawData != null && this._rawData.Length > 0)
+				Array.Clear(this._rawData, INDEX_ZERO, this._rawData.Length);
+			if (this._readCommandRawData != null && this._readCommandRawData.Length > 0)
+				Array.Clear(this._readCommandRawData, INDEX_ZERO, this._readCommandRawData.Length);
+			if (this.strideRaw != null && this.strideRaw.Length > 0)
+				Array.Clear(this.strideRaw, INDEX_ZERO, this.strideRaw.Length);
+			if (this.weightWholeRaw != null && this.weightWholeRaw.Length > 0)
+				Array.Clear(this.weightWholeRaw, INDEX_ZERO, this.weightWholeRaw.Length);
+			if (this.weightDecimalRaw != null && this.weightDecimalRaw.Length > 0)
+				Array.Clear(this.weightDecimalRaw, INDEX_ZERO, this.weightDecimalRaw.Length);
+			if (this.rmrRaw != null && this.rmrRaw.Length > 0)
+				Array.Clear(this.rmrRaw, INDEX_ZERO, this.rmrRaw.Length);
+			if (this.unitOfMeasureRaw != null && this.unitOfMeasureRaw.Length > 0)
+				Array.Clear(this.unitOfMeasureRaw, INDEX_ZERO, this.unitOfMeasureRaw.Length);
+			if (this.dobYearRaw != null && this.dobYearRaw.Length > 0)
+				Array.Clear(this.dobYearRaw, INDEX_ZERO, this.dobYearRaw.Length);
+			if (this.dobMonthRaw != null && this.dobMonthRaw.Length > 0)
+				Array.Clear(this.dobMonthRaw, INDEX_ZERO, this.dobMonthRaw.Length);
+			if (this.dobDayRaw != null && this.dobDayRaw.Length > 0)
+				Array.Clear(this.dobDayRaw, INDEX_ZERO, this.dobDayRaw.Length);
+			if (this.ageRaw != null && this.ageRaw.Length > 0)
+				Array.Clear(this.ageRaw, INDEX_ZERO, this.ageRaw.Length);
+			if (this.screenOrientationRaw != null && this.screenOrientationRaw.Length > 0)
+				Array.Clear(this.screenOrientationRaw, INDEX_ZERO, this.screenOrientationRaw.Length);
 
 		}
 
