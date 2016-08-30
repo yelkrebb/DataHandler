@@ -15,7 +15,8 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 		const int COMMAND_ID_READ_FT900 = 0x3B;
 
 		const int INDEX_ZERO = 0;
-		const int COMMAND_SIZE_READ = 1;
+		const int COMMAND_SIZE_READ = 2;
+		const int COMMAND_SIZE_WRITE_ORIG = 18;
 
 		const int TENACITY_STEPS_BYTE_LOC = 2;
 
@@ -127,6 +128,7 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 		{
 			await Task.Run(() =>
 			{
+				this._readCommandRawData = new byte[COMMAND_SIZE_READ];
 				byte[] commandPrefix = BitConverter.GetBytes(COMMAND_SIZE_READ_900);
 				byte[] commandID = BitConverter.GetBytes(COMMAND_ID_READ_FT900);
 				Buffer.BlockCopy(commandID, INDEX_ZERO, this._readCommandRawData, INDEX_ZERO + 1, 1);
@@ -140,6 +142,7 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 			BLEParsingStatus parseStatus = BLEParsingStatus.ERROR;
 			await Task.Run(() => 
 			{ 
+				this._rawData = new byte[rawData.Length];
 				Array.Copy(rawData, this._rawData, rawData.Length);
 
 				this.IsReadCommand = true;
@@ -208,6 +211,7 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 		{
 			await Task.Run(() =>
 			{ 
+				this._rawData = new byte[COMMAND_SIZE_WRITE_ORIG + 2];
 				this.tenacityStepsRaw = BitConverter.GetBytes(this.TenacitySteps);
 				this.frequencyStepsRaw = BitConverter.GetBytes(this.FrequencySteps);
 				this.frequencyCycleTimeRaw = BitConverter.GetBytes(this.FrequencyCycleTime);

@@ -9,6 +9,7 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 	{
 		const int COMMAND_PREFIX = 0x02;
 		const int COMMAND_ID_WRITE = 0x28;
+		const int COMMAND_SIZE_WRITE = 1;
 
 		const int INDEX_ZERO = 0;
 
@@ -57,6 +58,7 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 			BLEParsingStatus parsingStatus = BLEParsingStatus.ERROR;
 			await Task.Run(() =>
 			{
+				this._rawData = new byte[rawData.Length];
 				Array.Copy(rawData, this._rawData, rawData.Length);
 				this.IsReadCommand = true;
 				if (rawData[1] == 0x28)
@@ -89,7 +91,7 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 		{
 			await Task.Run(() =>
 			{
-
+				this._rawData = new byte[COMMAND_SIZE_WRITE + 2];
 				int flagValue = 0x00;
 				flagValue |= this.ExerciseData ? 0x01 : 0x00;
 				flagValue |= this.SettingsData ? 0x01 : 0x00;

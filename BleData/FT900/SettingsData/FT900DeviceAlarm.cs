@@ -12,6 +12,9 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 		const int COMMAND_ID_WRITE = 0x2A;
 		const int COMMAND_ID_READ = 0x2B;
 
+		const int COMMAND_SIZE_READ = 2;
+		const int COMMAND_SIZE_WRITE = 2;
+
 		const int INDEX_ZERO = 0;
 
 		const int ALARM_DURATION_LOC = 2;
@@ -63,6 +66,7 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 			BLEParsingStatus parsingStatus = BLEParsingStatus.ERROR;
 			await Task.Run(() =>
 			{
+				this._rawData = new byte[rawData.Length];
 				Array.Copy(rawData, this._rawData, rawData.Length);
 				this.IsReadCommand = true;
 				if (rawData[1] == 0x2A)
@@ -95,6 +99,7 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 		{
 			await Task.Run(() =>
 			{
+				this._readCommandRawData = new byte[COMMAND_SIZE_READ];
 				byte[] commandPrefix = BitConverter.GetBytes(COMMAND_PREFIX_READ);
 				byte[] commandID = BitConverter.GetBytes(COMMAND_ID_READ);
 				Buffer.BlockCopy(commandID, INDEX_ZERO, this._readCommandRawData, INDEX_ZERO + 1, 1);
@@ -109,7 +114,7 @@ namespace Motion.Core.Data.BleData.FT900.SettingsData
 			await Task.Run(() =>
 			{
 
-
+				this._rawData = new byte[COMMAND_SIZE_WRITE + 2];
 				Buffer.BlockCopy(this.alarmDurationRaw, 0, this._rawData, ALARM_DURATION_LOC, ALARM_DURATION_BYTE_SIZE);
 				Buffer.BlockCopy(this.alarmBeepTypeRaw, 0, this._rawData, ALARM_BEEP_TYPE_LOC, ALARM_BEEP_TYPE_BYTE_SIZE);
 				byte[] commandPrefix = BitConverter.GetBytes(COMMAND_PREFIX_WRITE);

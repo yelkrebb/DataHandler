@@ -56,16 +56,10 @@
     <Compile Include="BleData\FT900\SettingsData\FT900ClearEEPROM.cs" />
     <Compile Include="BleData\Trio\SettingsData\MedicineAlarm.cs" />
     <Compile Include="BleData\Trio\StepsData\StepsTableData.cs" />
-    <Compile Include="BleData\Trio\StepsData\ProfileBlocksData.cs" />
     <Compile Include="BleData\Trio\SettingsData\SensitivitySettings.cs" />
     <Compile Include="BleData\FT900\SettingsData\FT900SensitivitySettings.cs" />
     <Compile Include="BleData\FT900\StepsData\FT900StepsTableData.cs" />
-    <Compile Include="BleData\Trio\StepsData\SeizureBlocksData.cs" />
-    <Compile Include="BleData\Trio\StepsData\SignatureData.cs" />
-    <Compile Include="BleData\Trio\StepsData\SeizureData.cs" />
     <Compile Include="BleData\Trio\StepsData\TalliesData.cs" />
-    <Compile Include="BleData\Trio\StepsData\DisplayOnScreenData.cs" />
-    <Compile Include="BleData\Trio\StepsData\MessageData.cs" />
     <Compile Include="WebServiceData\DeviceWebServices\GetDeviceInformation.cs" />
     <Compile Include="WebServiceData\DeviceWebServices\SendApplicationInformation.cs" />
     <Compile Include="WebServiceData\DeviceWebServices\GetOnlinePortalData.cs" />
@@ -86,6 +80,13 @@
     <Compile Include="WebServiceData\DeviceWebServices\ActivateDeviceWithMemberFT900.cs" />
     <Compile Include="WebServiceData\DeviceWebServices\GetDeviceInformationFT900.cs" />
     <Compile Include="BleData\FT900\SettingsData\FT900StepAlgorithmSetting.cs" />
+    <Compile Include="BleData\Trio\Messages\MessageData.cs" />
+    <Compile Include="BleData\Trio\AccelData\ProfileBlocksData.cs" />
+    <Compile Include="BleData\Trio\AccelData\SeizureBlocksData.cs" />
+    <Compile Include="BleData\Trio\AccelData\SeizureData.cs" />
+    <Compile Include="BleData\Trio\AccelData\SignatureData.cs" />
+    <Compile Include="BleData\Trio\Others\DisplayOnScreenData.cs" />
+    <Compile Include="BleData\Trio\Others\FirwareDisplaySequenceData.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BleData\" />
@@ -97,7 +98,6 @@
     <Folder Include="BleData\Trio\Others\" />
     <Folder Include="BleData\FT900\Others\" />
     <Folder Include="BleData\FT900\StepsData\" />
-    <Folder Include="BleData\Trio\AccelData\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Motion.Mobile.Utilities\Motion.Mobile.Utilities.csproj">
