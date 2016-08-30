@@ -70,6 +70,16 @@ namespace Motion.Core.Data.WebServiceData.DeviceWebServices
 		public string ResponseStatus;
 		[JsonProperty(PropertyName = "msg")]
 		public string ResponseMessage;
+		[JsonProperty(PropertyName = "syncd")]
+		public long LastSyncDataDateTime;
+		[JsonProperty(PropertyName = "dtid")]
+		public int DataTransmissionID;
+		[JsonProperty(PropertyName = "lmno")]
+		public int LastMinuteSlotNo;
+		[JsonProperty(PropertyName = "lhno")]
+		public int LastHourNo;
+		[JsonProperty(PropertyName = "lsdt")]
+		public string LastStepDate;
 
 		[JsonIgnore]
 		public string responseJSON;

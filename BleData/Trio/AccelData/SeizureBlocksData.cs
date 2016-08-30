@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Motion.Mobile.Utilities;
 using Motion.Core.Data.BleData.Trio;
 
-namespace Motion.Core.Data.BleData.Trio.StepsData
+namespace Motion.Core.Data.BleData.Trio.AccelData
 {
 
 	public class SeizureBlocksParameters

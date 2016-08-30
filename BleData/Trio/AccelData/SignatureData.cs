@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Motion.Mobile.Utilities;
 using Motion.Core.Data.BleData.Trio;
 
-namespace Motion.Core.Data.BleData.Trio.StepsData
+namespace Motion.Core.Data.BleData.Trio.AccelData
 {
 	public class SignatureData
 	{
@@ -127,10 +127,10 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 				Array.Copy(this._rawData, MIN_DATA_LOC, this.minDataRaw, INDEX_ZERO, MIN_DATA_BYTE_SIZE);
 				Array.Copy(this._rawData, FREQUENCY_SAMPLING_LOC, this.frequencySamplingRaw, INDEX_ZERO, FREQUENCY_SAMPLING_BYTE_SIZE);
 
-				this.SDYear = Convert.ToInt32(Utils.getDecimalValue(this.yrDataRaw));
-				this.SDMonth = Convert.ToInt32(Utils.getDecimalValue(this.monthDataRaw));
-				this.SDDay = Convert.ToInt32(Utils.getDecimalValue(this.dayDataRaw));
-				this.SDHour = Convert.ToInt32(Utils.getDecimalValue(this.hourDataRaw));
+				this.SDYear = Convert.ToInt32(Utils.getDecimalValue(this.yrDataRaw) & 0x3F);
+				this.SDMonth = Convert.ToInt32(Utils.getDecimalValue(this.monthDataRaw) & 0x3F);
+				this.SDDay = Convert.ToInt32(Utils.getDecimalValue(this.dayDataRaw) & 0x3F);
+				this.SDHour = Convert.ToInt32(Utils.getDecimalValue(this.hourDataRaw) & 0x3F);
 				this.SDMin = Convert.ToInt32(Utils.getDecimalValue(this.minDataRaw));
 				this.FrequencySampling = Convert.ToInt32(Utils.getDecimalValue(this.frequencySamplingRaw));
 
@@ -146,7 +146,7 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 				int startIndexForSigData = (this.trioDevInfo.ModelNumber == 961) ? SIGNATURE_PROFILE_DATA_LOC : SIGNATURE_PROFILE_DATA_LOC_OLD;
 				int dataLen = rawData.Length - startIndexForSigData - CHECKSUM_BYTE_SIZE;
 				int sigLen = SIG_LEN;
-
+				this.signatureRaw = new byte[dataLen];
 				Array.Copy(this._rawData, startIndexForSigData, this.signatureRaw, INDEX_ZERO, dataLen);
 
 				int signatureCount = this.signatureRaw.Length / sigLen;
@@ -173,15 +173,15 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 			return parsingStatus;
 		}
 
-		public async Task<byte[]> GetReadStepTableDataCommand()
+		public async Task<byte[]> GetReadSignDataCommand()
 		{
 			await Task.Run(() =>
 			{
 				this._readCommandRawData = new byte[COMMAND_SIZE_READ];
 
-				byte[] yearParam = BitConverter.GetBytes(this.SDYear);
-				byte[] monthParam = BitConverter.GetBytes(this.SDMonth);
-				byte[] dayParam = BitConverter.GetBytes(this.SDDay);
+				byte[] yearParam = BitConverter.GetBytes(this.SDYear | 0xC0);
+				byte[] monthParam = BitConverter.GetBytes(this.SDMonth | 0xC0);
+				byte[] dayParam = BitConverter.GetBytes(this.SDDay | 0xC0);
 
 				Buffer.BlockCopy(yearParam, INDEX_ZERO, this._readCommandRawData,2 , 1);
 				Buffer.BlockCopy(monthParam, INDEX_ZERO, this._readCommandRawData, 3, 1);
@@ -189,8 +189,9 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 
 				byte[] commandPrefix = BitConverter.GetBytes(COMMAND_PREFIX);
 				byte[] commandID = BitConverter.GetBytes(COMMAND_ID_READ);
-				Buffer.BlockCopy(commandID, INDEX_ZERO, this._readCommandRawData, INDEX_ZERO + 1, 1);
 				Buffer.BlockCopy(commandPrefix, INDEX_ZERO, this._readCommandRawData, INDEX_ZERO, 1);
+				Buffer.BlockCopy(commandID, INDEX_ZERO, this._readCommandRawData, INDEX_ZERO + 1, 1);
+
 			});
 			return this._readCommandRawData;
 		}
