@@ -8,7 +8,7 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 {
 
 
-	public class SetDeviceMode :ITrioDataHandler
+	public class DeviceMode :ITrioDataHandler
 	{
 
 		const int COMMAND_PREFIX = 0x1B;
@@ -35,7 +35,7 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 
 		TrioDeviceInformation trioDevInfo;
 
-		public SetDeviceMode(TrioDeviceInformation devInfo)
+		public DeviceMode(TrioDeviceInformation devInfo)
 		{
 			this.trioDevInfo = devInfo;
 			this.ClearData();

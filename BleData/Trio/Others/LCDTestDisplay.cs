@@ -11,18 +11,14 @@ namespace Motion.Core.Data.BleData.Trio.Others
 		const int COMMAND_PREFIX = 0x1B;
 		const int COMMAND_ID_WRITE = 0x2C;
 		const int COMMAND_SIZE_WRITE = 2;
-		const int COMMAND_SIZE_WRITE_OLD = 7;
+
 
 		const int INDEX_ZERO = 0;
 
 		const int TEST_TYPE_LOC = 2;
 		const int TYPE_SEQUENCE_LOC = 3;
-		const int CHAR1_LOC = 2;
-		const int CHAR2_LOC = 3;
-		const int CHAR3_LOC = 4;
-		const int CHAR4_LOC = 5;
-		const int CHAR5_LOC = 6;
-		const int ICONS_LOC = 7;
+		const int MSG_LOC = 2;
+
 
 		const int TEST_TYPE_BYTE_SIZE = 1;
 		const int TYPE_SEQUENCE_BYTE_SIZE = 1;
@@ -33,11 +29,6 @@ namespace Motion.Core.Data.BleData.Trio.Others
 
 		public int TestType { get; set; }
 		public int TypeSequence { get; set; }
-		public int Character1 { get; set; }
-		public int Character2 { get; set; }
-		public int Character3 { get; set; }
-		public int Character4 { get; set; }
-		public int Character5 { get; set; }
 		public int Icons { get; set; }
 		public int WriteCommandResponseCode { get; set; }
 		public bool IsReadCommand { get; set; }
@@ -45,11 +36,6 @@ namespace Motion.Core.Data.BleData.Trio.Others
 		/* #### Equavalent RAW data per field #####*/
 		byte[] testTypeRaw;
 		byte[] typeSequenceRaw;
-		byte[] character1Raw;
-		byte[] character2Raw;
-		byte[] character3Raw;
-		byte[] character4Raw;
-		byte[] character5Raw;
 		byte[] iconsRaw;
 		byte[] writeCommandResponseCodeRaw;
 		/* ### End Raw data per field ### */
@@ -76,16 +62,6 @@ namespace Motion.Core.Data.BleData.Trio.Others
 				Array.Clear(this.testTypeRaw, INDEX_ZERO, this.testTypeRaw.Length);
 			if (this.typeSequenceRaw != null && this.typeSequenceRaw.Length > 0)
 				Array.Clear(this.typeSequenceRaw, INDEX_ZERO, this.typeSequenceRaw.Length);
-			if (this.character1Raw != null && this.character1Raw.Length > 0)
-				Array.Clear(this.character1Raw, INDEX_ZERO, this.character1Raw.Length);
-			if (this.character2Raw != null && this.character2Raw.Length > 0)
-				Array.Clear(this.character2Raw, INDEX_ZERO, this.character2Raw.Length);
-			if (this.character3Raw != null && this.character3Raw.Length > 0)
-				Array.Clear(this.character3Raw, INDEX_ZERO, this.character3Raw.Length);
-			if (this.character4Raw != null && this.character4Raw.Length > 0)
-				Array.Clear(this.character4Raw, INDEX_ZERO, this.character4Raw.Length);
-			if (this.character5Raw != null && this.character5Raw.Length > 0)
-				Array.Clear(this.character5Raw, INDEX_ZERO, this.character5Raw.Length);
 			if (this.writeCommandResponseCodeRaw != null && this.writeCommandResponseCodeRaw.Length > 0)
 				Array.Clear(this.writeCommandResponseCodeRaw, INDEX_ZERO, this.writeCommandResponseCodeRaw.Length);
 
@@ -125,7 +101,7 @@ namespace Motion.Core.Data.BleData.Trio.Others
 			throw new NotImplementedException();
 		}
 
-		public async Task<byte[]> GetWriteCommand()
+		public async Task<byte[]> GetWriteCommand(byte[] messageData)
 		{
 			await Task.Run(() =>
 			{
@@ -145,19 +121,15 @@ namespace Motion.Core.Data.BleData.Trio.Others
 
 				else
 				{
-					this._rawData = new byte[COMMAND_SIZE_WRITE_OLD + 2];
-					this.character1Raw = BitConverter.GetBytes(this.Character1);
-					this.character2Raw = BitConverter.GetBytes(this.Character2);
-					this.character3Raw = BitConverter.GetBytes(this.Character3);
-					this.character4Raw = BitConverter.GetBytes(this.Character4);
-					this.character5Raw = BitConverter.GetBytes(this.Character5);
+
+					if (messageData.Length <= 0)
+						return;
+						
+					this._rawData = new byte[COMMAND_SIZE_WRITE + messageData.Length + 2];
 					this.iconsRaw = BitConverter.GetBytes(this.Icons);
-					Buffer.BlockCopy(this.character1Raw, 0, this._rawData, CHAR1_LOC, CHARACTER_BYTE_SIZE);
-					Buffer.BlockCopy(this.character2Raw, 0, this._rawData, CHAR2_LOC, CHARACTER_BYTE_SIZE);
-					Buffer.BlockCopy(this.character3Raw, 0, this._rawData, CHAR3_LOC, CHARACTER_BYTE_SIZE);
-					Buffer.BlockCopy(this.character4Raw, 0, this._rawData, CHAR4_LOC, CHARACTER_BYTE_SIZE);
-					Buffer.BlockCopy(this.character5Raw, 0, this._rawData, CHAR5_LOC, CHARACTER_BYTE_SIZE);
-					Buffer.BlockCopy(this.iconsRaw, 0, this._rawData, ICONS_LOC, ICONS_BYTE_SIZE);
+					Buffer.BlockCopy(messageData, INDEX_ZERO, this._rawData, MSG_LOC, messageData.Length);
+					Buffer.BlockCopy(this.iconsRaw, INDEX_ZERO, this._rawData, MSG_LOC + messageData.Length, ICONS_BYTE_SIZE);
+
 					byte[] commandPrefix = BitConverter.GetBytes(COMMAND_PREFIX);
 					byte[] commandID = BitConverter.GetBytes(COMMAND_ID_WRITE);
 					Buffer.BlockCopy(commandID, INDEX_ZERO, this._rawData, INDEX_ZERO + 1, 1);

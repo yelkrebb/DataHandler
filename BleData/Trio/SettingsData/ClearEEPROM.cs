@@ -20,7 +20,9 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 
 		public bool ExerciseData { get; set; }
 		public bool SettingsData { get; set; }
-		public bool FontsData { get; set; }
+		public bool Tallies { get; set; }
+		public bool MedicineAlarm { get; set; }
+		public bool MotivationalQuotes { get; set; }
 		public bool SurveyQuestions { get; set; }
 		public int WriteCommandResponseCode { get; set; }
 		public bool IsReadCommand { get; set; }
@@ -115,9 +117,11 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 				{
 					int flagValue = 0x00;
 					flagValue |= this.ExerciseData ? 0x01 : 0x00;
-					flagValue |= this.SettingsData ? 0x01 : 0x00;
-					flagValue |= this.FontsData ? 0x01 : 0x00;
-					flagValue |= this.SurveyQuestions ? 0x01 : 0x00;
+					flagValue |= (this.SettingsData ? 0x01 : 0x00) << 1;
+					flagValue |= (this.SurveyQuestions ? 0x01 : 0x00) << 3;
+					flagValue |= (this.Tallies ? 0x01 : 0x00) << 4;
+					flagValue |= (this.MedicineAlarm ? 0x01 : 0x00) << 5;
+					flagValue |= (this.MotivationalQuotes ? 0x01 : 0x00) << 6;
 
 					this.eepRomDataRaw = BitConverter.GetBytes(flagValue);
 

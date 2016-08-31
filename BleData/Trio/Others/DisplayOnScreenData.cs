@@ -4,29 +4,46 @@ using System.Threading.Tasks;
 using Motion.Mobile.Utilities;
 using Motion.Core.Data.BleData.Trio;
 
-namespace Motion.Core.Data.BleData.Trio.StepsData
+namespace Motion.Core.Data.BleData.Trio.Others
 {
 	public class DisplayOnScreenData
 	{
 		const int COMMAND_PREFIX = 0x1B;
 		const int COMMAND_ID_WRITE = 0x54;
 
-		const int COMMAND_SIZE_WRITE = 7;
+		const int COMMAND_SIZE_WRITE = 13;
 
 		const int INDEX_ZERO = 0;
 
 		const int PACKET_NO_LOC = 2;
 		const int TOTAL_MESSAGE_LOC = 4;
 		const int CHECK_SUM_LOC = 7;
+		const int PROPERTY_LOC = 9;
+		const int XCOOR_LOC = 10;
+		const int YCOOR_LOC = 11;
+		const int BG_COLOR_LOC = 12;
+		const int MSG_BYTES_LOC = 14;
 
+		const int TERMINATOR_SIZE = 1;
 		const int PACKET_NO_BYTE_SIZE = 2;
 		const int TOTAL_MESSAGE_BYTE_SIZE = 3;
 		const int CHECK_SUM_BYTE_SIZE = 2;
+		const int PROPERTY_BYTE_SIZE = 1;
+		const int XCOOR_BYTE_SIZE = 1;
+		const int YCOOR_BYTE_SIZE = 1;
+		const int BG_COLOR_BYTE_SIZE = 2;
 		const int WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE = 1;
 
 		public int PacketNum { get; set; }
 		public int TotalMessage { get; set; }
 		public int CheckSum { get; set; }
+		public int PropertyText { get; set; }
+		public bool PropertyScroll { get; set; }
+		public int PropertyFont { get; set; }
+		public int PropertyColor { get; set; }
+		public int XCoordinate { get; set; }
+		public int YCoordinate { get; set; }
+		public int BackgroundColor { get; set; }
 		public int WriteCommandResponseCode { get; set; }
 		public bool IsReadCommand { get; set; }
 
@@ -34,6 +51,10 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 		byte[] packetNumRaw;
 		byte[] totalMessageRaw;
 		byte[] checkSumRaw;
+		byte[] propertyRaw;
+		byte[] xCoorRaw;
+		byte[] yCoorRaw;
+		byte[] bgColorRaw;
 		byte[] writeCommandResponseCodeRaw;
 		/* ### End Raw data per field ### */
 
@@ -85,18 +106,58 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 			return parsingStatus;
 		}
 
-		public async Task<byte[]> GetWriteCommand()
+		public async Task<byte[]> GetWriteCommand(byte[] messageData)
 		{
 			await Task.Run(() =>
 			{
-				this._rawData = new byte[COMMAND_SIZE_WRITE + 2];
+				// preset data
+				this.PacketNum = 0;
+				this.PropertyText = 0;
+				this.PropertyScroll = false;
+				this.PropertyFont = 0;
+				this.PropertyColor = 7;
+				this.XCoordinate = 45;
+				int terminatorVal = 255;
+
+
+
+				this._rawData = new byte[COMMAND_SIZE_WRITE + messageData.Length + 2];
+
+				byte[] terminator = BitConverter.GetBytes(terminatorVal);
+				int mesageCommandForCheckSumSize = PROPERTY_BYTE_SIZE + XCOOR_BYTE_SIZE + YCOOR_BYTE_SIZE + BG_COLOR_BYTE_SIZE + messageData.Length + 1;
+				byte[] messageCommandForCheckSum = new byte[mesageCommandForCheckSumSize];
+
+				this.TotalMessage = mesageCommandForCheckSumSize + 2;
+
 
 				this.packetNumRaw = BitConverter.GetBytes(this.PacketNum);
 				this.totalMessageRaw = BitConverter.GetBytes(this.TotalMessage);
-				this.checkSumRaw = BitConverter.GetBytes(this.CheckSum);
+
+				int flagValue = 0x00;
+				flagValue |= this.PropertyText << 7;
+				flagValue |=( Convert.ToInt32(this.PropertyScroll)) << 6;
+				flagValue |= this.PropertyFont << 4;
+				flagValue |= this.PropertyColor;
+				this.propertyRaw = BitConverter.GetBytes(flagValue);
+
+				this.xCoorRaw = BitConverter.GetBytes(this.XCoordinate);
+				this.yCoorRaw = BitConverter.GetBytes(this.YCoordinate);
+				this.bgColorRaw = BitConverter.GetBytes(this.BackgroundColor);
+
+
 
 				Buffer.BlockCopy(this.packetNumRaw, INDEX_ZERO, this._rawData, PACKET_NO_LOC, PACKET_NO_BYTE_SIZE);
 				Buffer.BlockCopy(this.totalMessageRaw, INDEX_ZERO, this._rawData, TOTAL_MESSAGE_LOC, TOTAL_MESSAGE_BYTE_SIZE);
+				Buffer.BlockCopy(this.propertyRaw, INDEX_ZERO, this._rawData, PROPERTY_LOC, PROPERTY_BYTE_SIZE);
+				Buffer.BlockCopy(this.xCoorRaw, INDEX_ZERO, this._rawData, XCOOR_LOC, XCOOR_BYTE_SIZE);
+				Buffer.BlockCopy(this.yCoorRaw, INDEX_ZERO, this._rawData, YCOOR_LOC, YCOOR_BYTE_SIZE);
+				Buffer.BlockCopy(this.bgColorRaw, INDEX_ZERO, this._rawData, BG_COLOR_LOC, BG_COLOR_BYTE_SIZE);
+				Buffer.BlockCopy(messageData, INDEX_ZERO, this._rawData, MSG_BYTES_LOC, messageData.Length);
+				Buffer.BlockCopy(terminator, INDEX_ZERO, this._rawData, MSG_BYTES_LOC + messageData.Length, TERMINATOR_SIZE);
+				Buffer.BlockCopy(this._rawData, PROPERTY_LOC, messageCommandForCheckSum, INDEX_ZERO, mesageCommandForCheckSumSize);
+
+				this.CheckSum = Utils.GetCheckSumWithBytes(messageCommandForCheckSum);
+				this.checkSumRaw = BitConverter.GetBytes(this.CheckSum);
 				Buffer.BlockCopy(this.checkSumRaw, INDEX_ZERO, this._rawData, CHECK_SUM_LOC, CHECK_SUM_BYTE_SIZE);
 
 
