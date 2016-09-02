@@ -112,7 +112,14 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 
 				string[] weightValues = this.Weight.ToString(CultureInfo.InvariantCulture).Split('.');
 				this.weightWholeRaw = BitConverter.GetBytes(int.Parse(weightValues[0]));
-				this.weightDecimalRaw = BitConverter.GetBytes(int.Parse(weightValues[1]));
+
+				if (BitConverter.IsLittleEndian)
+					Array.Reverse(this.weightWholeRaw);
+
+				if (weightValues.Length > 1)
+					this.weightDecimalRaw = BitConverter.GetBytes(int.Parse(weightValues[1]));
+				else
+					this.weightDecimalRaw = BitConverter.GetBytes(0);
 
 				this.rmrRaw = BitConverter.GetBytes(this.RestMetabolicRate);
 				this.unitOfMeasureRaw = BitConverter.GetBytes(Convert.ToInt32(this.UnitOfMeasure));
