@@ -31,6 +31,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BleData\Trio\SettingsData\CompanySettings.cs" />
+    <Compile Include="BleData\Trio\SettingsData\ClearEEPROM.cs" />
     <Compile Include="BleData\Trio\SettingsData\DeviceSettings.cs" />
     <Compile Include="BleData\Trio\SettingsData\ExerciseSettings.cs" />
     <Compile Include="BleData\Trio\SettingsData\SeizureSettings.cs" />
@@ -52,7 +53,6 @@
     <Compile Include="BleData\FT900\SettingsData\FT900DeviceAlarm.cs" />
     <Compile Include="BleData\Trio\Others\LCDTestDisplay.cs" />
     <Compile Include="BleData\FT900\Others\FT900LCDTestDisplay.cs" />
-    <Compile Include="BleData\Trio\SettingsData\ClearEEPROM.cs" />
     <Compile Include="BleData\FT900\SettingsData\FT900ClearEEPROM.cs" />
     <Compile Include="BleData\Trio\SettingsData\MedicineAlarm.cs" />
     <Compile Include="BleData\Trio\StepsData\StepsTableData.cs" />
@@ -87,6 +87,7 @@
     <Compile Include="BleData\Trio\AccelData\SignatureData.cs" />
     <Compile Include="BleData\Trio\Others\DisplayOnScreenData.cs" />
     <Compile Include="BleData\Trio\Others\FirwareDisplaySequenceData.cs" />
+    <Compile Include="UserData\UserInformation.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BleData\" />
@@ -98,6 +99,8 @@
     <Folder Include="BleData\Trio\Others\" />
     <Folder Include="BleData\FT900\Others\" />
     <Folder Include="BleData\FT900\StepsData\" />
+    <Folder Include="UserData\" />
+    <Folder Include="AppData\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Motion.Mobile.Utilities\Motion.Mobile.Utilities.csproj">

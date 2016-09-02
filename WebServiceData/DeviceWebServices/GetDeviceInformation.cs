@@ -161,7 +161,7 @@ namespace Motion.Core.Data.WebServiceData.DeviceWebServices
 
 	public class GetDeviceInformation
 	{
-		const string METHOD_NAME = "ActivateDeviceWithMember";
+		const string METHOD_NAME = "GetDeviceInfo";
 
 		public GetDeviceInfoRequest request = new GetDeviceInfoRequest();
 		public GetDeviceInfoResponse response = new GetDeviceInfoResponse();

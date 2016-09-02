@@ -23,7 +23,7 @@ namespace Motion.Core.Data.WebServiceData.DeviceWebServices
 		[JsonProperty(PropertyName = "aid")]
 		public int ApplicationID;
 		[JsonProperty(PropertyName = "drmid")]
-		public int DeviceDermID;
+		public int MemberDermID;
 		[JsonProperty(PropertyName = "fwver")]
 		public float TrackerFirmwareVersion;
 		[JsonIgnore]
@@ -157,7 +157,7 @@ namespace Motion.Core.Data.WebServiceData.DeviceWebServices
 
 	public class ActivateDeviceWithMember
 	{
-		const string METHOD_NAME = "GetDeviceInfo";
+		const string METHOD_NAME = "ActivateDeviceWithMember";
 
 		public ActivateDeviceWithMemberRequest request = new ActivateDeviceWithMemberRequest();
 		public ActivateDeviceWithMemberResponse response = new ActivateDeviceWithMemberResponse();
