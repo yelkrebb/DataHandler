@@ -167,7 +167,7 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 					this.Month = Convert.ToInt32(Utils.getDecimalValue(this.monthRaw)); 
 					this.Day = Convert.ToInt32(Utils.getDecimalValue(this.dayRaw));
 
-					if ((this.trioDevInfo.ModelNumber == 961 && this.trioDevInfo.FirmwareVersion < 5.0f))
+					/*if ((this.trioDevInfo.ModelNumber == 961 && this.trioDevInfo.FirmwareVersion < 5.0f))
 					{
 						Array.Copy(this._rawData, HOUR_OFFSET_BYTE_LOC, this.hourOffsetRaw, INDEX_ZERO, 1);
 						Array.Copy(this._rawData, MINUTE_OFFSET_BYTE_LOC, this.minuteOffsetRaw, INDEX_ZERO, 1);
@@ -176,8 +176,8 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 						this.OffestType = Convert.ToBoolean((flagValue >> 7) & 0x01);
 						this.HourOffset = flagValue & 0x3F;
 						this.MinuteOffset = Convert.ToInt32(Utils.getDecimalValue(this.minuteOffsetRaw)); 
-					}
-					else if (this.trioDevInfo.ModelNumber == 962 || (this.trioDevInfo.ModelNumber == 961 && this.trioDevInfo.FirmwareVersion >= 5.0f))
+					}*/
+					if (this.trioDevInfo.ModelNumber == 962 || (this.trioDevInfo.ModelNumber == 961 && this.trioDevInfo.FirmwareVersion >= 5.0f))
 					{
 						Array.Copy(this._rawData, HOUR_OFFSET_BYTE_LOC, this.hourOffsetRaw, INDEX_ZERO, 1);
 						Array.Copy(this._rawData, MINUTE_OFFSET_BYTE_LOC, this.minuteOffsetRaw, INDEX_ZERO, 1);

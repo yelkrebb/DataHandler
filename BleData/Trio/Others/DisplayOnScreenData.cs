@@ -58,8 +58,8 @@ namespace Motion.Core.Data.BleData.Trio.Others
 		byte[] writeCommandResponseCodeRaw;
 		/* ### End Raw data per field ### */
 
-		public byte[] _rawData { get; set; }
-		public byte[] _readCommandRawData { get; set; }
+		byte[] _rawData { get; set; }
+		byte[] _readCommandRawData { get; set; }
 
 		TrioDeviceInformation trioDevInfo;
 
@@ -130,7 +130,7 @@ namespace Motion.Core.Data.BleData.Trio.Others
 				this.TotalMessage = mesageCommandForCheckSumSize + 2;
 
 
-				this.packetNumRaw = BitConverter.GetBytes(this.PacketNum);
+				this.packetNumRaw = BitConverter.GetBytes(BitConverter.ToInt16(BitConverter.GetBytes(this.PacketNum), 0));
 				this.totalMessageRaw = BitConverter.GetBytes(this.TotalMessage);
 
 				int flagValue = 0x00;
@@ -142,12 +142,19 @@ namespace Motion.Core.Data.BleData.Trio.Others
 
 				this.xCoorRaw = BitConverter.GetBytes(this.XCoordinate);
 				this.yCoorRaw = BitConverter.GetBytes(this.YCoordinate);
-				this.bgColorRaw = BitConverter.GetBytes(this.BackgroundColor);
+				this.bgColorRaw = BitConverter.GetBytes(BitConverter.ToInt16(BitConverter.GetBytes(this.BackgroundColor), 0));
+
+				if (BitConverter.IsLittleEndian)
+				{
+					Array.Reverse(this.packetNumRaw);
+					Array.Reverse(this.bgColorRaw);
+					Array.Reverse(this.totalMessageRaw);
+				}
 
 
 
 				Buffer.BlockCopy(this.packetNumRaw, INDEX_ZERO, this._rawData, PACKET_NO_LOC, PACKET_NO_BYTE_SIZE);
-				Buffer.BlockCopy(this.totalMessageRaw, INDEX_ZERO, this._rawData, TOTAL_MESSAGE_LOC, TOTAL_MESSAGE_BYTE_SIZE);
+				Buffer.BlockCopy(this.totalMessageRaw, Utils.INDEX_ONE, this._rawData, TOTAL_MESSAGE_LOC, TOTAL_MESSAGE_BYTE_SIZE);
 				Buffer.BlockCopy(this.propertyRaw, INDEX_ZERO, this._rawData, PROPERTY_LOC, PROPERTY_BYTE_SIZE);
 				Buffer.BlockCopy(this.xCoorRaw, INDEX_ZERO, this._rawData, XCOOR_LOC, XCOOR_BYTE_SIZE);
 				Buffer.BlockCopy(this.yCoorRaw, INDEX_ZERO, this._rawData, YCOOR_LOC, YCOOR_BYTE_SIZE);
@@ -157,7 +164,11 @@ namespace Motion.Core.Data.BleData.Trio.Others
 				Buffer.BlockCopy(this._rawData, PROPERTY_LOC, messageCommandForCheckSum, INDEX_ZERO, mesageCommandForCheckSumSize);
 
 				this.CheckSum = Utils.GetCheckSumWithBytes(messageCommandForCheckSum);
-				this.checkSumRaw = BitConverter.GetBytes(this.CheckSum);
+				this.checkSumRaw =BitConverter.GetBytes(BitConverter.ToInt16(BitConverter.GetBytes(this.CheckSum), 0));
+
+				if(BitConverter.IsLittleEndian)
+					Utils.reverseBytesForEndianessHandling(this.checkSumRaw);
+
 				Buffer.BlockCopy(this.checkSumRaw, INDEX_ZERO, this._rawData, CHECK_SUM_LOC, CHECK_SUM_BYTE_SIZE);
 
 

@@ -111,18 +111,25 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 				this.strideRaw = BitConverter.GetBytes(this.Stride);
 
 				string[] weightValues = this.Weight.ToString(CultureInfo.InvariantCulture).Split('.');
-				this.weightWholeRaw = BitConverter.GetBytes(int.Parse(weightValues[0]));
+				this.weightWholeRaw = BitConverter.GetBytes(BitConverter.ToInt16(BitConverter.GetBytes(int.Parse(weightValues[0])), 0));
 
-				if (BitConverter.IsLittleEndian)
-					Array.Reverse(this.weightWholeRaw);
 
 				if (weightValues.Length > 1)
 					this.weightDecimalRaw = BitConverter.GetBytes(int.Parse(weightValues[1]));
 				else
 					this.weightDecimalRaw = BitConverter.GetBytes(0);
 
-				this.rmrRaw = BitConverter.GetBytes(this.RestMetabolicRate);
+				this.rmrRaw = BitConverter.GetBytes(BitConverter.ToInt16(BitConverter.GetBytes(this.RestMetabolicRate), 0));
+
+					
 				this.unitOfMeasureRaw = BitConverter.GetBytes(Convert.ToInt32(this.UnitOfMeasure));
+
+				if (BitConverter.IsLittleEndian)
+				{
+					Array.Reverse(this.weightWholeRaw);
+					Array.Reverse(this.rmrRaw);
+
+				}
 
 				Buffer.BlockCopy(this.strideRaw, 0, this._rawData, STRIDE_BYTE_LOC, STRIDE_BYTE_SIZE);
 				Buffer.BlockCopy(this.weightWholeRaw, 0, this._rawData, WEIGHT_WHOLE_BYTE_LOC, WEIGHT_WHOLE_BYTE_SIZE);

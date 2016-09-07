@@ -150,15 +150,22 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 					this._rawData = new byte[COMMAND_SIZE_WRITE_ORIG + 2];
 
 				this.tenacityStepsRaw = BitConverter.GetBytes(this.TenacitySteps);
-				this.intensityStepsRaw = BitConverter.GetBytes(this.IntensitySteps);
+				this.intensityStepsRaw = BitConverter.GetBytes(BitConverter.ToInt16(BitConverter.GetBytes(this.IntensitySteps), 0));
 				this.intensityTimeRaw = BitConverter.GetBytes(this.IntensityTime);
 				this.intensityMinuteThresholdRaw = BitConverter.GetBytes(this.IntensityMinuteThreshold);
 				this.intensityRestMinuteAllowedRaw = BitConverter.GetBytes(this.IntensityRestMinuteAllowed);
-				this.frequencyStepsRaw = BitConverter.GetBytes(this.FrequencySteps);
+				this.frequencyStepsRaw = BitConverter.GetBytes(BitConverter.ToInt16(BitConverter.GetBytes(this.FrequencySteps), 0));
 				this.frequencyCycleTimeRaw = BitConverter.GetBytes(this.FrequencyCycleTime);
 				this.frequencyCycleAndIntervalRaw = BitConverter.GetBytes(this.FrequencyCycleInterval | (this.FrequencyCycle << 4));
 
-				Buffer.BlockCopy(this.tenacityStepsRaw, 0, this._rawData, TENACITY_STEPS_BYTE_LOC, TENACITY_STEPS_BYTE_SIZE);
+				if (BitConverter.IsLittleEndian)
+				{
+					Array.Reverse(this.tenacityStepsRaw);
+					Array.Reverse(this.intensityStepsRaw);
+					Array.Reverse(this.frequencyStepsRaw);
+				}
+
+				Buffer.BlockCopy(this.tenacityStepsRaw, Utils.INDEX_ONE, this._rawData, TENACITY_STEPS_BYTE_LOC, TENACITY_STEPS_BYTE_SIZE);
 				Buffer.BlockCopy(this.intensityStepsRaw, 0, this._rawData, INTENSITY_STEPS_BYTE_LOC, INTENSITY_STEPS_BYTE_SIZE);
 				Buffer.BlockCopy(this.intensityTimeRaw, 0, this._rawData, INTENSITY_TIME_BYTE_LOC, INTENSITY_TIME_BYTE_SIZE);
 				Buffer.BlockCopy(this.intensityMinuteThresholdRaw, 0, this._rawData, INTENSITY_MINUTE_THRESHOLD_BYTE_LOC, INTENSITY_MINUTE_THRESHOLD_BYTE_SIZE);

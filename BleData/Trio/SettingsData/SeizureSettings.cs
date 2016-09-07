@@ -146,8 +146,14 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 				else
 					this._rawData = new byte[COMMAND_SIZE_WRITE_OLD + 2];
 
-				this.seizureNumberOfRecordsRaw = BitConverter.GetBytes(this.SeizureNumberOfRecords);
+				int flagValue = 0x00;
+				flagValue |= this.SeizureSamplingTime/60;
+				flagValue |= this.SeizureNumberOfRecords << 5;
+				this.seizureNumberOfRecordsRaw = BitConverter.GetBytes(flagValue);
+
+
 				this.seizureSamplingFrequencyRaw = BitConverter.GetBytes(this.SeizureSamplingFrequency);
+
 
 				Buffer.BlockCopy(this.seizureNumberOfRecordsRaw, INDEX_ZERO, this._rawData, SEIZURE_NO_OF_REC_BYTE_LOC, SEIZURE_NO_OF_REC_BYTE_SIZE);
 				Buffer.BlockCopy(this.seizureSamplingFrequencyRaw, INDEX_ZERO, this._rawData, SEIZURE_SAMPLING_FREQUENCY_BYTE_LOC, SEIZURE_SAMPLING_FREQUENCY_BYTE_SIZE);

@@ -247,16 +247,23 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 				{
 					this._rawData = new byte[COMMAND_SIZE_WRITE_NEW + 2];
 
-					this.samplingTimeRaw = BitConverter.GetBytes(this.SamplingTime);
+					this.samplingTimeRaw = BitConverter.GetBytes(BitConverter.ToInt16(BitConverter.GetBytes(this.SamplingTime), 0));
 					this.samplingCycleRaw = BitConverter.GetBytes(this.SamplingCycle);
 					this.samplingFrequencyRaw = BitConverter.GetBytes(this.SamplingFrequency);
 					this.samplingThresholdRaw = BitConverter.GetBytes(this.SamplingThreshold);
 					this.samplingRecordingPerdayRaw = BitConverter.GetBytes(this.SamplingRecordingPerDay);
 					this.samplingStepsRaw = BitConverter.GetBytes(this.SamplingSteps);
-					this.minuteRecordingIntervalRaw = BitConverter.GetBytes(this.MinuteRecordingInterval);
+					this.minuteRecordingIntervalRaw = BitConverter.GetBytes(BitConverter.ToInt16(BitConverter.GetBytes(this.MinuteRecordingInterval), 0));
 					this.maximumStepsRaw = BitConverter.GetBytes(this.MaximumSteps);
 					this.timeframeInSecondsRaw = BitConverter.GetBytes(this.TimeFrameInSeconds);
 					this.samplingTotalBlocksRaw = BitConverter.GetBytes(this.SamplingTotalBlocks);
+
+					if (BitConverter.IsLittleEndian)
+					{
+						Array.Reverse(this.samplingTimeRaw);
+						Array.Reverse(this.minuteRecordingIntervalRaw);
+
+					}
 
 					Buffer.BlockCopy(this.samplingTimeRaw, INDEX_ZERO, this._rawData, SAMPLING_TIME_BYTE_LOC, SAMPLING_TIME_BYTE_SIZE_NEW);
 					Buffer.BlockCopy(this.samplingCycleRaw, INDEX_ZERO, this._rawData, SAMPLING_CYCLE_BYTE_LOC_NEW, SAMPLING_CYCLE_BYTE_SIZE);
@@ -298,15 +305,21 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 				}*/
 				else
 				{
+					int shiftLevel = 4;
+					if ((this.trioDevInfo.ModelNumber == 936 && this.trioDevInfo.FirmwareVersion >= 1.4f) || this.trioDevInfo.ModelNumber >= 936)
+						shiftLevel = 5;
+
 					this._rawData = new byte[COMMAND_SIZE_WRITE_ORIG + 2];
 					int samplingTimeCycle = 0x00;
-					samplingTimeCycle |= (this.SamplingCycle << 4);
+					samplingTimeCycle |= (this.SamplingCycle << shiftLevel);
 					samplingTimeCycle |= (this.SamplingTime);
 
 					this.samplingTimeCycleRaw = BitConverter.GetBytes(samplingTimeCycle);
 
 					this.samplingFrequencyRaw = BitConverter.GetBytes(this.SamplingFrequency);
 					this.samplingThresholdRaw = BitConverter.GetBytes(this.SamplingThreshold);
+
+
 
 					Buffer.BlockCopy(this.samplingTimeCycleRaw, INDEX_ZERO, this._rawData, SAMPLING_TIME_BYTE_LOC, SAMPLING_TIME_BYTE_SIZE_OLD);
 					Buffer.BlockCopy(this.samplingFrequencyRaw, INDEX_ZERO, this._rawData, SAMPLING_FREQUENCY_BYTE_LOC_OLD, SAMPLING_FREQUENCY_BYTE_SIZE);

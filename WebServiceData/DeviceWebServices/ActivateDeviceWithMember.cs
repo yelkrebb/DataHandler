@@ -184,6 +184,9 @@ namespace Motion.Core.Data.WebServiceData.DeviceWebServices
 				System.Diagnostics.Debug.WriteLine(responseStr);
 				this.response.responseJSON = responseStr;
 				this.response = JsonConvert.DeserializeObject<ActivateDeviceWithMemberResponse>(responseStr, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+
+				if(string.Equals("Member & Device is already active.",this.response.ResponseMessage))
+				   status = WebServiceRequestStatus.ERROR_REQUEST_DATA_INVALID;
 			}
 			else
 			{
