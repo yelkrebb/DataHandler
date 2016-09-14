@@ -293,7 +293,8 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 		private bool hourRangeHouseMissingPacket()
 		{
 			int totalHoursRead = (this._readHourRangeCommandRawData[6] - this._readHourRangeCommandRawData[5]) + 1;
-
+			System.Diagnostics.Debug.WriteLine("totalHoursRead " + totalHoursRead);
+			System.Diagnostics.Debug.WriteLine("rawDataLength " + _rawData.Length);
 			return this._rawData.Length < ((this.getHourlyDataSize() * totalHoursRead) + CHECKSUM_AND_TERMINATOR_DATA_SIZE) ? true : false;
 		}
 

@@ -18,6 +18,8 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 		public int signatureGenerated { get; set; }
 		public int signatureSent { get; set; }
 		public int fraudTable { get; set; }
+		public bool allFlagged { get; set; }
+		public DateTime tableDate { get; set; }
 
 		internal StepsTableParameters()
 		{
@@ -118,6 +120,7 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 
 		private void ClearStepsData()
 		{
+			if (this.stepsDataTable != null && this.stepsDataTable.Count > 0)
 			this.stepsDataTable.Clear();
 		}
 
@@ -164,18 +167,12 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 
 						StepsTableParameters stepParams = new StepsTableParameters();
 
-						int dataLen = 8;
+
 						if (i % 2 == 0)
 						{
-							currentIndex = currentIndex + YEAR_DATA_BYTE_LOC;
+							currentIndex = currentIndex + 3;
 
 						}
-
-						if ((i % 2 != 0) && (this.trioDevInfo.ModelNumber == 961 && this.trioDevInfo.FirmwareVersion >= 5.0f))
-						{
-							dataLen = 9;
-						}
-
 
 						this.yrDataRaw = new byte[YEAR_DATA_BYTE_SIZE];
 						this.monthDataRaw = new byte[MONTH_DATA_BYTE_SIZE];
@@ -186,17 +183,23 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 
 
 						Array.Copy(this._rawData, currentIndex, this.yrDataRaw, INDEX_ZERO, YEAR_DATA_BYTE_SIZE);
-						Array.Copy(this._rawData, currentIndex + YEAR_DATA_BYTE_SIZE, this.monthDataRaw, INDEX_ZERO, MONTH_DATA_BYTE_SIZE);
-						Array.Copy(this._rawData, currentIndex + MONTH_DATA_BYTE_SIZE, this.dayDataRaw, INDEX_ZERO, DAY_DATA_BYTE_SIZE);
-						Array.Copy(this._rawData, currentIndex + DAY_DATA_BYTE_SIZE, this.hrNumberRaw, INDEX_ZERO, HOUR_NUM_BYTE_SIZE);
-						Array.Copy(this._rawData, currentIndex + HOUR_NUM_BYTE_SIZE, this.sentHourFlagRaw, INDEX_ZERO, SENT_HOUR_BYTE_SIZE);
-						Array.Copy(this._rawData, currentIndex + SENT_HOUR_BYTE_SIZE, this.profileGeneratedRaw, INDEX_ZERO, PROFILE_GENERATED_BYTE_SIZE);
+						currentIndex = currentIndex + YEAR_DATA_BYTE_SIZE;
+						Array.Copy(this._rawData, currentIndex, this.monthDataRaw, INDEX_ZERO, MONTH_DATA_BYTE_SIZE);
+						currentIndex = currentIndex + MONTH_DATA_BYTE_SIZE;
+						Array.Copy(this._rawData, currentIndex, this.dayDataRaw, INDEX_ZERO, DAY_DATA_BYTE_SIZE);
+						currentIndex += DAY_DATA_BYTE_SIZE;
+						Array.Copy(this._rawData, currentIndex, this.hrNumberRaw, INDEX_ZERO, HOUR_NUM_BYTE_SIZE);
+						currentIndex += HOUR_NUM_BYTE_SIZE;
+						Array.Copy(this._rawData, currentIndex, this.sentHourFlagRaw, INDEX_ZERO, SENT_HOUR_BYTE_SIZE);
+						currentIndex += SENT_HOUR_BYTE_SIZE;
+						Array.Copy(this._rawData, currentIndex, this.profileGeneratedRaw, INDEX_ZERO, PROFILE_GENERATED_BYTE_SIZE);
+						currentIndex += PROFILE_GENERATED_BYTE_SIZE;
 
-
-						stepParams.dbYear = Convert.ToInt32(Utils.getDecimalValue(this.yrDataRaw)); 
-						stepParams.dbMonth = Convert.ToInt32(Utils.getDecimalValue(this.monthDataRaw));  
-						stepParams.dbDay = Convert.ToInt32(Utils.getDecimalValue(this.dayDataRaw)); 
-						stepParams.dbHourNumber = Convert.ToInt32(Utils.getDecimalValue(this.hrNumberRaw)); 
+						// use 3F since bit 6 and 7 us turned on, need to turn it back off
+						stepParams.dbYear = Convert.ToInt32(Utils.getDecimalValue(this.yrDataRaw)) & 0x3F; 
+						stepParams.dbMonth = Convert.ToInt32(Utils.getDecimalValue(this.monthDataRaw)) & 0x3F;  
+						stepParams.dbDay = Convert.ToInt32(Utils.getDecimalValue(this.dayDataRaw)) & 0x3F; 
+						stepParams.dbHourNumber = Convert.ToInt32(Utils.getDecimalValue(this.hrNumberRaw)) & 0x3F; 
 						stepParams.sentHourFlag = Convert.ToInt32(Utils.getDecimalValue(this.sentHourFlagRaw)); 
 						int flagValue = Convert.ToInt32(Utils.getDecimalValue(this.profileGeneratedRaw));  
 						stepParams.signatureGenerated = Convert.ToInt32(flagValue & 0xFF);
@@ -206,13 +209,25 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 						//stepsDataTable
 						{
 							this.fraudTableRaw = new byte[FRAUD_TABLE_BYTE_SIZE];
-							Array.Copy(this._rawData, currentIndex + PROFILE_GENERATED_BYTE_SIZE, this.fraudTableRaw, INDEX_ZERO, FRAUD_TABLE_BYTE_SIZE);
+							Array.Copy(this._rawData, currentIndex, this.fraudTableRaw, INDEX_ZERO, FRAUD_TABLE_BYTE_SIZE);
+							currentIndex += FRAUD_TABLE_BYTE_SIZE;
 							stepParams.fraudTable = Convert.ToInt32(Utils.getDecimalValue(this.fraudTableRaw)); 
 						}
 
-						currentIndex = currentIndex + dataLen;
-						stepsDataTable.Add(stepParams);
+						stepParams.allFlagged = false;
+						if (stepParams.sentHourFlag == 16777215) // or 'FFFFFF'
+							stepParams.allFlagged = true;
+
+						if (stepParams.dbYear != 0)
+						{
+							stepParams.tableDate = new DateTime(stepParams.dbYear, stepParams.dbMonth, stepParams.dbDay);
+							stepsDataTable.Add(stepParams);
+						}
+
+
 					}
+
+					stepsDataTable.Sort((a, b) => b.tableDate.CompareTo(a.tableDate));
 
 					parsingStatus = BLEParsingStatus.SUCCESS;
 				}

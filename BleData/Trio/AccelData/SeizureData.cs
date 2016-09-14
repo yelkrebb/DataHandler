@@ -10,7 +10,7 @@ namespace Motion.Core.Data.BleData.Trio.AccelData
 	public class SeizureData
 	{
 		const int COMMAND_PREFIX = 0x1B;
-		const int COMMAND_ID_READ = 0x26;
+		const int COMMAND_ID_READ = 0x33;
 		const int COMMAND_SIZE_READ = 4;
 
 		const int INDEX_ZERO = 0;

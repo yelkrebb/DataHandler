@@ -219,7 +219,7 @@ namespace Motion.Core.Data.BleData.Trio.AccelData
 		}
 
 
-		public async Task<byte[]> GetReadStepTableDataCommand()
+		public async Task<byte[]> GetReadSeizureBlocksDataCommand()
 		{
 			await Task.Run(() =>
 			{
@@ -232,7 +232,7 @@ namespace Motion.Core.Data.BleData.Trio.AccelData
 			return this._readCommandRawData;
 		}
 
-		public async Task<byte[]> GetWriteStepTableDataCommand(SeizureBlocksParameters seizureBlocksParamWrite)
+		public async Task<byte[]> GetWriteSeizureBlocksDataCommand(SeizureBlocksParameters seizureBlocksParamWrite)
 		{
 			await Task.Run(() =>
 			{

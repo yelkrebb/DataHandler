@@ -34,7 +34,7 @@ namespace Motion.Core.Data.BleData.Trio
 
 		public float FirmwareVersion { get; set; }
 		public int BatteryLevel { get; set; }
-		public char BroadcastType { get; set; }
+		public string BroadcastType { get; set; }
 		public float HardwareVersion { get; set; }
 		public float BootloaderVersion { get; set; }
 

@@ -88,6 +88,11 @@
     <Compile Include="BleData\Trio\Others\DisplayOnScreenData.cs" />
     <Compile Include="BleData\Trio\Others\FirwareDisplaySequenceData.cs" />
     <Compile Include="UserData\UserInformation.cs" />
+    <Compile Include="AppData\ApplicationUpdateSettings.cs" />
+    <Compile Include="DeviceData\DeviceData.cs" />
+    <Compile Include="MemberData\MemberServerProfile.cs" />
+    <Compile Include="FirmwareData\FirmwareUpdateInfo.cs" />
+    <Compile Include="AccelDataInfo\SeizureBlockInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BleData\" />
@@ -101,6 +106,10 @@
     <Folder Include="BleData\FT900\StepsData\" />
     <Folder Include="UserData\" />
     <Folder Include="AppData\" />
+    <Folder Include="FirmwareData\" />
+    <Folder Include="DeviceData\" />
+    <Folder Include="MemberData\" />
+    <Folder Include="AccelDataInfo\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Motion.Core.WSHandler\Motion.Core.WSHandler.csproj">
