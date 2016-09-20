@@ -141,10 +141,12 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 					Array.Copy(this._rawData, 2, this.writeCommandResponseCodeRaw, INDEX_ZERO, WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE);
 					this.WriteCommandResponseCode = Convert.ToInt32(Utils.getDecimalValue(this.writeCommandResponseCodeRaw));
 
-
-					this.fraudTableRaw = new byte[FRAUD_TABLE_BYTE_SIZE];
-					Array.Copy(this._rawData, 3, this.fraudTableRaw, INDEX_ZERO, FRAUD_TABLE_BYTE_SIZE);
-					this.FraudTableCommandValue = Convert.ToInt32(Utils.getDecimalValue(this.fraudTableRaw)); 
+					if ((this.trioDevInfo.ModelNumber == 961 && this.trioDevInfo.FirmwareVersion >= 5.0f))
+					{
+						this.fraudTableRaw = new byte[FRAUD_TABLE_BYTE_SIZE];
+						Array.Copy(this._rawData, 3, this.fraudTableRaw, INDEX_ZERO, FRAUD_TABLE_BYTE_SIZE);
+						this.FraudTableCommandValue = Convert.ToInt32(Utils.getDecimalValue(this.fraudTableRaw));
+					}
 
 					parsingStatus = BLEParsingStatus.SUCCESS;
 
@@ -220,7 +222,7 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 
 						if (stepParams.dbYear != 0)
 						{
-							stepParams.tableDate = new DateTime(stepParams.dbYear, stepParams.dbMonth, stepParams.dbDay);
+							stepParams.tableDate = new DateTime(stepParams.dbYear+ 2000, stepParams.dbMonth, stepParams.dbDay);
 							stepsDataTable.Add(stepParams);
 						}
 

@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace Motion.Core.Data.BleData.Trio.SettingsData
 {
-	public class SensitivitySettings: ITrioDataHandler
+	public class SensitivitySettings
 	{
 		const int COMMAND_PREFIX = 0x1B;
 		const int COMMAND_ID_WRITE = 0x58;
@@ -83,9 +83,9 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 				Array.Clear(this.writeCommandResponseCodeRaw, INDEX_ZERO, this.writeCommandResponseCodeRaw.Length);
 		}
 
-		public async Task<BLEParsingStatus> ParseData(byte[] rawData)
+		public async Task<int> ParseData(byte[] rawData)
 		{
-			BLEParsingStatus parsingStatus = BLEParsingStatus.ERROR;
+			int parsingStatus = 0;
 			await Task.Run(() =>
 			{
 				this._rawData = new byte[rawData.Length];
@@ -97,7 +97,7 @@ namespace Motion.Core.Data.BleData.Trio.SettingsData
 					this.writeCommandResponseCodeRaw = new byte[WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE];
 					Array.Copy(this._rawData, 2, this.writeCommandResponseCodeRaw, INDEX_ZERO, WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE);
 					this.WriteCommandResponseCode = Convert.ToInt32(Utils.getDecimalValue(this.writeCommandResponseCodeRaw));
-					parsingStatus = BLEParsingStatus.SUCCESS;
+					parsingStatus = this.WriteCommandResponseCode;
 				}
 
 				else

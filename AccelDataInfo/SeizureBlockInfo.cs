@@ -8,7 +8,7 @@ namespace Motion.Core.Data.AccelDataInfo
 		public int sbDay { get; set; }
 		public int sbHour { get; set; }
 		public int sbMinute { get; set; }
-		public int sbRecordStatus { get; set; }
+		public int sbseizureRecordNo { get; set; }
 		public int sbSeizureBlock { get; set; }
 		
 		public SeizureBlockInfo()

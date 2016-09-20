@@ -56,7 +56,7 @@ namespace Motion.Core.Data.WebServiceData.DeviceWebServices
 		[JsonProperty(PropertyName = "htype")]
 		public string SignatureHeaderType;
 		[JsonProperty(PropertyName = "blkno")]
-		public string SeizureBlockNo;
+		public int SeizureBlockNo;
 
 		[JsonProperty(PropertyName = "data")]
 		public Dictionary<string, Dictionary<string, List<string>>> AccelData;

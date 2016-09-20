@@ -187,7 +187,7 @@ namespace Motion.Core.Data.BleData.Trio.AccelData
 			return parsingStatus;
 		}
 
-		public async Task<byte[]> GetReadStepTableDataCommand()
+		public async Task<byte[]> GetReadCommand()
 		{
 			await Task.Run(() =>
 			{
