@@ -83,6 +83,8 @@ namespace Motion.Core.Data.WebServiceData.DeviceWebServices
 				System.Diagnostics.Debug.WriteLine(responseStr);
 				this.response.responseJSON = responseStr;
 				this.response = JsonConvert.DeserializeObject<UploadTalliesDataResponse>(responseStr, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+				if(string.Equals(this.response.ResponseStatus,"FAIL"))
+					status = WebServiceRequestStatus.FAIL;
 			}
 			else
 			{
@@ -94,7 +96,7 @@ namespace Motion.Core.Data.WebServiceData.DeviceWebServices
 		{
 			bool isValid = false;
 
-			if (this.request.DeviceModel != 0 && this.request.DeviceSerial != 0 && this.request.MemberDeviceID != 0 && this.request.MemberDeviceID != 0
+			if (this.request.DeviceModel != 0 && this.request.DeviceSerial != 0 && this.request.MemberDeviceID != 0 
 			   &&  this.request.ApplicationID != 0 && this.request.PlatformID != 0 && this.request.DeviceDateTime != null)
 			{
 				isValid = true;

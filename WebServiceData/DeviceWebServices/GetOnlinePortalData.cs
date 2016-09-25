@@ -66,6 +66,8 @@ namespace Motion.Core.Data.WebServiceData.DeviceWebServices
 				System.Diagnostics.Debug.WriteLine(responseStr);
 				this.response.responseJSON = responseStr;
 				this.response = JsonConvert.DeserializeObject<GetOnlinePortalDataResponse>(responseStr, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+				if (string.Equals(this.response.ResponseStatus, "FAIL"))
+					status = WebServiceRequestStatus.FAIL;
 			}
 			else
 			{

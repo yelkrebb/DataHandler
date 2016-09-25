@@ -93,6 +93,7 @@
     <Compile Include="MemberData\MemberServerProfile.cs" />
     <Compile Include="FirmwareData\FirmwareUpdateInfo.cs" />
     <Compile Include="AccelDataInfo\SeizureBlockInfo.cs" />
+    <Compile Include="AppData\ApplicationInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BleData\" />

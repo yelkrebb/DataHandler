@@ -229,7 +229,7 @@ namespace Motion.Core.Data.BleData.Trio.StepsData
 
 					}
 
-					stepsDataTable.Sort((a, b) => b.tableDate.CompareTo(a.tableDate));
+					stepsDataTable.Sort((a, b) => a.tableDate.CompareTo(b.tableDate));
 
 					parsingStatus = BLEParsingStatus.SUCCESS;
 				}

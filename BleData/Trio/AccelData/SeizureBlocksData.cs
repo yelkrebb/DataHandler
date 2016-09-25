@@ -17,8 +17,11 @@ namespace Motion.Core.Data.BleData.Trio.AccelData
 		public int sbHour { get; set; }
 		public int sbMinute { get; set; }
 		public int sbRecordStatus { get; set; }
+		public int sbRecordNo { get; set; }
 		public int sbSeizureBlock { get; set; }
 		public bool sbIsNewest { get; set; }
+		public DateTime tableDate { get; set; }
+
 
 		internal SeizureBlocksParameters()
 		{
@@ -26,17 +29,6 @@ namespace Motion.Core.Data.BleData.Trio.AccelData
 		}
 	}
 
-	public class SeizureBlocksParametersOld
-	{
-
-		public int sbSeizureBlock { get; set; }
-		public bool sbIsNewest { get; set; }
-
-		internal SeizureBlocksParametersOld()
-		{
-
-		}
-	}
 
 	public class SeizureBlocksData
 	{
@@ -69,7 +61,7 @@ namespace Motion.Core.Data.BleData.Trio.AccelData
 
 
 		public List<SeizureBlocksParameters> seizureBlocksData;
-		public List<SeizureBlocksParametersOld> seizureBlocksDataOld;
+
 
 
 		/* #### Equavalent RAW data per field #####*/
@@ -133,7 +125,7 @@ namespace Motion.Core.Data.BleData.Trio.AccelData
 					Array.Copy(this._rawData, 2, this.writeCommandResponseCodeRaw, INDEX_ZERO, WRITE_COMMAND_RESPONSE_CODE_BYTE_SIZE);
 					this.WriteCommandResponseCode = Convert.ToInt32(Utils.getDecimalValue(this.writeCommandResponseCodeRaw));
 				}
-				else //(rawData[1] == 0x22)
+				else //(rawData[1] == 0x34)
 				{
 					this.seizureBlocksData = new List<SeizureBlocksParameters>();
 					if (this.trioDevInfo.ModelNumber == 961)
@@ -161,22 +153,28 @@ namespace Motion.Core.Data.BleData.Trio.AccelData
 							Array.Copy(this._rawData, currentIndex + RECORD_STATUS_BYTE_SIZE, this.seizureBlockRaw, INDEX_ZERO, SEIZURE_BLOCK_BYTE_SIZE);
 
 
-							stepParams.sbYear = Convert.ToInt32(Utils.getDecimalValue(this.yrDataRaw));
-							stepParams.sbMonth = Convert.ToInt32(Utils.getDecimalValue(this.monthDataRaw));
-							stepParams.sbDay = Convert.ToInt32(Utils.getDecimalValue(this.dayDataRaw));
-							stepParams.sbHour = Convert.ToInt32(Utils.getDecimalValue(this.hourDataRaw));
+							stepParams.sbYear = Convert.ToInt32( (Utils.getDecimalValue(this.yrDataRaw)) & 0x3F);
+							stepParams.sbMonth = Convert.ToInt32( (Utils.getDecimalValue(this.monthDataRaw)) & 0x3F);
+							stepParams.sbDay = Convert.ToInt32( (Utils.getDecimalValue(this.dayDataRaw)) & 0x3F);
+							stepParams.sbHour = Convert.ToInt32( (Utils.getDecimalValue(this.hourDataRaw)) & 0x3F);
 							stepParams.sbSeizureBlock = Convert.ToInt32(Utils.getDecimalValue(this.seizureBlockRaw));
 
 							int byteValue = Convert.ToInt32(Utils.getDecimalValue(this.recordStatusDataRaw));
 							stepParams.sbMinute = Convert.ToInt32(byteValue & 0x3F);
 							stepParams.sbRecordStatus = Convert.ToInt32(byteValue >> 6);
 
-
+							stepParams.sbRecordNo = i + 1;
 
 
 							currentIndex = currentIndex + dataLen;
-							seizureBlocksData.Add(stepParams);
+							if (stepParams.sbYear != 0)
+							{
+								stepParams.tableDate = new DateTime(stepParams.sbYear + 2000, stepParams.sbMonth, stepParams.sbDay);
+								seizureBlocksData.Add(stepParams);
+							}
 						}
+
+						seizureBlocksData.Sort((a, b) => a.tableDate.CompareTo(b.tableDate));
 
 						parsingStatus = BLEParsingStatus.SUCCESS;
 					}
@@ -192,7 +190,7 @@ namespace Motion.Core.Data.BleData.Trio.AccelData
 							for (int i = 0; i < max; i++)
 							{
 
-								SeizureBlocksParametersOld stepParams = new SeizureBlocksParametersOld();
+								SeizureBlocksParameters stepParams = new SeizureBlocksParameters();
 
 
 								this.seizureBlockRaw = new byte[SEIZURE_BLOCK_BYTE_SIZE];
@@ -202,7 +200,7 @@ namespace Motion.Core.Data.BleData.Trio.AccelData
 								stepParams.sbSeizureBlock = Convert.ToInt32(Utils.getDecimalValue(this.seizureBlockRaw));
 
 								currentIndex = currentIndex + dataLen;
-								seizureBlocksDataOld.Add(stepParams);
+								seizureBlocksData.Add(stepParams);
 							}
 
 							parsingStatus = BLEParsingStatus.SUCCESS;

@@ -87,7 +87,7 @@ namespace Motion.Core.Data.WebServiceData.DeviceWebServices
 	}
 	public class UploadSeizureData
 	{
-		const string METHOD_NAME = "UploadSignData";
+		const string METHOD_NAME = "UploadSeizureData";
 
 		public SeizureData seizData;
 
@@ -113,6 +113,8 @@ namespace Motion.Core.Data.WebServiceData.DeviceWebServices
 				System.Diagnostics.Debug.WriteLine(responseStr);
 				this.response.responseJSON = responseStr;
 				this.response = JsonConvert.DeserializeObject<UploadSeizureDataResponse>(responseStr, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+				if (string.Equals(this.response.ResponseStatus, "FAIL"))
+					status = WebServiceRequestStatus.FAIL;
 			}
 			else
 			{
